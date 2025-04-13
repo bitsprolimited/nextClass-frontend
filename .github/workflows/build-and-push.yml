@@ -32,8 +32,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build \
-            -t gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest \
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Push Docker image to GCR (only on main)
         if: github.ref == 'refs/heads/main'
