@@ -8,7 +8,7 @@ on:
 
 env:
   IMAGE_NAME: ct-assessment-app
-  PROJECT_ID: playground-s-11-8345c322
+  PROJECT_ID: playground-s-11-00fe4b9c
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
