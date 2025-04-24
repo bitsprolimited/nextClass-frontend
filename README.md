@@ -28,3 +28,13 @@ This repository contains files to build and deploy a Dockerized Flask applicatio
 
 3. Access the Application:
 * Open a web browser and navigate to http://localhost:80 to see the Flask application running.
+
+## GitHub Actions Workflow: Build and Push Docker Image to GCR:
+
+This repository contains a GitHub Actions workflow located at `.github/workflows/build-and-push.yml` that automatically builds and pushes a Docker image to Google Container Registry (GCR) when changes are made to the application source code or Dockerfile.
+
+## 🛠️ Prerequisites
+
+* **GitHub Secret:**
+
+    GCP_SA_KEY: Contains the JSON key of a Google Cloud Service Account with sufficient IAM permissions to push to the project's GCR.
