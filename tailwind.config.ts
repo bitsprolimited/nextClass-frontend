@@ -10,6 +10,10 @@ export default {
   theme: {
   	extend: {
   		colors: {
+			background2: 'hsl(var(--background2))',
+			abbey: 'hsl(var(--abbey))',
+			zeus: 'hsl(var(--zeus))',
+			pampas: 'hsl(var(--pampas))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
