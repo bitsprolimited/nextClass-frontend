@@ -1,12 +1,11 @@
-import Footer from "@/components/footer";
-import Testimonial from "@/components/testimonials";
+import HeroSection from "@/components/landing/hero-section";
+import Testimonial from "@/components/landing/testimonials";
 
 export default function Page() {
   return (
-    <div className="flex flex-col  items-center">
-      <h1>Home</h1>
+    <div className="flex flex-col items-center">
+      <HeroSection />
       <Testimonial />
-      <Footer />
     </div>
   );
 }
