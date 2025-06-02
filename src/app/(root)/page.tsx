@@ -1,16 +1,15 @@
 import ComingSoon from "@/components/comingSoon";
-import Footer from "@/components/footer";
 import SubscribeNewsletter from "@/components/subscribeNewsletter";
-import Testimonial from "@/components/testimonials";
+import HeroSection from "@/components/landing/hero-section";
+import Testimonial from "@/components/landing/testimonials";
 
 export default function Page() {
   return (
-    <div className="flex flex-col  items-center">
-      <h1>Home</h1>
+    <div className="flex flex-col items-center">
+      <HeroSection />
       <Testimonial />
       <ComingSoon />
       <SubscribeNewsletter />
-      <Footer />
     </div>
   );
 }
