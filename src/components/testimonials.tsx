@@ -58,7 +58,7 @@ export default function Testimonial() {
 
         <p className="text-lg leading-relaxed text-white/90 mb-6">
           “Lorem Ipsum is simply dummy text of the printing typesetting industry
-          has been the industry's standard dummy text ever since the 1500s when
+          has been the industrys standard dummy text ever since the 1500s when
           unknown printer took a galley of type and scrambled it to.”
         </p>
 

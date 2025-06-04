@@ -1,3 +1,4 @@
+import ComingSoon from "@/components/comingSoon";
 import Footer from "@/components/footer";
 import Testimonial from "@/components/testimonials";
 import Link from "next/link";
@@ -16,6 +17,7 @@ export default function Page() {
         Login
       </Link>
       <Testimonial />
+      <ComingSoon />
       <Footer />
     </div>
   );
