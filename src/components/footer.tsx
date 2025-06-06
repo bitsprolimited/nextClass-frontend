@@ -1,7 +1,6 @@
 "use client";
+import { SOCIAL_ICONS } from "@/lib/constants";
 import Image from "next/image";
-
-import { FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -82,18 +81,16 @@ export default function Footer() {
           <div className="mt-4 min-w-0">
             <h4 className="text-lg font-semibold mb-4">Connect with us:</h4>
             <div className="flex space-x-4 mb-4">
-              {[FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn].map(
-                (Icon, idx) => (
-                  <a
-                    key={idx}
-                    href="#"
-                    className="border border-white rounded-full p-2 text-lg hover:text-orange-500 hover:border-orange-500 transition-colors"
-                  >
-                    <Icon />
-                  </a>
-                )
-              )}
-            </div>
+              {SOCIAL_ICONS.map((Icon, idx) => (
+                <a
+                  key={idx}
+                  href="#"
+                  className="border border-white rounded-full p-2 text-lg hover:text-orange-500 hover:border-orange-500 transition-colors"
+                >
+                  <Icon />
+                </a>
+              ))}
+            </div>{" "}
             <ul className="space-y-1 text-sm text-white/80">
               <li>
                 <a
@@ -119,8 +116,9 @@ export default function Footer() {
       </footer>
       <div className="bg-black py-4 px-6 md:px-20 flex flex-col md:flex-row justify-between items-center text-xs text-white/70 gap-2">
         <p>
-          © 2023 <span className="text-yellow-400 font-bold">NEXTCLASS</span>{" "}
-          Made with <span className="text-yellow-400">💛</span> by{" "}
+          © {new Date().getFullYear()}{" "}
+          <span className="text-yellow-400 font-bold">NEXTCLASS</span> Made with{" "}
+          <span className="text-yellow-400">💛</span> by{" "}
           <span className="text-orange-500 font-bold">BITSPRO</span>
         </p>
         <div className="space-x-4">
