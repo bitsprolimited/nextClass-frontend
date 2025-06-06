@@ -1,10 +1,13 @@
 "use client";
 import { motion } from "motion/react";
 import { Button } from "../ui/button";
+import HeroSectionCarousel from "./hero-section-carousel";
+import HeroStudentAvatar from "./hero-student-avatar";
+import { SOCIAL_ICONS } from "@/lib/constants";
 
 function HeroSection() {
   const items = ["Anywhere", "Anytime", "Any Place", "With Ease"];
-  const duration = 0.5;
+  const duration = 1;
   const pause = 1;
   const stagger = duration + pause;
 
@@ -20,11 +23,9 @@ function HeroSection() {
   const itemVariants = {
     hidden: {
       y: 100,
-      opacity: 0,
     },
     visible: {
       y: [100, 0, -100],
-      opacity: [0, 1, 0],
       transition: {
         duration: duration * 2 + pause,
         times: [0, 0.5, 1],
@@ -37,8 +38,8 @@ function HeroSection() {
   };
 
   return (
-    <section className="h-screen w-full flex">
-      <div className="flex flex-col items-start gap-20 w-1/2 pt-52 pl-16">
+    <section className="min-h-screen 2xl:min-h-[900px] w-full flex">
+      <div className="flex flex-col justify-center items-start gap-20 w-1/2 max-w-[800px] pt-16 pl-16 ml-auto">
         <div className="flex flex-col items-start gap-[30px]">
           <div>
             <p className="text-primary text-sm">
@@ -87,8 +88,27 @@ function HeroSection() {
             </Button>
           </div>
         </div>
+        <div className="flex gap-4 items-center">
+          <p>Connect with us:</p>
+          <div className="flex space-x-4">
+            {SOCIAL_ICONS.map((Icon, idx) => (
+              <a
+                key={idx}
+                href="#"
+                className="border border-abbey text-abbey rounded-full p-2 text-lg hover:text-white hover:border-primary hover:bg-primary transition-colors"
+              >
+                <Icon size={15} />
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="w-1/2 bg-primary"></div>
+      <div className="w-1/2">
+        <div className="relative w-full h-full">
+          <HeroSectionCarousel />
+          <HeroStudentAvatar />
+        </div>
+      </div>
     </section>
   );
 }
