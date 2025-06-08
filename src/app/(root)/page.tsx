@@ -1,3 +1,5 @@
+import ComingSoon from "@/components/comingSoon";
+import SubscribeNewsletter from "@/components/subscribeNewsletter";
 import AboutSection from "@/components/landing/about-section";
 import ArticlesSection from "@/components/landing/articles-section";
 import FeaturedTutors from "@/components/landing/featured-tutors";
@@ -16,6 +18,8 @@ export default function Page() {
       <HowItWorksSection />
       <Testimonial />
       <ArticlesSection />
+      <ComingSoon />
+      <SubscribeNewsletter />
     </div>
   );
 }
