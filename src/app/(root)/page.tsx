@@ -17,9 +17,9 @@ export default function Page() {
       <FeaturedTutors />
       <HowItWorksSection />
       <Testimonial />
+      <ArticlesSection />
       <ComingSoon />
       <SubscribeNewsletter />
-      <ArticlesSection />
     </div>
   );
 }
