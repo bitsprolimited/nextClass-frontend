@@ -1,5 +1,6 @@
 import ComingSoon from "@/components/comingSoon";
 import Footer from "@/components/footer";
+import SubscribeNewsletter from "@/components/subscribeNewsletter";
 import Testimonial from "@/components/testimonials";
 import Link from "next/link";
 
@@ -18,6 +19,7 @@ export default function Page() {
       </Link>
       <Testimonial />
       <ComingSoon />
+      <SubscribeNewsletter />
       <Footer />
     </div>
   );

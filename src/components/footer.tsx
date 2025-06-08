@@ -19,13 +19,13 @@ export default function Footer() {
         {/* Main Grid */}
         <div className="grid md:grid-cols-4 gap-6 z-10 relative">
           {/* Logo & Description */}
-          <div>
+          <div className="mr-20">
             <Image
-              src="/logo-white.png"
+              src="/footerLogo.png"
               alt="NextClass Logo"
-              height={64}
-              width={64}
-              className=" md:h-16 mb-4"
+              height="156"
+              width="267"
+              className="  mb-4"
             />
             <p className="text-white/80 text-sm leading-relaxed">
               NextClass is your best choice for afterschool and/or
@@ -34,9 +34,9 @@ export default function Footer() {
           </div>
 
           {/* All Tutors */}
-          <div>
+          <div className="mt-4 min-w-0">
             <h4 className="text-lg font-semibold mb-4">All Tutors</h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-4 text-sm">
               {[
                 "KG/Nursery",
                 "Primary 1–3",
@@ -57,9 +57,9 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="mt-4 min-w-0">
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-4 text-sm">
               {[
                 "Privacy Policy",
                 "Terms & Conditions",
@@ -79,7 +79,7 @@ export default function Footer() {
           </div>
 
           {/* Connect with Us */}
-          <div>
+          <div className="mt-4 min-w-0">
             <h4 className="text-lg font-semibold mb-4">Connect with us:</h4>
             <div className="flex space-x-4 mb-4">
               {[FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn].map(
