@@ -10,7 +10,7 @@ export default function Testimonial() {
       <div className="hidden md:block absolute top-20 left-15 transform -translate-x-1/2 -translate-y-1/2 z-0">
         {/* Uncomment if decor-left.png is ready */}
         <Image
-          src="/decor-left.png"
+          src="/images/decor-left.png"
           alt="Decorative left"
           width={200}
           height={200}
@@ -21,7 +21,7 @@ export default function Testimonial() {
       {/* Decorative Right Image */}
       <div className="hidden md:block absolute top-1/2 right-0 transform -translate-y-1/2 z-0">
         <Image
-          src="/decor.png"
+          src="/images/decor.png"
           alt="Decorative right"
           width={100}
           height={200}
@@ -42,13 +42,13 @@ export default function Testimonial() {
       <div className="relative max-w-2xl mx-auto p-6 text-center bg-transparent">
         <div className="relative w-20 h-20 mx-auto mb-6">
           <Image
-            src="/Author.png"
+            src="/images/Author.png"
             alt="Pollock Austin"
             fill
             className="rounded-full object-cover"
           />
           <Image
-            src="/quote.png"
+            src="/images/quote.png"
             alt="Quote"
             width={40}
             height={40}

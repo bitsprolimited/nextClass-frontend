@@ -8,7 +8,7 @@ function AboutSection(): React.JSX.Element {
     <section className="w-full h-full bg-[#2509790a] flex justify-center items-center py-36">
       <div className="flex flex-col md:flex-row items-center justify-center gap-12 max-w-7xl h-full w-full">
         <div
-          style={{ backgroundImage: "url('/about-section.png')" }}
+          style={{ backgroundImage: "url('/images/about-section.png')" }}
           className="h-[570px] max-w-[460px] w-full bg-cover bg-center flex items-end justify-center"
         >
           <Button className="mb-10 bg-secondary hover:bg-primary rounded-full h-auto py-2 px-10">
@@ -47,7 +47,7 @@ function AboutSection(): React.JSX.Element {
             </CardContent>
           </Card>
           <Image
-            src="/shape.png"
+            src="/images/shape.png"
             alt="Decorative right"
             width={100}
             height={200}
