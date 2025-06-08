@@ -26,62 +26,62 @@ export const navItems = [
 export const HERO_IMAGES = [
   {
     id: 1,
-    src: "/hero-img1.png",
+    src: "/images/hero-img1.png",
     alt: "",
   },
   {
     id: 2,
-    src: "/hero-img2.png",
+    src: "/images/hero-img2.png",
     alt: "",
   },
   {
     id: 3,
-    src: "/hero-bg1.png",
+    src: "/images/hero-bg1.png",
     alt: "",
   },
   {
     id: 4,
-    src: "/hero-img7.png",
+    src: "/images/hero-img7.png",
     alt: "",
   },
   {
     id: 5,
-    src: "/hero-img8.png",
+    src: "/images/hero-img8.png",
     alt: "",
   },
   {
     id: 6,
-    src: "/hero-bg1.png",
+    src: "/images/hero-bg1.png",
     alt: "",
   },
   {
     id: 7,
-    src: "/hero-img3.png",
+    src: "/images/hero-img3.png",
     alt: "",
   },
   {
     id: 8,
-    src: "/hero-img4.png",
+    src: "/images/hero-img4.png",
     alt: "",
   },
   {
     id: 9,
-    src: "/hero-bg1.png",
+    src: "/images/hero-bg1.png",
     alt: "",
   },
   {
     id: 10,
-    src: "/hero-img5.png",
+    src: "/images/hero-img5.png",
     alt: "",
   },
   {
     id: 11,
-    src: "/hero-img6.png",
+    src: "/images/hero-img6.png",
     alt: "",
   },
   {
     id: 12,
-    src: "/hero-bg2.png",
+    src: "/images/hero-bg2.png",
     alt: "",
   },
 ];
@@ -153,7 +153,7 @@ export const tutors = [
     name: "Ryan Patterson",
     course: "Math",
     price: "$50",
-    image: "/tutor-1.png",
+    image: "/images/tutor-1.png",
     duration: "8hrs",
     lectures: "20",
   },
@@ -162,7 +162,7 @@ export const tutors = [
     name: "Ryan Patterson",
     course: "Math",
     price: "$50",
-    image: "/tutor-2.png",
+    image: "/images/tutor-2.png",
     duration: "8hrs",
     lectures: "20",
   },
@@ -171,7 +171,7 @@ export const tutors = [
     name: "Ryan Patterson",
     course: "Math",
     price: "$50",
-    image: "/tutor-3.png",
+    image: "/images/tutor-3.png",
     duration: "8hrs",
     lectures: "20",
   },
@@ -179,7 +179,7 @@ export const tutors = [
 
 export const STEPS = {
   parents: {
-    img: "/parent-how-it-works.png",
+    img: "/images/parent-how-it-works.png",
     steps: [
       {
         title: "Sign up",
@@ -208,7 +208,7 @@ export const STEPS = {
     ],
   },
   tutors: {
-    img: "/tutor-how-it-works.png",
+    img: "/images/tutor-how-it-works.png",
     steps: [
       {
         title: "Sign up",

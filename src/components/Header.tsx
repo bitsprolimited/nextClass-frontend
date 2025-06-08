@@ -26,7 +26,7 @@ function Header(): React.JSX.Element {
       <div className="w-full max-w-4xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           <Image
-            src="/logo.png"
+            src="/images/logo.png"
             alt="Next class Logo"
             width={100}
             height={24}

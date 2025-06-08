@@ -8,7 +8,7 @@ export default function Footer() {
       <footer className="relative bg-[#0027A5] text-white pt-12 pb-6 px-10 md:px-20 overflow-hidden">
         {/* Watermark Logo */}
         <Image
-          src="/logo-background.png"
+          src="/images/logo-background.png"
           alt="Background Logo"
           width={128}
           height={128}
@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Logo & Description */}
           <div className="mr-20">
             <Image
-              src="/footerLogo.png"
+              src="/images/logo-white.png"
               alt="NextClass Logo"
               height="156"
               width="267"

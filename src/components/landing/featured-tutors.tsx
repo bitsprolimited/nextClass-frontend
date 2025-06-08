@@ -65,7 +65,7 @@ function FeaturedTutors(): React.JSX.Element {
             <Image
               width={100}
               height={100}
-              src="/book-img.png"
+              src="/images/book-img.png"
               alt=""
               className="place-self-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             />
