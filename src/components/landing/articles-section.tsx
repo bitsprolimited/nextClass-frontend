@@ -21,7 +21,7 @@ const ArticleCard = ({
   article: ArticleData;
 }): React.JSX.Element => {
   return (
-    <Card className="group hover:bg-primary w-full max-w-[380px] bg-[#f8f6f4] rounded-none shadow-none transition-colors">
+    <Card className="group hover:bg-primary w-full max-w-[380px] bg-background3 rounded-none shadow-none transition-colors">
       <CardContent className="px-10 py-20 relative">
         <div className="flex items-center justify-between gap-8">
           <p className="w-20 h-20 flex flex-col items-center justify-center bg-primary rounded-sm group-hover:bg-white ease-in-out transition-all">
@@ -70,7 +70,7 @@ function ArticlesSection(): React.JSX.Element {
             <Image
               width={100}
               height={100}
-              src="/book-img.png"
+              src="/images/book-img.png"
               alt=""
               className="place-self-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             />
@@ -81,8 +81,8 @@ function ArticlesSection(): React.JSX.Element {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {ARTICLES.map((article) => (
-            <ArticleCard key={article.title} article={article} />
+          {ARTICLES.map((article, index) => (
+            <ArticleCard key={index} article={article} />
           ))}
         </div>
       </div>

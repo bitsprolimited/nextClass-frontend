@@ -3,8 +3,7 @@
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
+  NavigationMenuList
 } from "@/components/ui/navigation-menu";
 import { navItems } from "@/lib/constants";
 import Image from "next/image";
@@ -24,7 +23,7 @@ function Header(): React.JSX.Element {
       <div className="w-full max-w-4xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           <Image
-            src="/logo.png"
+            src="/images/logo.png"
             alt="Next class Logo"
             width={100}
             height={24}
@@ -34,14 +33,14 @@ function Header(): React.JSX.Element {
           <NavigationMenuList className="gap-10 flex items-center">
             {navItems.map((item) => (
               <NavigationMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
-                  <NavigationMenuLink
+                <Link href={item.href} passHref>
+                  <span
                     className={`px-0 hover:text-secondary group inline-flex h-9 w-max items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all ${
                       pathname === item.href ? "text-secondary font-bold" : ""
                     }`}
                   >
                     {item.label}
-                  </NavigationMenuLink>
+                  </span>
                 </Link>
               </NavigationMenuItem>
             ))}
