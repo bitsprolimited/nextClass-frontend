@@ -18,7 +18,9 @@ function Header(): React.JSX.Element {
   return (
     <header
       className={`${
-        pathname === "/" ? "absolute top-0 w-full shadow bg-white/80 backdrop-blur-md" : ""
+        pathname === "/"
+          ? "absolute top-0 w-full shadow bg-white/80 backdrop-blur-md"
+          : ""
       } flex items-center justify-between px-4 py-8`}
     >
       <div className="w-full max-w-4xl mx-auto flex items-center justify-between">
@@ -48,9 +50,11 @@ function Header(): React.JSX.Element {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <Button className="font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
-          Login
-        </Button>
+        <Link href="/login" passHref>
+          <Button className="font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
+            Login
+          </Button>
+        </Link>
       </div>
     </header>
   );
