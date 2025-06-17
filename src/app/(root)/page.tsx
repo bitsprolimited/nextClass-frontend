@@ -10,7 +10,7 @@ import Testimonial from "@/components/landing/testimonials";
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center">
+    <main className="flex flex-col items-center">
       <HeroSection />
       <Features />
       <AboutSection />
@@ -20,6 +20,6 @@ export default function Page() {
       <ArticlesSection />
       <ComingSoon />
       <SubscribeNewsletter />
-    </div>
+    </main>
   );
 }

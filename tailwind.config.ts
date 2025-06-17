@@ -11,11 +11,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        background2: "hsl(var(--background2))",
         abbey: "hsl(var(--abbey))",
         zeus: "hsl(var(--zeus))",
         pampas: "hsl(var(--pampas))",
         background: "hsl(var(--background))",
+        background2: "hsl(var(--background-2))",
+        background3: "hsl(var(--background-3))",
         foreground: "hsl(var(--foreground))",
         card: {
           DEFAULT: "hsl(var(--card))",

@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ComingSoon() {
   return (
-    <section className="relative w-60% mt-6 bg-[#FFA300] text-white overflow-hidden py-20 px-6 md:px-20">
+    <section className="relative w-full max-w-7xl mx-auto mt-6 bg-[#FFA300] text-white overflow-hidden py-20 px-6 md:px-20">
       {/* Top‐right decorative graphic */}
       <div className="hidden md:block absolute top-16 right-16 transform translate-x-1/4 -translate-y-1/4 z-0">
         <Image
@@ -17,7 +17,7 @@ export default function ComingSoon() {
       </div>
 
       {/* Bottom‐left decorative graphic */}
-      <div className="hidden md:block absolute bottom-0 left-0 transform -translate-x-1/4 translate-y-1/4 z-0">
+      <div className="hidden md:block absolute bottom-0 left-0 transform z-0">
         <Image
           src="/DecorativeBottom.png"
           alt="Decorative bottom left"
