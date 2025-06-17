@@ -197,7 +197,7 @@ export default function ParentSignup() {
                   onChange={() => setConfirmAge(!confirmAge)}
                   className="accent-orange-500"
                 />
-                I confirm that I'm 18 years of age or older
+                I confirm that I&apos;m 18 years of age or older
               </label>
             </div>
 

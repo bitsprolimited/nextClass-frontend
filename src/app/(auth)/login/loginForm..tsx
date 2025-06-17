@@ -1,15 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { FaGoogle } from "react-icons/fa6";
-import { FaApple } from "react-icons/fa";
-import ComingSoonWide from "@/components/landing/comingSoonWide";
 import { JSX } from "react";
+import { useForm } from "react-hook-form";
+import { FaApple } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa6";
+import { z } from "zod";
 
 const formSchema = z.object({
   email: z.string().email("Enter a valid email"),

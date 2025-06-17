@@ -1,4 +1,4 @@
-import { useState } from "react";
+import PasswordMeter from "@/components/auth/passwordMeter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,9 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import PasswordMeter from "@/components/auth/passwordMeter";
+import { useState } from "react";
 import { FaApple, FaGoogle } from "react-icons/fa";
-import { Link } from "lucide-react";
 
 const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
 
@@ -154,7 +153,7 @@ export default function TutorSignupForm() {
                   onChange={() => setConfirmAge(!confirmAge)}
                   className="accent-orange-500"
                 />
-                I confirm that I'm 18 years of age or older
+                I confirm that I&apos;m 18 years of age or older
               </label>
             </div>
 
