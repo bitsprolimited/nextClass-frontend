@@ -21,8 +21,8 @@ export default function ComingSoon() {
         <Image
           src="/DecorativeBottom.png"
           alt="Decorative bottom left"
-          width={180}
-          height={180}
+          width={189}
+          height={280}
           className="opacity-90"
         />
       </div>
