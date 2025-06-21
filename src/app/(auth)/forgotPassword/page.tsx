@@ -1,18 +1,18 @@
 import React from "react";
-import { LoginForm } from "./loginForm.";
+
 import ComingSoonWide from "@/components/landing/comingSoonWide";
 import Footer from "@/components/footer";
 import Header from "@/components/Header";
-import HeroLogin from "./heroSectionLogin";
+
+import ForgotPasswordForm from "./forgotPasswordForm";
+import HeroForgot from "./heroForgot";
 
 function Login() {
   return (
-    <main className="">
+    <main className=" ">
       <Header />
-      <HeroLogin />
-      <div className="flex justify-center items-center w-full py-10">
-        <LoginForm />
-      </div>
+      <HeroForgot />
+      <ForgotPasswordForm />
       <ComingSoonWide />
       <Footer />
     </main>
