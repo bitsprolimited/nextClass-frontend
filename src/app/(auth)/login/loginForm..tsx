@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { FaApple } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
 import { z } from "zod";
+import { useRouter } from "next/navigation"; // ✅ import router
 
 const formSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -18,6 +19,8 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function LoginForm(): JSX.Element {
+  const router = useRouter(); // ✅ initialize router
+
   const {
     register,
     handleSubmit,
@@ -28,7 +31,12 @@ export function LoginForm(): JSX.Element {
 
   const onSubmit = async (data: FormSchema) => {
     console.log(data);
-    // handle login logic
+
+    // Normally you would verify login here.
+    // For now, simulate login success and redirect:
+    setTimeout(() => {
+      router.push("/tutorDashboard"); // ✅ redirect to dashboard
+    }, 1000);
   };
 
   return (
@@ -65,7 +73,8 @@ export function LoginForm(): JSX.Element {
               </p>
             )}
             <Link
-              href="/forgot-password"
+              href="/forgotPassword"
+              passHref
               className="text-blue-800 text-sm float-right mt-2 block"
             >
               Forgot Password?
@@ -85,7 +94,7 @@ export function LoginForm(): JSX.Element {
         </p>
 
         <div className="flex gap-4 justify-center mt-4">
-          <Button className="g-blue-900 text-white rounded-full px-6 py-3 flex items-center gap-2 shadow border">
+          <Button className="bg-blue-900 text-white rounded-full px-6 py-3 flex items-center gap-2 shadow border">
             <FaGoogle className="w-5 h-5" />
             Sign Up With Google
           </Button>
