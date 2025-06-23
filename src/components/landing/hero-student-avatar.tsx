@@ -7,22 +7,22 @@ const HERO_STUDENT_AVATARS = [
   {
     id: 1,
     alt: "Student Avatar",
-    src: "/hero-avatar-1.png",
+    src: "/images/hero-avatar-1.png",
   },
   {
     id: 2,
     alt: "Student Avatar",
-    src: "/hero-avatar-2.png",
+    src: "/images/hero-avatar-2.png",
   },
   {
     id: 3,
     alt: "Student Avatar",
-    src: "/hero-avatar-3.png",
+    src: "/images/hero-avatar-3.png",
   },
   {
     id: 4,
     alt: "Student Avatar",
-    src: "/hero-avatar-4.png",
+    src: "/images/hero-avatar-4.png",
   },
 ];
 

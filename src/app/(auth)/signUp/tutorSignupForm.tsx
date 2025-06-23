@@ -1,169 +1,251 @@
+"use client";
+
 import PasswordMeter from "@/components/auth/passwordMeter";
+import VerifyEmailAlert from "@/components/auth/verify-email-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useState } from "react";
+import { tutorSignup } from "@/services/auth.service";
+import { AuthResponse, AxioErrorResponse } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import Link from "next/link";
+import { JSX, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaApple, FaGoogle } from "react-icons/fa";
+import { toast } from "sonner";
+import { z } from "zod";
 
-const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
-
-export default function TutorSignupForm() {
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    country: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
+const tutorSignupFormSchema = z
+  .object({
+    fullName: z.string().min(2, "Full name must be at least 2 characters"),
+    email: z.string().email("Enter a valid email"),
+    phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+    agreeTerms: z.boolean().refine((val) => val, "You must agree to the terms"),
+    confirmAge: z
+      .boolean()
+      .refine((val) => val, "You must confirm you are 18 or older"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
   });
 
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [confirmAge, setConfirmAge] = useState(false);
+export type TutorSignupFormSchema = z.infer<typeof tutorSignupFormSchema>;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+export default function TutorSignupForm(): JSX.Element {
+  const [open, setOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<TutorSignupFormSchema>({
+    resolver: zodResolver(tutorSignupFormSchema),
+    mode: "all",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
+      agreeTerms: false,
+      confirmAge: false,
+    },
+  });
+
+  const password = watch("password");
+
+  const { mutate, isPending } = useMutation<
+    AuthResponse,
+    AxiosError<AxioErrorResponse>,
+    TutorSignupFormSchema
+  >({
+    mutationKey: ["tutorSignup"],
+    mutationFn: tutorSignup,
+    onSuccess: async () => {
+      toast("Signup successful", {
+        className: "bg-[#F5F4F8] text-[#031D95]",
+        duration: 5000,
+      });
+      setOpen(true);
+    },
+    onError: (error) => {
+      console.error("Signup failed:", error);
+      toast("Signup failed", {
+        className: "bg-[#F5F4F8] text-[#031D95]",
+        description: error.response?.data.message,
+        duration: 5000,
+      });
+    },
+  });
+
+  const onSubmit = async (data: TutorSignupFormSchema) => {
+    mutate(data);
   };
 
   return (
     <div className="flex flex-col items-end w-[70%] mx-auto">
-      <a href="/parentSignup">
+      <Link href="/parentSignup">
         <Button className="mb-4 bg-[#F5F4F8] text-[20px] text-[#031D95] px-4 py-3 rounded-full">
           Sign up as a parent
         </Button>
-      </a>
+      </Link>
 
       <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-2 md:px-4 lg:px-6 flex justify-center items-center">
         <div className="w-full max-w-2xl">
-          <form className="mt-8 space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             <div className="w-[70%] mx-auto space-y-5">
-              <h2 className=" text-2xl font-semibold">
-                Tutors’ <span className="text-[#FFA300]">Registration</span>
+              <h2 className="text-2xl font-semibold">
+                Tutors&apos;{" "}
+                <span className="text-[#FFA300]">Registration</span>
               </h2>
-              <Input
-                type="text"
-                placeholder="Full Name"
-                name="fullName"
-                value={form.fullName}
-                onChange={handleChange}
-              />
-              <Input
-                type="email"
-                placeholder="Email Address"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-              />
 
-              <Select
-                value={form.country}
-                onValueChange={(val) =>
-                  setForm((prev) => ({ ...prev, country: val }))
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Country" />
-                </SelectTrigger>
-                <SelectContent>
-                  {countries.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div>
+                <Input
+                  type="text"
+                  placeholder="Full Name"
+                  {...register("fullName")}
+                />
+                {errors.fullName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.fullName.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Input
+                  type="email"
+                  placeholder="Email Address"
+                  {...register("email")}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
               <div className="relative">
                 <div className="space-y-5">
                   {/* Phone Input with Country Code */}
-                  <div className="flex gap-2">
-                    <div className="w-[80px]">
+                  <div>
+                    <div className="flex gap-2">
+                      <div className="w-[80px]">
+                        <Input
+                          type="text"
+                          value="+234"
+                          disabled
+                          className="text-center"
+                        />
+                      </div>
                       <Input
-                        type="text"
-                        value="+234"
-                        disabled
-                        className="text-center"
+                        type="tel"
+                        placeholder="0xxxxxxxxx00"
+                        {...register("phoneNumber")}
                       />
                     </div>
-                    <Input
-                      type="tel"
-                      placeholder="0xxxxxxxxx00"
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleChange}
-                    />
+                    {errors.phoneNumber && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.phoneNumber.message}
+                      </p>
+                    )}
                   </div>
 
                   {/* Password Fields + Floating Meter */}
+                  <div>
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      {...register("password")}
+                    />
+                    {errors.password && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.password.message}
+                      </p>
+                    )}
+                  </div>
 
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    type="password"
-                    placeholder="Confirm Password"
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                  />
+                  <div>
+                    <Input
+                      type="password"
+                      placeholder="Confirm Password"
+                      {...register("confirmPassword")}
+                    />
+                    {errors.confirmPassword && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Floating password meter to the right */}
                 <div className="absolute top-[-5] left-full ml-4 w-[320px]">
-                  <PasswordMeter password={form.password} />
+                  <PasswordMeter password={password || ""} />
                 </div>
               </div>
             </div>
 
             {/* Checkboxes */}
             <div className="space-y-3 text-sm">
-              <label className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  checked={agreeTerms}
-                  onChange={() => setAgreeTerms(!agreeTerms)}
-                  className="accent-orange-500 mt-1"
-                />
-                <span>
-                  By clicking Create Account or Sign Up with Google or Apple,
-                  you agree to our{" "}
-                  <a href="#" className="text-blue-500 underline">
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-blue-500 underline">
-                    Privacy Policy
-                  </a>
-                  .
-                </span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={confirmAge}
-                  onChange={() => setConfirmAge(!confirmAge)}
-                  className="accent-orange-500"
-                />
-                I confirm that I&apos;m 18 years of age or older
-              </label>
+              <div>
+                <label className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    {...register("agreeTerms")}
+                    className="accent-orange-500 mt-1"
+                  />
+                  <span>
+                    By clicking Create Account or Sign Up with Google or Apple,
+                    you agree to our{" "}
+                    <a href="#" className="text-blue-500 underline">
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a href="#" className="text-blue-500 underline">
+                      Privacy Policy
+                    </a>
+                    .
+                  </span>
+                </label>
+                {errors.agreeTerms && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.agreeTerms.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    {...register("confirmAge")}
+                    className="accent-orange-500"
+                  />
+                  I confirm that I&apos;m 18 years of age or older
+                </label>
+                {errors.confirmAge && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.confirmAge.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Submit Button */}
             <div className="w-[70%] mx-auto flex justify-center">
               <Button
                 type="submit"
-                className="w-full bg-[#FFA300] hover:bg-gray-800 rounded-full py-6 text-white text-base"
+                disabled={isSubmitting || isPending}
+                className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white text-base disabled:opacity-50"
               >
-                Create An Account
+                {isSubmitting || isPending
+                  ? "Creating Account..."
+                  : "Create An Account"}
               </Button>
             </div>
 
@@ -173,25 +255,34 @@ export default function TutorSignupForm() {
 
             {/* Google/Apple Buttons */}
             <div className="flex gap-4 justify-center mt-4">
-              <Button className="g-blue-900 text-white rounded-full px-6 py-4 flex items-center gap-2 shadow border">
+              <Button
+                type="button"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow border"
+              >
                 <FaGoogle className="w-5 h-5" />
                 Sign Up With Google
               </Button>
-              <Button className="bg-blue-900 text-white rounded-full px-6 py-4 flex items-center gap-2 shadow">
+              <Button
+                type="button"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow"
+              >
                 <FaApple className="w-5 h-5" />
                 Sign Up With Apple
               </Button>
             </div>
           </form>
+
           <div className="my-6 border-t border-gray-800 w-[60%] mx-auto" />
+
           <p className="mt-8 text-center text-sm">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-600 underline">
+            <Link href="/login" className="text-blue-600 underline">
               Login
-            </a>
+            </Link>
           </p>
         </div>
       </section>
+      <VerifyEmailAlert open={open} onOpenChange={setOpen} />
     </div>
   );
 }

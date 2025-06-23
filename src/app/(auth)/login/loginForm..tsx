@@ -9,34 +9,59 @@ import { useForm } from "react-hook-form";
 import { FaApple } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
 import { z } from "zod";
-import { useRouter } from "next/navigation"; // ✅ import router
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/services/auth.service";
+import { createSession } from "@/services/session";
+import { LoginResponse } from "@/types";
 
-const formSchema = z.object({
+const loginFormSchema = z.object({
   email: z.string().email("Enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-type FormSchema = z.infer<typeof formSchema>;
+export type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
 export function LoginForm(): JSX.Element {
-  const router = useRouter(); // ✅ initialize router
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
+  } = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormSchema),
+    mode: "all",
   });
 
-  const onSubmit = async (data: FormSchema) => {
-    console.log(data);
+  const { mutate, isPending } = useMutation<
+    LoginResponse,
+    Error,
+    LoginFormSchema
+  >({
+    mutationKey: ["login"],
+    mutationFn: login,
+    onSuccess: async (data) => {
+      await createSession({
+        user: {
+          id: data.user.id,
+          fullName: data.user.fullName,
+          role: data.user.role,
+          email: data.user.email,
+          isEmailVerified: data.user.isEmailVerified,
+        },
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      });
 
-    // Normally you would verify login here.
-    // For now, simulate login success and redirect:
-    setTimeout(() => {
-      router.push("/tutorDashboard"); // ✅ redirect to dashboard
-    }, 1000);
+      if (data.user.role === "parent") {
+        router.push("/parentDashboard");
+      }
+      router.push("/tutorDashboard");
+    },
+  });
+
+  const onSubmit = async (data: LoginFormSchema) => {
+    mutate(data);
   };
 
   return (
@@ -85,7 +110,9 @@ export function LoginForm(): JSX.Element {
             type="submit"
             className="w-full bg-[#FFA300] hover:bg-gray-800 rounded-full py-6 text-white"
           >
-            {isSubmitting ? "Logging in..." : "Login To My Account"}
+            {isSubmitting || isPending
+              ? "Logging in..."
+              : "Login To My Account"}
           </Button>
         </form>
 
@@ -107,7 +134,7 @@ export function LoginForm(): JSX.Element {
         <div className="my-6 border-t border-black w-[60%] mx-auto" />
 
         <p className="text-center text-sm text-gray-600">
-          Don’t have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signUp" className="text-blue-700 font-medium">
             Create an Account
           </Link>
