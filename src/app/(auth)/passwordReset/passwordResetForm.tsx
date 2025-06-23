@@ -5,6 +5,7 @@ import PasswordMeter from "@/components/auth/passwordMeter";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 const PasswordResetForm = () => {
   const [password, setPassword] = useState("");
@@ -83,12 +84,14 @@ const PasswordResetForm = () => {
               className="mx-auto mb-6"
             />
 
-            <Button
-              className="bg-[#FFA300] text-white py-6 rounded-full hover:bg-gray-800 w-full"
-              onClick={() => setShowPopup(false)}
-            >
-              Back To Dashboard
-            </Button>
+            <Link href="/parentsDashboard">
+              <Button
+                className="bg-[#FFA300] text-white py-6 rounded-full hover:bg-gray-800 w-full"
+                onClick={() => setShowPopup(false)}
+              >
+                Back To Dashboard
+              </Button>
+            </Link>
           </div>
         </div>
       )}
