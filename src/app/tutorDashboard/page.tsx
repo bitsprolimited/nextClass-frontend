@@ -5,7 +5,7 @@ import Footer from "@/components/footer";
 
 import Dashboard from "./Dashboard";
 
-function Login() {
+function Page() {
   return (
     <main className="min-h-screen flex flex-col items-center ">
       <Dashboard />
@@ -16,4 +16,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Page;

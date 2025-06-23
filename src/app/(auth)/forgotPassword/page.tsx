@@ -9,7 +9,7 @@ import HeroForgot from "./heroForgot";
 
 function Login() {
   return (
-    <main className=" ">
+    <main>
       <Header />
       <HeroForgot />
       <ForgotPasswordForm />
