@@ -10,21 +10,21 @@ const testimonials = [
     title: "Designer, Mother of 4",
     message:
       "NextClass has really my children to be able to prioritise his time better via their scheduling and prompt classes. the tutors are also very friendly and impactful. I must say that overall, NextClass has been of immense benefit to my children. Cheers guys!!",
-    image: "/Author.png",
+    image: "/images/Author.png",
   },
   {
     name: "Samuel Obasi",
-    title: "Product Designer",
+    title: "/images/Product Designer",
     message:
       "“This platform gave me clarity and confidence. The experience was smooth and rewarding. Highly recommended!”",
-    image: "/Author.png",
+    image: "/images/Author.png",
   },
   {
     name: "Chidinma Glory",
     title: "Frontend Developer",
     message:
       "“The mentorship sessions were a turning point for me. I feel more equipped to take on tech challenges now.”",
-    image: "/Author.png",
+    image: "/images/Author.png",
   },
 ];
 
@@ -70,9 +70,9 @@ export default function Testimonial() {
         <Image
           width={100}
           height={100}
-          src="/book-img.png"
+          src="/images/book-img.png"
           alt=""
-          className="place-self-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          className="h-full place-self-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         />
         <p className="text-sm uppercase tracking-widest text-orange-500 mb-2">
           Happy Students

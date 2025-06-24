@@ -30,7 +30,7 @@ function HeroLogin() {
                       <BreadcrumbLink href="/">Home</BreadcrumbLink>
                     </BreadcrumbItem>
                     <span aria-hidden="true" className="px-2 text-gray-500">
-                      /
+                      {"//"}
                     </span>
                     <BreadcrumbItem>
                       <BreadcrumbPage className="text-secondary">

@@ -18,7 +18,7 @@ export default function Page() {
       <HowItWorksSection />
       <Testimonial />
       <ArticlesSection />
-      <ComingSoon />
+      <ComingSoon className="max-w-7xl mx-auto"/>
       <SubscribeNewsletter />
     </main>
   );

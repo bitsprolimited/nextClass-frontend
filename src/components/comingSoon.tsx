@@ -1,14 +1,20 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-export default function ComingSoon() {
+export default function ComingSoon({ className }: { className?: string }) {
   return (
-    <section className="relative w-full max-w-7xl mx-auto mt-6 bg-[#FFA300] text-white overflow-hidden py-20 px-6 md:px-20">
+    <section
+      className={cn(
+        "relative w-full flex items-center bg-[#FFA300] text-white overflow-hidden py-20 px-6 md:px-20",
+        className
+      )}
+    >
       {/* Top‐right decorative graphic */}
       <div className="hidden md:block absolute top-16 right-16 transform translate-x-1/4 -translate-y-1/4 z-0">
         <Image
-          src="/DecorativeTop.png"
+          src="/images/DecorativeTop.png"
           alt="Decorative top right"
           width={149}
           height={248}
@@ -19,7 +25,7 @@ export default function ComingSoon() {
       {/* Bottom‐left decorative graphic */}
       <div className="hidden md:block absolute bottom-0 left-0 transform z-0">
         <Image
-          src="/DecorativeBottom.png"
+          src="/images/DecorativeBottom.png"
           alt="Decorative bottom left"
           width={189}
           height={280}
@@ -44,7 +50,7 @@ export default function ComingSoon() {
           <div className="w-[180px] h-[65px] bg-white rounded-lg shadow-lg flex items-center justify-center">
             <a href="#" target="_blank" rel="noopener noreferrer">
               <Image
-                src="/Play Store.png"
+                src="/images/Play Store.png"
                 alt="Get it on Google Play"
                 width={150}
                 height={45}
@@ -56,7 +62,7 @@ export default function ComingSoon() {
           <div className="w-[180px] h-[65px] bg-white rounded-lg shadow-md flex items-center justify-center">
             <a href="#" target="_blank" rel="noopener noreferrer">
               <Image
-                src="/App Store.png"
+                src="/images/App Store.png"
                 alt="Get it on Google Play"
                 width={150}
                 height={45}
