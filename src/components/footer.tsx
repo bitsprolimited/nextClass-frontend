@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Logo & Description */}
           <div className="mr-20">
             <Image
-              src="/footerLogo.png"
+              src="/images/footerLogo.png"
               alt="NextClass Logo"
               height="156"
               width="267"

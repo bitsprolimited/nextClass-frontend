@@ -54,9 +54,10 @@ export function LoginForm(): JSX.Element {
       });
 
       if (data.user.role === "parent") {
-        router.push("/parentDashboard");
+        router.push("/dashboard/parent");
+        return;
       }
-      router.push("/tutorDashboard");
+      router.push("/dashboad/tutor");
     },
   });
 
@@ -135,7 +136,7 @@ export function LoginForm(): JSX.Element {
 
         <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/signUp" className="text-blue-700 font-medium">
+          <Link href="/signup" className="text-blue-700 font-medium">
             Create an Account
           </Link>
         </p>

@@ -8,7 +8,7 @@ import {
 import Image from "next/image";
 import React from "react";
 
-function HeroReset() {
+function HeroForgot() {
   return (
     <section className="bg-[#f3f3f3] w-full">
       <div className="container mx-auto h-full w-full relative">
@@ -24,7 +24,7 @@ function HeroReset() {
             <div className="flex justify-center items-center h-full w-full">
               <div className="flex flex-col items-start mx-auto">
                 <h1 className="text-[58px] font-medium text-zeus">
-                  Reset Password
+                  Forgot Password
                 </h1>
                 <Breadcrumb>
                   <BreadcrumbList>
@@ -33,17 +33,17 @@ function HeroReset() {
                     </BreadcrumbItem>
 
                     <span aria-hidden="true" className="px-2 text-gray-500">
-                      &quot;//&quot;
+                      {"//"}
                     </span>
                     <BreadcrumbItem>
                       <BreadcrumbLink href="/"> Login</BreadcrumbLink>
                     </BreadcrumbItem>
                     <span aria-hidden="true" className="px-2 text-gray-500">
-                      &quot;//&quot;
+                      {"//"}
                     </span>
                     <BreadcrumbItem>
                       <BreadcrumbPage className="text-secondary">
-                        Reset Password
+                        Forgot Password
                       </BreadcrumbPage>
                     </BreadcrumbItem>
                   </BreadcrumbList>
@@ -66,4 +66,4 @@ function HeroReset() {
   );
 }
 
-export default HeroReset;
+export default HeroForgot;

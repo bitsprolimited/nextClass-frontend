@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   BookOpen,
@@ -7,18 +6,17 @@ import {
   Clock,
   Pencil,
 } from "lucide-react";
-import { MdOutlineCalendarMonth } from "react-icons/md";
+import Image from "next/image";
 import { FiWatch } from "react-icons/fi";
 import { IoBookOutline } from "react-icons/io5";
+import { MdOutlineCalendarMonth } from "react-icons/md";
 
 import AlertRotator from "@/components/alerts/AlertRotator";
 import DashboardTabs from "@/components/tutors/DashboardTabs";
-import Header from "@/components/Header";
 
 export default function Dashboard() {
   return (
     <>
-      <Header />
       <div className=" min-h-screen p-6 sm:p-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">

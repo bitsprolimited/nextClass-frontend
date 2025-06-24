@@ -1,6 +1,6 @@
-import { LoginFormSchema } from "@/app/(auth)/login/loginForm.";
-import { ParentSignupFormSchema } from "@/app/(auth)/parentSignup/parentSignup";
-import { TutorSignupFormSchema } from "@/app/(auth)/signUp/tutorSignupForm";
+import { LoginFormSchema } from "@/app/(auth)/login/loginForm";
+import { ParentSignupFormSchema } from "@/app/(auth)/signup/parentSignup";
+import { TutorSignupFormSchema } from "@/app/(auth)/signup/tutor/tutorSignupForm";
 import axiosInstance from "@/lib/axios";
 import { AuthResponse, LoginResponse, ParentSignupRequest } from "@/types";
 
@@ -38,9 +38,6 @@ export const parentSignup = async (
     role: "parent" as const,
   };
 
-  const response = await axiosInstance.post(
-    "/auth/register",
-    signupData
-  );
+  const response = await axiosInstance.post("/auth/register", signupData);
   return response.data;
 };
