@@ -10,12 +10,8 @@ function Page() {
   return (
     <main className="min-h-screen w-full flex flex-col items-center ">
       <div className="w-[80%]">
-        <Header />
         <Dashboard />
       </div>
-
-      <ComingSoonWide />
-      <Footer />
     </main>
   );
 }
