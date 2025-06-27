@@ -33,13 +33,13 @@ function HeroReset() {
                     </BreadcrumbItem>
 
                     <span aria-hidden="true" className="px-2 text-gray-500">
-                      /
+                      {"//"}
                     </span>
                     <BreadcrumbItem>
                       <BreadcrumbLink href="/"> Login</BreadcrumbLink>
                     </BreadcrumbItem>
                     <span aria-hidden="true" className="px-2 text-gray-500">
-                      /
+                      {"//"}
                     </span>
                     <BreadcrumbItem>
                       <BreadcrumbPage className="text-secondary">

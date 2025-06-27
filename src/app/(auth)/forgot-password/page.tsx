@@ -1,9 +1,8 @@
-import React from "react";
 
-import ComingSoonWide from "@/components/landing/comingSoonWide";
 import Footer from "@/components/footer";
 import Header from "@/components/Header";
 
+import ComingSoon from "@/components/comingSoon";
 import ForgotPasswordForm from "./forgotPasswordForm";
 import HeroForgot from "./heroForgot";
 
@@ -13,7 +12,7 @@ function Login() {
       <Header />
       <HeroForgot />
       <ForgotPasswordForm />
-      <ComingSoonWide />
+      <ComingSoon />
       <Footer />
     </main>
   );

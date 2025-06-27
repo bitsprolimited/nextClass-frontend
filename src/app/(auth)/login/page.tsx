@@ -1,9 +1,8 @@
-import React from "react";
-import { LoginForm } from "./loginForm.";
-import ComingSoonWide from "@/components/landing/comingSoonWide";
+import ComingSoon from "@/components/comingSoon";
 import Footer from "@/components/footer";
 import Header from "@/components/Header";
 import HeroLogin from "./heroSectionLogin";
+import { LoginForm } from "./loginForm";
 
 function Login() {
   return (
@@ -13,7 +12,7 @@ function Login() {
       <div className="flex justify-center items-center w-full py-10">
         <LoginForm />
       </div>
-      <ComingSoonWide />
+      <ComingSoon />
       <Footer />
     </main>
   );

@@ -3,8 +3,17 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   env: {
-    // update to your API endpoint
-    NEXT_PUBLIC_API_BASE_URL: "http://localhost:3000",
+    NEXT_PUBLIC_API_BASE_URL: "http://localhost:5500/api/v1",
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.hashnode.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

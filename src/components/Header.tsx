@@ -1,26 +1,28 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuList
+  NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { useSession } from "@/hooks/useSession";
 import { navItems } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { Button } from "./ui/button";
 
 function Header(): React.JSX.Element {
   const pathname = usePathname();
+  const { data: session, error } = useSession();
   return (
     <header
       className={`${
         pathname === "/"
-          ? "absolute top-0 w-full shadow bg-white/80 backdrop-blur-md"
+          ? "absolute top-0 w-full shadow bg-white/80 backdrop-blur-md z-50"
           : ""
-      } flex items-center justify-between px-4 py-8`}
+      } flex items-center justify-between px-4 py-8 w-full`}
     >
       <div className="w-full max-w-4xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
@@ -29,6 +31,7 @@ function Header(): React.JSX.Element {
             alt="Next class Logo"
             width={100}
             height={24}
+            className="h-full w-full object-cover"
           />
         </div>
         <NavigationMenu className="mx-auto">
@@ -49,11 +52,22 @@ function Header(): React.JSX.Element {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <Link href="/login" passHref>
-          <Button className="font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
-            Login
-          </Button>
-        </Link>
+        {!session || error ? (
+          <Link href="/login">
+            <Button className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
+              Login
+            </Button>
+          </Link>
+        ) : (
+          <a href={"/api/auth/signout"}>
+            <Button
+              className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full"
+              variant="outline"
+            >
+              Logout
+            </Button>
+          </a>
+        )}
       </div>
     </header>
   );

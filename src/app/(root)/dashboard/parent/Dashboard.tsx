@@ -20,7 +20,7 @@ const classData = [
     subject: "Mathematics",
   },
   {
-    image: "/images/tutor-4.png",
+    image: "/images/tutor-2.png",
     title: "Elements of UI/UX",
     date: "Mon, May 26",
     time: "9:00am - 9:30",
