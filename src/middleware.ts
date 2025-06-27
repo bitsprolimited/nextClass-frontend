@@ -1,7 +1,8 @@
 import { getSession } from "@/services/session";
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
+// const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
+const protectedRoutes: string[] = [];
 const publicRoutes = ["/login", "/signup", "/forgot-password"];
 
 export default async function middleware(req: NextRequest) {

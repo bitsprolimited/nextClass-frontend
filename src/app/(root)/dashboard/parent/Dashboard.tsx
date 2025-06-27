@@ -3,15 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock } from "lucide-react";
-import { MdOutlineCalendarMonth } from "react-icons/md";
-import { IoBookOutline } from "react-icons/io5";
-
+import { BookOpenIcon, Calendar, CalendarIcon, ClockIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import FeaturedTutors from "@/components/landing/featured-tutors";
 import TutorList from "@/components/tutors/tutor-list";
 
 import AddLearnerModal from "@/components/modals/AddLearnerModal";
+import RecentlyCalledTutors from "@/components/parents/recentlyCalledTutors";
 
 const classData = [
   {
@@ -50,7 +47,6 @@ export default function Dashboard() {
           View Calendar
         </Button>
       </div>
-
       {/* Alert Banner */}
       <div className="bg-[#F6EFE9] rounded-xl flex flex-col lg:flex-row items-center justify-between px-6 py-5 shadow-sm">
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2 text-sm">
@@ -73,9 +69,9 @@ export default function Dashboard() {
       </div>
 
       {/* Main Dashboard Content */}
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col lg:flex-row gap-6 bg-[#f8f6f4]">
         {/* Upcoming Class */}
-        <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-md w-full max-w-6xl mx-auto">
+        <div className=" p-6 sm:p-10 rounded-2xl shadow-md w-full max-w-6xl mx-auto">
           <Tabs defaultValue="history" className="w-full">
             {/* Tabs Header */}
             <TabsList className="flex gap-10  pb-2 mb-6 border-gray-200 bg-transparent">
@@ -94,58 +90,84 @@ export default function Dashboard() {
             </TabsList>
 
             {/* Tabs Content */}
-            <TabsContent value="history" className="divide-y divide-gray-200">
+            <TabsContent value="history" className="space-y-10">
               {classData.map((item, index) => (
-                <div key={index} className="py-8 first:pt-0">
-                  <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                    <div className="flex items-center gap-6 w-full">
-                      <div className="w-[90px] h-[90px] rounded-xl overflow-hidden border">
-                        <Image
-                          src={item.image}
-                          alt="Class"
-                          width={90}
-                          height={90}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
+                <div
+                  key={index}
+                  className={`flex w-full max-w-[852px] items-start justify-between gap-6 mx-auto ${
+                    index > 0 ? "pt-10 border-t border-[#031d9547]" : ""
+                  }`}
+                >
+                  {/* Class Image */}
+                  <div className="relative w-36 h-36 rounded-[10px] border border-[#ada1a1] overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt="Class"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
 
-                      <div className="flex-1 pl-6">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">
-                          {item.title}
-                        </h3>
-                        <div className=" flex flex-col sm:flex-row gap-10 text-sm text-gray-800">
-                          <div className="flex flex-col items-center text-center">
-                            <MdOutlineCalendarMonth className="text-[24px] mb-1" />
-                            <span className="text-[24px]">{item.date}</span>
-                            <span className=" text-lg text-gray-500 mt-1">
-                              {item.time}
-                            </span>
-                          </div>
+                  {/* Class Content */}
+                  <div className="flex flex-col items-end justify-center gap-[22px] w-full">
+                    <h2 className="text-[32px] font-medium text-[#2c241b] leading-normal font-['Montserrat'] flex items-start">
+                      {item.title}
+                    </h2>
 
-                          <div className="hidden sm:block w-px bg-gray-300 h-10 self-center" />
-
-                          <div className="flex flex-col items-center text-center">
-                            <Clock className=" mb-1" />
-                            <span className="text-[24px]">{item.duration}</span>
-                          </div>
-
-                          <div className="hidden sm:block w-px bg-gray-300 h-10 self-center" />
-
-                          <div className="flex flex-col items-center text-center">
-                            <IoBookOutline className=" text-[24px] mb-1" />
-                            <span className=" text-[24px]">{item.subject}</span>
-                          </div>
-                        </div>
-                        <div className="flex justify-center gap-4 mt-4">
-                          <Button className="bg-white text-red-500 hover:bg-[#FFA300] rounded-full px-6 py-4 text-sm font-medium">
-                            Cancel Class
-                          </Button>
-
-                          <Button className="bg-[#031D95] text-white rounded-full px-6 py-4 text-sm font-medium">
-                            Reschedule Class
-                          </Button>
+                    <div className="flex flex-wrap items-start justify-between gap-6 w-full max-w-[656px]">
+                      {/* Date */}
+                      <div className="flex flex-col gap-3 items-start">
+                        <CalendarIcon className="w-6 h-6 text-[#2c241b]" />
+                        <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-['Montserrat']">
+                          {item.date}
+                          <br />
+                          <span className="text-xl text-[#2c241b99]">
+                            {item.time}
+                          </span>
                         </div>
                       </div>
+
+                      <div className="hidden sm:block text-[64px] leading-none opacity-20 text-[#2c241b]">
+                        |
+                      </div>
+
+                      {/* Duration */}
+                      <div className="flex flex-col gap-3 items-start">
+                        <ClockIcon className="w-6 h-6 text-[#2c241b]" />
+                        <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-['Montserrat'] whitespace-nowrap">
+                          {item.duration}
+                        </div>
+                      </div>
+
+                      <div className="hidden sm:block text-[64px] leading-none opacity-20 text-[#2c241b]">
+                        |
+                      </div>
+
+                      {/* Subject */}
+                      <div className="flex flex-col gap-3 items-start">
+                        <BookOpenIcon className="w-6 h-6 text-[#2c241b]" />
+                        <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-['Montserrat'] whitespace-nowrap">
+                          {item.subject}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex items-start gap-[22px]">
+                      <Button
+                        variant="ghost"
+                        className="px-10 py-0 h-auto rounded-full"
+                      >
+                        <span className="text-[#d43838] text-[16px] font-medium leading-[55px] whitespace-nowrap">
+                          Cancel Class
+                        </span>
+                      </Button>
+
+                      <Button className="px-10 py-0 h-auto bg-[#031d95] rounded-full">
+                        <span className="text-white text-[16px] font-medium leading-[55px] whitespace-nowrap">
+                          Reschedule Class
+                        </span>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -155,7 +177,7 @@ export default function Dashboard() {
         </div>
 
         {/* Student List */}
-        <div className="w-full rounded-2xl shadow-md p-6 bg-white lg:max-w-[270px] flex flex-col justify-between">
+        <div className="w-full rounded-2xl shadow-md p-6 bg-[#f8f6f4]  lg:max-w-[360px] flex flex-col justify-between">
           <div className="space-y-4">
             {[
               {
@@ -217,7 +239,7 @@ export default function Dashboard() {
 
       {/* Tabs */}
       <div className="pt-10">
-        <FeaturedTutors />
+        <RecentlyCalledTutors />
         <TutorList />
       </div>
       {/* Modal component at the bottom of the page */}

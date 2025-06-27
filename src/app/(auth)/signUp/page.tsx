@@ -1,12 +1,11 @@
-
 import ComingSoon from "@/components/comingSoon";
 import Footer from "@/components/footer";
-import ParentSignup from "./parentSignup";
+import ParentSignupForm from "./parentSignup";
 
 function Login() {
   return (
     <main className="min-h-screen flex flex-col items-center ">
-      <ParentSignup />
+      <ParentSignupForm />
       <ComingSoon />
       <Footer />
     </main>
