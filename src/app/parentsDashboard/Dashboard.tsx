@@ -3,22 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  BookOpenIcon,
-  Calendar,
-  CalendarIcon,
-  Clock,
-  ClockIcon,
-} from "lucide-react";
-import { MdOutlineCalendarMonth } from "react-icons/md";
-import { IoBookOutline } from "react-icons/io5";
-
+import { BookOpenIcon, Calendar, CalendarIcon, ClockIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
-import FeaturedTutors from "@/components/landing/featured-tutors";
 import TutorList from "@/components/tutors/tutor-list";
 
 import AddLearnerModal from "@/components/modals/AddLearnerModal";
-import Upcoming from "@/components/parents/upcoming";
 import RecentlyCalledTutors from "@/components/parents/recentlyCalledTutors";
 
 const classData = [
