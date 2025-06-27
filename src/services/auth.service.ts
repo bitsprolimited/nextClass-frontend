@@ -2,7 +2,14 @@ import { LoginFormSchema } from "@/app/(auth)/login/loginForm";
 import { ParentSignupFormSchema } from "@/app/(auth)/signup/parentSignup";
 import { TutorSignupFormSchema } from "@/app/(auth)/signup/tutor/tutorSignupForm";
 import axiosInstance from "@/lib/axios";
-import { AuthResponse, LoginResponse, ParentSignupRequest } from "@/types";
+import {
+  AuthResponse,
+  ForgotPasswordResponse,
+  LoginResponse,
+  ParentSignupRequest,
+  ResendVerificationResponse,
+  VerificationResponse,
+} from "@/types";
 
 export const login = async (data: LoginFormSchema): Promise<LoginResponse> => {
   const response = await axiosInstance.post("/auth/login", data);
@@ -39,5 +46,50 @@ export const parentSignup = async (
   };
 
   const response = await axiosInstance.post("/auth/register", signupData);
+  return response.data;
+};
+
+export const verifyEmail = async (
+  token: string
+): Promise<VerificationResponse> => {
+  const response = await axiosInstance.get(`/auth/verify-email?token=${token}`);
+
+  return response.data;
+};
+
+export const resendVerificationEmail = async (
+  email: string
+): Promise<ResendVerificationResponse> => {
+  const response = await axiosInstance.post(`/auth/resend-verification`, {
+    email,
+  });
+
+  return response.data;
+};
+
+export const forgotPassword = async ({
+  email,
+}: {
+  email: string;
+}): Promise<ForgotPasswordResponse> => {
+  const response = await axiosInstance.post(`/auth/forgot-password`, {
+    email,
+  });
+
+  return response.data;
+};
+
+export const resetPassword = async ({
+  password,
+  token,
+}: {
+  password: string;
+  token: string;
+}) => {
+  const response = await axiosInstance.post(`/auth/reset-password`, {
+    newPassword: password,
+    token,
+  });
+
   return response.data;
 };
