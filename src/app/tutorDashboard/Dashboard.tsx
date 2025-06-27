@@ -16,7 +16,7 @@ import DashboardTabs from "@/components/tutors/DashboardTabs";
 
 export default function Dashboard() {
   return (
-    <div className=" min-h-screen p-6 sm:p-10">
+    <div className=" min-h-screen py-6 sm:p-10">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
@@ -142,8 +142,9 @@ export default function Dashboard() {
             </p>
             <div className="w-24 h-24 rounded-lg overflow-hidden border">
               <Image
-                src="https://cdn.hashnode.com/res/hashnode/image/upload/v1750369585211/a76b742d-4d91-4816-b17f-5c09eb3f3246.png"
+                src="/images/tutor-3"
                 alt="Class"
+                fill
                 className="object-cover w-full h-full"
               />
             </div>
