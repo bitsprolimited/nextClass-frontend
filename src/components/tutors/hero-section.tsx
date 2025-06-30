@@ -1,4 +1,5 @@
-import Image from "next/image";
+import React from "react";
+import ReusableHeroSection from "../ReusableHeroSection";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,54 +8,35 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import React from "react";
 
 function HeroSection(): React.JSX.Element {
   return (
-    <section className="bg-[#f3f3f3] w-full">
-      <div className="container mx-auto h-full w-full relative">
-        <Image
-          src="/images/tutor-saly-17.png"
-          alt="Decorative"
-          width={500}
-          height={500}
-          className="absolute top-0 left-0"
-        />
-        <div className="relative h-full w-full">
-          <div className="flex items-center justify-between gap-10 h-full w-full overflow-hidden">
-            <div className="flex justify-center items-center h-full w-full">
-              <div className="flex flex-col items-start mx-auto">
-                <h1 className="text-[58px] font-medium text-zeus">
-                  All Tutors
-                </h1>
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem>
-                      <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage className="text-secondary">
-                        All Tutors
-                      </BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </div>
-            </div>
-            <div className="w-full h-full max-w-[450px] relative -bottom-20">
-              <Image
-                src="/images/tutor-saly-16.png"
-                alt="Decorative"
-                width={700}
-                height={700}
-                className="object-cover w-full h-full"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <ReusableHeroSection
+      img={{
+        primary: { src: "/images/tutor-saly-16.png" },
+        secondary: {
+          src: "/images/tutor-saly-17.png",
+          className: "top-0 left-0",
+        },
+      }}
+      heading="All Tutors"
+      breadcrumb={
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>{"//"}</BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-secondary">
+                All Tutors
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      }
+      bgColor="bg-[#f3f3f3]"
+    />
   );
 }
 

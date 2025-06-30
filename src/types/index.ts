@@ -42,6 +42,21 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface VerificationResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ResendVerificationResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface SessionData {
   user: User;
   accessToken: string;

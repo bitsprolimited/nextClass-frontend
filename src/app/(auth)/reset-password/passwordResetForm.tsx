@@ -1,25 +1,109 @@
 "use client";
 
-import { useState } from "react";
 import PasswordMeter from "@/components/auth/passwordMeter";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { resetPassword } from "@/services/auth.service";
+import { AxioErrorResponse, ForgotPasswordResponse } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { JSX, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-const PasswordResetForm = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+const passwordResetFormSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export type PasswordResetFormSchema = z.infer<typeof passwordResetFormSchema>;
+
+const PasswordResetForm = ({
+  token,
+}: {
+  token: string | string[] | undefined;
+}): JSX.Element => {
   const [showPopup, setShowPopup] = useState(false);
-  // const [email, setEmail] = useState("demo@mailinator.com"); // or however you're getting the email
+  const router = useRouter();
 
-  const handleContinue = () => {
-    if (password && confirmPassword && password === confirmPassword) {
-      setShowPopup(true);
-    } else {
-      alert("Passwords must match and not be empty.");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<PasswordResetFormSchema>({
+    resolver: zodResolver(passwordResetFormSchema),
+    mode: "all",
+  });
+
+  const password = watch("password", "");
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/forgot-password");
     }
+  }, [router, token]);
+
+  const { mutate, isPending } = useMutation<
+    ForgotPasswordResponse,
+    AxiosError<AxioErrorResponse>,
+    { password: string; token: string }
+  >({
+    mutationKey: ["reset-password"],
+    mutationFn: resetPassword,
+    onSuccess: () => {
+      setShowPopup(true);
+      toast.success("Password reset successfully!", {
+        duration: 3000,
+      });
+    },
+    onError: (error) => {
+      console.error("Failed to reset password:", error);
+      toast.error("Failed to reset password", {
+        description: error.response?.data.message || "Please try again later",
+        duration: 5000,
+      });
+    },
+  });
+
+  const onSubmit = async (data: PasswordResetFormSchema) => {
+    if (!token) {
+      alert("Invalid or expired reset token");
+      return;
+    }
+
+    mutate({
+      password: data.password,
+      token: token as string,
+    });
   };
+
+  // Show loading or redirect if no token
+  if (!token) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center my-5 relative">
@@ -33,27 +117,46 @@ const PasswordResetForm = () => {
             easy-to-remember
           </p>
 
-          <div className="space-y-4 text-left">
-            <Input
-              type="password"
-              placeholder="Input Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Input
-              type="password"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-4 text-left">
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Input Password"
+                  {...register("password")}
+                  autoComplete="new-password"
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
 
-          <Button
-            className="mt-6 w-full bg-[#FFA300] text-white font-semibold py-3 rounded-full hover:bg-[#e69500] transition duration-300"
-            onClick={handleContinue}
-          >
-            Create New Password
-          </Button>
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Confirm New Password"
+                  {...register("confirmPassword")}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="mt-6 w-full bg-[#FFA300] text-white font-semibold py-3 rounded-full hover:bg-[#e69500] transition duration-300"
+              disabled={isSubmitting || isPending}
+            >
+              {isSubmitting || isPending
+                ? "Creating New Password..."
+                : "Create New Password"}
+            </Button>
+          </form>
         </div>
 
         {/* PasswordMeter floats beside the form */}
@@ -68,9 +171,9 @@ const PasswordResetForm = () => {
           <div className="bg-white rounded-xl p-6 sm:p-10 w-full max-w-[90vw] md:max-w-[600px] xl:max-w-[700px] text-center shadow-xl relative">
             <h2 className="text-xl font-semibold mb-4">
               Password Changed
-              <span className="text-[#FFA300]">Successfully </span>
+              <span className="text-[#FFA300]"> Successfully</span>
             </h2>
-            <p className="text-gray-700 text-sm mb-6 ">
+            <p className="text-gray-700 text-sm mb-6">
               You have successfully reset your password. You will be
               automatically redirected to the Login page to input your correct
               details.
@@ -78,18 +181,18 @@ const PasswordResetForm = () => {
 
             <Image
               src="/images/image-164.png"
-              alt="Mailbox"
+              alt="Success"
               width={350}
               height={250}
               className="mx-auto mb-6"
             />
 
-            <Link href="/parentsDashboard">
+            <Link href="/login">
               <Button
-                className="bg-[#FFA300] text-white py-6 rounded-full hover:bg-gray-800 w-full"
+                className="bg-[#FFA300] text-white py-6 rounded-full hover:bg-[#e69500] w-full"
                 onClick={() => setShowPopup(false)}
               >
-                Back To Dashboard
+                Go to Login
               </Button>
             </Link>
           </div>

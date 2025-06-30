@@ -1,16 +1,13 @@
-"use client";
-
-import { useState } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { BookOpenIcon, Calendar, CalendarIcon, ClockIcon } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
 import TutorList from "@/components/tutors/tutor-list";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { BookOpenIcon, Calendar, CalendarIcon, ClockIcon } from "lucide-react";
+import Image from "next/image";
 
-import AddLearnerModal from "@/components/modals/AddLearnerModal";
 import RecentlyCalledTutors from "@/components/parents/recentlyCalledTutors";
 import { Profile } from "./profile/Profile";
 import Link from "next/link";
+import LearnersList from "@/components/parents/LearnersList";
 
 const classData = [
   {
@@ -32,13 +29,12 @@ const classData = [
 ];
 
 export default function Dashboard() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#F8F7FC] px-4 lg:px-60 py-10 space-y-20">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-[48px] font-bold text-[#2C1E1E] leading-tight">
+          <h1 className="text-[48px] font-medium text-[#2C1E1E] tracking-normal font-aeroTrial">
             My Dashboard
           </h1>
           <p className="text-[#544E4E] text-lg mt-1">
@@ -182,64 +178,7 @@ export default function Dashboard() {
         </div>
 
         {/* Student List */}
-        <div className="w-full rounded-2xl shadow-md p-6 bg-[#f8f6f4]  lg:max-w-[360px] flex flex-col justify-between">
-          <div className="space-y-4">
-            {[
-              {
-                name: "Layzee WokHad",
-                age: "7yrs",
-                grade: "Grade 7",
-                bg: "bg-green-700",
-                avatar: "/images/avatar-1.png", // optional: avatar or emoji
-              },
-              {
-                name: "Layzee WokHad",
-                age: "3yrs",
-                grade: "Grade 2",
-                bg: "bg-purple-700",
-                avatar: "/images/avatar-2.png",
-              },
-            ].map((student, i) => (
-              <div
-                key={i}
-                className={`text-white p-4 rounded-xl flex items-center justify-between ${student.bg}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black font-bold text-sm">
-                    👧
-                  </div>
-                  <div>
-                    <p className="font-semibold text-base leading-tight">
-                      {student.name}
-                    </p>
-                    <p className="text-sm">
-                      {student.age} {student.grade}
-                    </p>
-                  </div>
-                </div>
-                <button className="text-white text-xl font-bold leading-none">
-                  ⋮
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Add Learner Section */}
-          <div className="mt-10">
-            <h3 className="text-[#FFA300] text-xl font-semibold leading-tight">
-              Add another <br /> Learner today
-            </h3>
-            <p className="text-sm text-black mt-2">
-              What are you learning today?
-            </p>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="mt-4 w-full border border-[#031D95] text-[#031D95] rounded-full px-4 py-3 text-sm font-medium hover:bg-[#031D95] hover:text-white transition"
-            >
-              Add a Learner +
-            </button>
-          </div>
-        </div>
+        <LearnersList />
       </div>
       <Profile />
 
@@ -248,8 +187,6 @@ export default function Dashboard() {
         <RecentlyCalledTutors />
         <TutorList />
       </div>
-      {/* Modal component at the bottom of the page */}
-      <AddLearnerModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
     </div>
   );
 }

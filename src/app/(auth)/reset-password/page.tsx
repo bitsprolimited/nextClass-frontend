@@ -3,15 +3,20 @@ import Footer from "@/components/footer";
 import HeroReset from "./heroReset";
 import PasswordResetForm from "./passwordResetForm";
 
-function Login() {
+async function ResetPassword({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { token } = await searchParams;
   return (
     <main className="min-h-screen flex flex-col items-center ">
       <HeroReset />
-      <PasswordResetForm />
+      <PasswordResetForm token={token} />
       <ComingSoon />
       <Footer />
     </main>
   );
 }
 
-export default Login;
+export default ResetPassword;

@@ -156,21 +156,23 @@ export const TUTORS = [
 
 function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
   return (
-    <Card className="max-w-[400px] bg-white rounded-[10px] p-4 border-none">
-      <div className="w-[120px] h-[120px] mx-auto">
+    <Card className="relative max-w-[400px] hover:bg-primary bg-white rounded-[10px] p-4 border-none group">
+      <div className="w-[120px] h-[120px] mx-auto absolute  left-1/2 -top-[60px] -translate-x-1/2">
         <Avatar className="w-full h-full shadow-[0px_4px_4px_#00000040]">
           <AvatarImage src={tutorData.image} />
           <AvatarFallback>{tutorData.name.charAt(0)}</AvatarFallback>
         </Avatar>
       </div>
-      <CardContent className="flex flex-col gap-4 mt-4">
+      <CardContent className="flex flex-col gap-4 mt-4 pt-10">
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2">
             <span className="font-medium text-2xl text-zeus">🇳🇬</span>
-            <h2 className="font-medium text-2xl text-zeus">{tutorData.name}</h2>
+            <h2 className="font-medium text-2xl text-zeus group-hover:text-white">
+              {tutorData.name}
+            </h2>
           </div>
           <div className="flex items-center gap-1">
-            <p className="text-zeus text-[10px] font-medium">
+            <p className="text-zeus text-[10px] font-medium group-hover:text-gray-200">
               {tutorData.rating}
             </p>
             <div className="flex items-center gap-1">
@@ -181,19 +183,22 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
                 />
               ))}
             </div>
-            <p className="opacity-50 text-zeus text-[10px]">
+            <p className="opacity-50 text-zeus text-[10px] group-hover:text-gray-200">
               ({tutorData.reviewCount})
             </p>
           </div>
         </div>
         <div className="flex justify-between flex-wrap gap-2">
           {tutorData.badges.map((badge, index) => (
-            <Badge key={index} className={`${badge.color} textsm`}>
+            <Badge
+              key={index}
+              className={`${badge.color} text-xs group-hover:bg-white`}
+            >
               {badge.text}
             </Badge>
           ))}
         </div>
-        <div className="w-full">
+        <div className="w-full group-hover:hidden">
           <ul className="flex flex-wrap justify-between gap-[8px_20px]">
             {tutorData.details.map((detail, index) => (
               <li key={index} className="flex items-center gap-3">
@@ -202,6 +207,14 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="group-hover:flex hidden justify-center gap-2 mt-10">
+          <Button className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2">
+            View Profile
+          </Button>
+          <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
+            Schedule a Meeting
+          </Button>
         </div>
       </CardContent>
     </Card>
