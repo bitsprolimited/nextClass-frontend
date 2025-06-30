@@ -9,6 +9,8 @@ import TutorList from "@/components/tutors/tutor-list";
 
 import AddLearnerModal from "@/components/modals/AddLearnerModal";
 import RecentlyCalledTutors from "@/components/parents/recentlyCalledTutors";
+import { Profile } from "./profile/Profile";
+import Link from "next/link";
 
 const classData = [
   {
@@ -43,9 +45,12 @@ export default function Dashboard() {
             Are you ready to teach today?
           </p>
         </div>
-        <Button className="bg-[#031D95] text-white rounded-full px-8 py-3 text-base font-medium">
-          View Calendar
-        </Button>
+
+        <Link href="/dashboard/parent/profile" passHref>
+          <Button className="bg-[#031D95] text-white rounded-full px-8 py-3 text-base font-medium">
+            View Calendar
+          </Button>
+        </Link>
       </div>
       {/* Alert Banner */}
       <div className="bg-[#F6EFE9] rounded-xl flex flex-col lg:flex-row items-center justify-between px-6 py-5 shadow-sm">
@@ -236,6 +241,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <Profile />
 
       {/* Tabs */}
       <div className="pt-10">
