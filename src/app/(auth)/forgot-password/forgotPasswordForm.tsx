@@ -74,7 +74,7 @@ const ForgotPasswordForm = (): JSX.Element => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-[20px]">
+    <div className="bg-white flex items-center justify-center px-4 py-[60px]">
       <div className="bg-[#F5F4F8] w-full max-w-5xl py-[60px] px-40 text-center mx-auto">
         <h2 className="text-2xl sm:text-[28px] font-semibold text-[#2C1E1E] mb-2">
           Input Your Registered <span className="text-[#FFA300]">Email</span>

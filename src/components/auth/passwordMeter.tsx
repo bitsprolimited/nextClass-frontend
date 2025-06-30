@@ -8,11 +8,11 @@ interface PasswordMeterProps {
 }
 
 const rules = {
-  minLength: /.{6,}/g,
-  hasNumber: /[0-9]/g,
-  hasSpecialChar: /[#?!@$%^&*-]/g,
-  hasLowercase: /[a-z]/g,
-  hasUppercase: /[A-Z]/g,
+  minLength: /.{6,}/,
+  hasNumber: /[0-9]/,
+  hasSpecialChar: /[#?!@$%^&*-]/,
+  hasLowercase: /[a-z]/,
+  hasUppercase: /[A-Z]/,
 };
 
 const PasswordMeter: React.FC<PasswordMeterProps> = ({ password }) => {
@@ -26,30 +26,35 @@ const PasswordMeter: React.FC<PasswordMeterProps> = ({ password }) => {
           label: "Poor Strength",
           color: "text-red-500",
           bar: "bg-red-400",
+          border: "border-red-400",
         };
       case 2:
         return {
           label: "Fair Strength",
           color: "text-yellow-500",
           bar: "bg-yellow-400",
+          border: "border-yellow-400",
         };
       case 3:
         return {
           label: "Good Strength",
           color: "text-blue-500",
           bar: "bg-blue-500",
+          border: "border-blue-500",
         };
       case 4:
         return {
           label: "Strong Password",
           color: "text-green-600",
           bar: "bg-green-500",
+          border: "border-green-500",
         };
       default:
         return {
           label: "Poor Strength",
           color: "text-red-500",
           bar: "bg-red-400",
+          border: "border-red-400",
         };
     }
   };
@@ -57,12 +62,14 @@ const PasswordMeter: React.FC<PasswordMeterProps> = ({ password }) => {
   const level = getStrengthLabel(score);
 
   return (
-    <div className="rounded-xl shadow p-4 bg-white border border-gray-200 max-w-lg">
+    <div className="rounded-xl shadow p-4 bg-white border border-gray-200 max-w-md w-full">
       <p className="text-sm font-medium text-gray-800 mb-1">
         Password Strength
       </p>
 
-      <div className="w-[60%] h-[2px] bg-[#FFD4D4] rounded overflow-hidden mb-1">
+      <div
+        className={`w-[60%] h-[4px] bg-[#FFD4D4] border ${level.border} rounded overflow-hidden mb-1`}
+      >
         <div
           className={`${level.bar} h-full transition-all duration-300`}
           style={{ width: `${(score / 4) * 100}%` }}
@@ -111,15 +118,15 @@ interface RuleProps {
 }
 
 const Rule: React.FC<RuleProps> = ({ label, isValid, hint = "" }) => (
-  <div className="flex items-start gap-1.5">
+  <div className="flex items-center gap-1.5 w-full">
     <span
-      className={`text-lg leading-[1] ${
+      className={`text-lg ${
         isValid ? "text-green-600" : "text-gray-800"
       }`}
     >
       •
     </span>
-    <span className="leading-snug">
+    <span>
       <span className={`${isValid ? "text-green-600 font-semibold" : ""}`}>
         {label}
       </span>{" "}

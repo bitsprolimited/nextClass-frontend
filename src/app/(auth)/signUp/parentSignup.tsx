@@ -141,8 +141,8 @@ export default function ParentSignupForm(): JSX.Element {
 
   return (
     <div className="flex flex-col items-end w-[70%] mx-auto">
-      <Link href="/tutorSignup">
-        <Button className="mb-4 bg-[#F5F4F8] text-[20px] text-[#031D95] px-4 py-3 rounded-full">
+      <Link href="/signup/tutor" className="my-4">
+        <Button className="bg-[#F5F4F8] text-[20px] text-[#031D95] px-4 py-3 rounded-full">
           Sign up as a tutor
         </Button>
       </Link>
@@ -150,7 +150,7 @@ export default function ParentSignupForm(): JSX.Element {
       <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-2 md:px-4 lg:px-6 flex justify-center items-center">
         <div className="w-full max-w-2xl">
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-            <div className="w-[70%] mx-auto space-y-5">
+            <div className="w-[70%] mx-auto space-y-5 relative">
               <h2 className="text-2xl font-semibold">
                 Parents&apos;{" "}
                 <span className="text-[#FFA300]">Registration</span>
@@ -158,6 +158,7 @@ export default function ParentSignupForm(): JSX.Element {
 
               <div>
                 <Input
+                  className="py-4 pl-5 h-auto"
                   type="text"
                   placeholder="Full Name"
                   {...register("fullName")}
@@ -171,6 +172,7 @@ export default function ParentSignupForm(): JSX.Element {
 
               <div>
                 <Input
+                  className="py-4 pl-5 h-auto"
                   type="email"
                   placeholder="Email Address"
                   {...register("email")}
@@ -189,7 +191,7 @@ export default function ParentSignupForm(): JSX.Element {
                   control={control}
                   render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-full bg-white py-4 pl-5 h-auto">
                         <SelectValue placeholder="Select Country" />
                       </SelectTrigger>
                       <SelectContent>
@@ -221,7 +223,7 @@ export default function ParentSignupForm(): JSX.Element {
                         onValueChange={field.onChange}
                         disabled={!selectedCountry}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full bg-white py-4 pl-5 h-auto">
                           <SelectValue placeholder="Select State" />
                         </SelectTrigger>
                         <SelectContent>
@@ -252,7 +254,7 @@ export default function ParentSignupForm(): JSX.Element {
                         onValueChange={field.onChange}
                         disabled={!selectedState}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full bg-white py-4 pl-5 h-auto">
                           <SelectValue placeholder="Select City" />
                         </SelectTrigger>
                         <SelectContent>
@@ -276,6 +278,7 @@ export default function ParentSignupForm(): JSX.Element {
               {/* Street Address */}
               <div>
                 <Input
+                  className="py-4 pl-5 h-auto"
                   type="text"
                   placeholder="Street Address"
                   {...register("street")}
@@ -292,13 +295,14 @@ export default function ParentSignupForm(): JSX.Element {
                 <div className="flex gap-2">
                   <div className="w-[80px]">
                     <Input
+                      className="py-4 text-center h-auto"
                       type="text"
                       value="+234"
                       disabled
-                      className="text-center"
                     />
                   </div>
                   <Input
+                    className="py-4 pl-5 h-auto"
                     type="tel"
                     placeholder="0xxxxxxxxx00"
                     {...register("phone")}
@@ -311,40 +315,39 @@ export default function ParentSignupForm(): JSX.Element {
                 )}
               </div>
 
-              {/* Password Fields + Floating Meter */}
-              <div className="relative">
-                <div className="space-y-5">
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Password"
-                      {...register("password")}
-                    />
-                    {errors.password && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.password.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Confirm Password"
-                      {...register("confirmPassword")}
-                    />
-                    {errors.confirmPassword && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
+              <div className="space-y-5">
+                <div>
+                  <Input
+                    className="py-4 pl-5 h-auto"
+                    type="password"
+                    placeholder="Password"
+                    {...register("password")}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
 
-                {/* Floating password meter to the right */}
-                <div className="absolute top-0 left-full ml-4 w-[320px]">
-                  <PasswordMeter password={password || ""} />
+                <div>
+                  <Input
+                    className="py-4 pl-5 h-auto"
+                    type="password"
+                    placeholder="Confirm Password"
+                    {...register("confirmPassword")}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
                 </div>
+              </div>
+
+              {/* Floating password meter to the right */}
+              <div className="absolute left-full ml-5 top-1/2 w-full">
+                <PasswordMeter password={password || ""} />
               </div>
             </div>
 
