@@ -1,0 +1,117 @@
+"use client";
+import Image from "next/image";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Users,
+  Clock,
+  DollarSign,
+  PlayCircle,
+} from "lucide-react";
+import { JSX } from "react";
+import LearnersSection from "@/components/parents/learnersSection";
+import LessonNotesSection from "@/components/parents/lessonNotesSection";
+
+export const Profile = (): JSX.Element => {
+  return (
+    <div className="flex flex-col gap-8 items-center py-10">
+      {/* Top Section */}
+      <div className="flex flex-col md:flex-row items-center gap-10 w-full max-w-6xl">
+        {/* Profile Image */}
+        <div className="flex flex-col items-center">
+          <Image
+            src="/images/ryan.png" // Make sure this matches your image path
+            alt="Ryan Patterson"
+            width={496}
+            height={496}
+            className="rounded-full  object-cover"
+          />
+          <p className="text-green-600 font-semibold mt-2">ONLINE</p>
+        </div>
+
+        {/* Info Card */}
+        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow w-full">
+          <div className="flex justify-between items-center">
+            <span className="bg-[#031d95] text-white text-sm px-4 py-1 rounded-md font-medium">
+              Parent
+            </span>
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 text-2xl md:text-3xl font-semibold text-[#2c241b]">
+            <Image
+              src="/images/USA.png"
+              alt="US Flag"
+              className="inline-block rounded-sm"
+              width={68}
+              height={32}
+            />
+            <h1 className="font-aero">Ryan Patterson</h1>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-8 mt-8 text-[#2c241b]">
+            <div className="flex flex-col gap-2">
+              <Clock className="w-5 h-5" />
+              <span>55 classes Attended</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <DollarSign className="w-5 h-5" />
+              <span>$980 paid</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Users className="w-5 h-5" />
+              <span>4 Learners</span>
+            </div>
+            <div className="flex flex-col gap-2 text-green-700">
+              <PlayCircle className="w-5 h-5" />
+              <span>1 Ongoing Class</span>
+            </div>
+            <div className="flex flex-col gap-2 col-span-2">
+              <MapPin className="w-5 h-5 text-[#292D32]" />
+              <span>15, Frank Sinatra Drive, LA</span>
+            </div>
+          </div>
+
+          <div className="text-right text-sm text-[#031d9580] font-medium mt-6">
+            JOINED 29, MAY 2025
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Info */}
+      <div className="w-full max-w-6xl mt-8 p-6 flex flex-wrap gap-6 justify-center md:justify-between">
+        {/* Phone */}
+        <div className="flex items-center gap-4">
+          <div className="bg-[#4c76ff45] border border-[#4c75ff] p-4 rounded-lg">
+            <Phone className="w-[34px] h-[34px]" />
+          </div>
+          <p className="text-[#292d32] font-medium text-lg">+1 234 567 890</p>
+        </div>
+
+        {/* Email */}
+        <div className="flex items-center gap-4">
+          <div className="bg-[#4cff9a45] border border-[#4cff99] p-4 rounded-lg">
+            <Mail className="w-[34px] h-[34px]" color="#039536" />
+          </div>
+          <p className="text-[#292d32] font-medium text-lg">
+            patterson@xyzmail.com
+          </p>
+        </div>
+
+        {/* Location */}
+        <div className="flex items-center gap-4">
+          <div className="bg-[#ff4cff45] border border-[#ff4cff] p-4 rounded-lg">
+            <MapPin className="w-[34px] h-[34px]" color="#8B0395" />
+          </div>
+          <p className="text-[#2c241b] font-medium text-lg">
+            15, Frank Sinatra Drive, LA
+          </p>
+        </div>
+      </div>
+      {/* Divider */}
+      <hr className="w-full max-w-6xl border-t border-gray-300 my-8" />
+      <LearnersSection />
+      <LessonNotesSection />
+    </div>
+  );
+};

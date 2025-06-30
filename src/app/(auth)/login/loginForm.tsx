@@ -99,7 +99,7 @@ export function LoginForm(): JSX.Element {
               </p>
             )}
             <Link
-              href="/forgotPassword"
+              href="/forgot-password"
               passHref
               className="text-blue-800 text-sm float-right mt-2 block"
             >
