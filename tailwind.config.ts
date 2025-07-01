@@ -10,6 +10,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        aeroTrial: ["var(--font-aero-trial)"],
+        studioSans: ["var(--font-studio-sans)"],
+      },
       colors: {
         abbey: "hsl(var(--abbey))",
         zeus: "hsl(var(--zeus))",

@@ -88,8 +88,8 @@ export default function TutorSignupForm(): JSX.Element {
 
   return (
     <div className="flex flex-col items-end w-[70%] mx-auto">
-      <Link href="/parentSignup">
-        <Button className="mb-4 bg-[#F5F4F8] text-[20px] text-[#031D95] px-4 py-3 rounded-full">
+      <Link href="/signup" className="my-4">
+        <Button className="bg-[#F5F4F8] text-[20px] text-[#031D95] px-4 py-3 rounded-full">
           Sign up as a parent
         </Button>
       </Link>
@@ -97,7 +97,7 @@ export default function TutorSignupForm(): JSX.Element {
       <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-2 md:px-4 lg:px-6 flex justify-center items-center">
         <div className="w-full max-w-2xl">
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-            <div className="w-[70%] mx-auto space-y-5">
+            <div className="w-[70%] mx-auto space-y-5 relative">
               <h2 className="text-2xl font-semibold">
                 Tutors&apos;{" "}
                 <span className="text-[#FFA300]">Registration</span>
@@ -105,6 +105,7 @@ export default function TutorSignupForm(): JSX.Element {
 
               <div>
                 <Input
+                  className="h-auto py-4 pl-5"
                   type="text"
                   placeholder="Full Name"
                   {...register("fullName")}
@@ -118,6 +119,7 @@ export default function TutorSignupForm(): JSX.Element {
 
               <div>
                 <Input
+                  className="h-auto py-4 pl-5"
                   type="email"
                   placeholder="Email Address"
                   {...register("email")}
@@ -129,64 +131,63 @@ export default function TutorSignupForm(): JSX.Element {
                 )}
               </div>
 
-              <div className="relative">
-                <div className="space-y-5">
-                  {/* Phone Input with Country Code */}
-                  <div>
-                    <div className="flex gap-2">
-                      <div className="w-[80px]">
-                        <Input
-                          type="text"
-                          value="+234"
-                          disabled
-                          className="text-center"
-                        />
-                      </div>
+              <div className="space-y-5">
+                {/* Phone Input with Country Code */}
+                <div>
+                  <div className="flex gap-2">
+                    <div className="w-[80px]">
                       <Input
-                        type="tel"
-                        placeholder="0xxxxxxxxx00"
-                        {...register("phoneNumber")}
+                        className="h-auto py-4 pl-5"
+                        type="text"
+                        value="+234"
+                        disabled
                       />
                     </div>
-                    {errors.phoneNumber && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.phoneNumber.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Password Fields + Floating Meter */}
-                  <div>
                     <Input
-                      type="password"
-                      placeholder="Password"
-                      {...register("password")}
+                      className="h-auto py-4 pl-5"
+                      type="tel"
+                      placeholder="0xxxxxxxxx00"
+                      {...register("phoneNumber")}
                     />
-                    {errors.password && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.password.message}
-                      </p>
-                    )}
                   </div>
-
-                  <div>
-                    <Input
-                      type="password"
-                      placeholder="Confirm Password"
-                      {...register("confirmPassword")}
-                    />
-                    {errors.confirmPassword && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.confirmPassword.message}
-                      </p>
-                    )}
-                  </div>
+                  {errors.phoneNumber && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.phoneNumber.message}
+                    </p>
+                  )}
                 </div>
 
-                {/* Floating password meter to the right */}
-                <div className="absolute top-[-5] left-full ml-4 w-[320px]">
-                  <PasswordMeter password={password || ""} />
+                <div>
+                  <Input
+                    className="h-auto py-4 pl-5"
+                    type="password"
+                    placeholder="Password"
+                    {...register("password")}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
+
+                <div>
+                  <Input
+                    className="h-auto py-4 pl-5"
+                    type="password"
+                    placeholder="Confirm Password"
+                    {...register("confirmPassword")}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+              {/* Floating password meter to the right */}
+              <div className="absolute left-full ml-5 top-1/2 w-full">
+                <PasswordMeter password={password || ""} />
               </div>
             </div>
 

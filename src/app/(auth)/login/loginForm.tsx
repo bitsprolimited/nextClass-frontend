@@ -13,7 +13,9 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/auth.service";
 import { createSession } from "@/services/session";
-import { LoginResponse } from "@/types";
+import { AxioErrorResponse, LoginResponse } from "@/types";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 const loginFormSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -35,7 +37,7 @@ export function LoginForm(): JSX.Element {
 
   const { mutate, isPending } = useMutation<
     LoginResponse,
-    Error,
+    AxiosError<AxioErrorResponse>,
     LoginFormSchema
   >({
     mutationKey: ["login"],
@@ -58,6 +60,12 @@ export function LoginForm(): JSX.Element {
         return;
       }
       router.push("/dashboad/tutor");
+    },
+    onError: (error) => {
+      toast.error("Login failed", {
+        description: error.response?.data.message || "Please try again later",
+        duration: 5000,
+      });
     },
   });
 
@@ -92,6 +100,7 @@ export function LoginForm(): JSX.Element {
               type="password"
               placeholder="Password"
               {...register("password")}
+              autoComplete="current-password"
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">
@@ -109,11 +118,9 @@ export function LoginForm(): JSX.Element {
 
           <Button
             type="submit"
-            className="w-full bg-[#FFA300] hover:bg-gray-800 rounded-full py-6 text-white"
+            className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white"
           >
-            {isSubmitting || isPending
-              ? "Logging in..."
-              : "Login To My Account"}
+            {isSubmitting || isPending ? "Logging in..." : "Login"}
           </Button>
         </form>
 
