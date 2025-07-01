@@ -14,7 +14,7 @@ const notes: Note[] = [
     date: "14/06/2025",
     title: "Meeting with James P. Paxwell",
     content:
-      "Lorem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo at mollis eu nec. Consequat nisi mauris. Leo adipiscing egestas ultrices justo ac se...",
+      "orem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo a se...",
     tag: "Ongoing",
     lastUpdated: "28, MAY 2025",
     bgColor: "bg-[#F9C5C5]",
@@ -23,7 +23,7 @@ const notes: Note[] = [
     date: "16/06/2025",
     title: "Meeting with James P. Paxwell",
     content:
-      "Lorem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo at mollis eu nec. Consequat nisi mauris. Leo adipiscing egestas ultrices justo ac se...",
+      "orem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo a se...",
     tag: "Ongoing",
     lastUpdated: "28, MAY 2025",
     bgColor: "bg-[#EFF58A]",
@@ -32,7 +32,7 @@ const notes: Note[] = [
     date: "19/06/2025",
     title: "Meeting with James P. Paxwell",
     content:
-      "Lorem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo at mollis eu nec. Consequat nisi mauris. Leo adipiscing egestas ultrices justo ac se...",
+      "Lorem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo a se...",
     tag: "Ongoing",
     lastUpdated: "28, MAY 2025",
     bgColor: "bg-[#9FD9FF]",
@@ -41,7 +41,7 @@ const notes: Note[] = [
     date: "21/06/2025",
     title: "Meeting with James P. Paxwell",
     content:
-      "Lorem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo at mollis eu nec. Consequat nisi mauris. Leo adipiscing egestas ultrices justo ac se...",
+      "Lorem ipsum dolor sit amet consectetur.blandit eu est.Vitae sit risus ligula eu suscipit scelerisque sit diam diam. Faucibus lectus amet volutpat nulla aliquam lorem neque phasellus. Malesuada id tortor sed consequat risus. Et convallis massa gravid.Enim nisi turpis arcu morbi lectus elementum. Commodo a se...",
     lastUpdated: "28, MAY 2025",
     bgColor: "bg-[#F5B97F]",
   },
@@ -59,11 +59,11 @@ export default function LessonNotesSection() {
         </div>
 
         {/* Wrapping Notes Grid */}
-        <div className="flex flex-wrap gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {notes.map((note, index) => (
             <div
               key={index}
-              className={`relative flex flex-col w-[300px] h-[400px] items-start gap-5 p-5 rounded-lg ${note.bgColor}`}
+              className={`relative flex flex-col w-full h-[400px] items-start gap-5 p-5 rounded-lg ${note.bgColor}`}
             >
               {/* Top: Date & Tag */}
               <div className="flex flex-col items-start gap-[7px] pb-3 w-full border-b border-[#24242480]">
