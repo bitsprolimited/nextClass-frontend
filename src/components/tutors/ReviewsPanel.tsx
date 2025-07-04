@@ -11,7 +11,8 @@ const reviews = Array(4).fill({
 
 export default function ReviewsPanel() {
   return (
-    <div className="space-y-4 ">
+    <div className="space-y-8 w-full max-w-6xl mx-auto mt-10 ">
+      <h2 className="text-2xl font-semibold text-[#2c241b] mb-2">My Reviews</h2>
       {/* Rating */}
       <div className="text-base font-semibold flex items-center gap-2">
         4.8/5{" "}
@@ -21,44 +22,50 @@ export default function ReviewsPanel() {
           ))}
         </div>
       </div>
+      <div className="bg-[#F8F8F8] p-6 rounded-2xl">
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">20 Reviews</h3>
 
-      {/* Title */}
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">20 Reviews</h3>
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+          {reviews.map((review, idx) => (
+            <div
+              key={idx}
+              className="bg-[#DDEEFF] p-4 rounded-lg text-center flex flex-col items-center gap-8 text-sm"
+            >
+              <div className="relative w-[50px] h-[50px]">
+                <Image
+                  src="/images/Author.png"
+                  alt={review.name}
+                  fill
+                  className="rounded-full object-cover"
+                />
+                <Image
+                  src="/images/quote.png"
+                  alt="quote"
+                  width={24}
+                  height={24}
+                  className="absolute -bottom-3 -right-[-10]"
+                />
+              </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
-        {reviews.map((review, idx) => (
-          <div
-            key={idx}
-            className="bg-[#DDEEFF] p-4 rounded-lg text-center flex flex-col items-center gap-2 text-sm"
-          >
-            <div className="relative w-[50px] h-[50px]">
-              <Image
-                src="/images/Author.png"
-                alt={review.name}
-                fill
-                className="rounded-full object-cover"
-              />
-              <Image
-                src="/images/quote.png"
-                alt="quote"
-                width={24}
-                height={24}
-                className="absolute -bottom-3 -right-[-10]"
-              />
+              <p className="text-gray-700 leading-snug line-clamp-4">
+                {review.content}
+              </p>
+              <h4 className="text-3xl font-semibold text-gray-900">
+                {review.name}
+              </h4>
+              <p className="text-[11px] text-[#FFA300] font-medium uppercase tracking-wider">
+                {review.role}
+              </p>
             </div>
-
-            <p className="text-gray-700 leading-snug line-clamp-4">
-              {review.content}
-            </p>
-            <h4 className="text-base font-semibold text-gray-900">
-              {review.name}
-            </h4>
-            <p className="text-[11px] text-[#FFA300] font-medium uppercase tracking-wider">
-              {review.role}
-            </p>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="flex justify-center mt-8">
+          <button className="bg-[#F38500] text-white text-sm px-6 py-2 rounded-full hover:opacity-90 transition">
+            Load More Reviews
+          </button>
+        </div>
       </div>
     </div>
   );

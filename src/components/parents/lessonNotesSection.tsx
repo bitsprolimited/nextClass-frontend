@@ -1,4 +1,5 @@
 import { Download } from "lucide-react";
+import Link from "next/link";
 
 type Note = {
   date: string;
@@ -53,9 +54,11 @@ export default function LessonNotesSection() {
       <div className="bg-[#F4F4F4] p-6 rounded-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-[#2c241b]">Lesson Notes</h2>
-          <button className="text-sm font-medium text-[#031D95] hover:underline">
-            View All
-          </button>
+          <Link href="/dashboard/parent/lesson" passHref>
+            <button className="text-sm font-medium text-[#031D95] hover:underline">
+              View All
+            </button>
+          </Link>
         </div>
 
         {/* Wrapping Notes Grid */}

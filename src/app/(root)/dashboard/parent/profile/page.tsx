@@ -1,13 +1,13 @@
 "use client";
 
-import HowItWorksSection from "@/components/landing/how-it-works";
+import HeroProfile from "./heroSectionProfile";
 import { Profile } from "./Profile";
 
 const page = () => {
   return (
     <main className=" ">
+      <HeroProfile />
       <Profile />
-      <HowItWorksSection />
     </main>
   );
 };

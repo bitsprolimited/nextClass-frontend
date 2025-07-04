@@ -12,6 +12,8 @@ import {
 import { JSX } from "react";
 import LearnersSection from "@/components/parents/learnersSection";
 import LessonNotesSection from "@/components/parents/lessonNotesSection";
+import ReviewsPanel from "@/components/tutors/ReviewsPanel";
+import TransactionsHistory from "@/components/parents/transactionHistory";
 
 export const Profile = (): JSX.Element => {
   return (
@@ -112,6 +114,8 @@ export const Profile = (): JSX.Element => {
       <hr className="w-full max-w-6xl border-t border-gray-300 my-8" />
       <LearnersSection />
       <LessonNotesSection />
+      <ReviewsPanel />
+      <TransactionsHistory />
     </div>
   );
 };
