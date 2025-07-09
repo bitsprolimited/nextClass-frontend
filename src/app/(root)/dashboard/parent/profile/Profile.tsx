@@ -14,6 +14,7 @@ import LearnersSection from "@/components/parents/learnersSection";
 import LessonNotesSection from "@/components/parents/lessonNotesSection";
 import ReviewsPanel from "@/components/tutors/ReviewsPanel";
 import TransactionsHistory from "@/components/parents/transactionHistory";
+import Link from "next/link";
 
 export const Profile = (): JSX.Element => {
   return (
@@ -34,10 +35,16 @@ export const Profile = (): JSX.Element => {
 
         {/* Info Card */}
         <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow w-full">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-6">
             <span className="bg-[#031d95] text-white text-sm px-4 py-1 rounded-md font-medium">
               Parent
             </span>
+
+            <Link href="/dashboard/parent/edit" passHref>
+              <button className="text-sm font-medium text-[#031D95] hover:underline">
+                View All
+              </button>
+            </Link>
           </div>
 
           <div className="mt-4 flex items-center gap-2 text-2xl md:text-3xl font-semibold text-[#2c241b]">

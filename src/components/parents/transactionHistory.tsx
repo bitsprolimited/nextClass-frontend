@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { BookOpen, Calendar, Clock, Landmark } from "lucide-react";
+import { BookOpen, Calendar, Clock } from "lucide-react";
 
 const transactions = [
   {
