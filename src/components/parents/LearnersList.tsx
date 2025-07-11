@@ -1,30 +1,20 @@
 import React, { useState } from "react";
 import AddLearnerModal from "../modals/AddLearnerModal";
+import { Child } from "@/types";
 
-export default function LearnersList() {
+interface LearnersListProps {
+  learners?: Child[];
+}
+
+export default function LearnersList({ learners }: LearnersListProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="w-full rounded-2xl shadow-md p-6 bg-[#f8f6f4]  lg:max-w-[360px] flex flex-col justify-between">
       <div className="space-y-4">
-        {[
-          {
-            name: "Layzee WokHad",
-            age: "7yrs",
-            grade: "Grade 7",
-            bg: "bg-green-700",
-            avatar: "/images/avatar-1.png", // optional: avatar or emoji
-          },
-          {
-            name: "Layzee WokHad",
-            age: "3yrs",
-            grade: "Grade 2",
-            bg: "bg-purple-700",
-            avatar: "/images/avatar-2.png",
-          },
-        ].map((student, i) => (
+        {learners && learners.map((student, i) => (
           <div
             key={i}
-            className={`text-white p-4 rounded-xl flex items-center justify-between ${student.bg}`}
+            className={`text-white p-4 rounded-xl flex items-center justify-between odd:bg-[#031D95] even:bg-[#FFA300]`}
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black font-bold text-sm">
@@ -35,7 +25,7 @@ export default function LearnersList() {
                   {student.name}
                 </p>
                 <p className="text-sm">
-                  {student.age} {student.grade}
+                  {student.age} years, {student.grade}
                 </p>
               </div>
             </div>

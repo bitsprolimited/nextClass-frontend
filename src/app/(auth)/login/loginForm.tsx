@@ -110,7 +110,7 @@ export function LoginForm(): JSX.Element {
             <Link
               href="/forgot-password"
               passHref
-              className="text-blue-800 text-sm float-right mt-2 block"
+              className="text-primary text-sm float-right mt-2 block"
             >
               Forgot Password?
             </Link>
@@ -129,11 +129,11 @@ export function LoginForm(): JSX.Element {
         </p>
 
         <div className="flex gap-4 justify-center mt-4">
-          <Button className="bg-blue-900 text-white rounded-full px-6 py-3 flex items-center gap-2 shadow border">
+          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow border">
             <FaGoogle className="w-5 h-5" />
             Sign Up With Google
           </Button>
-          <Button className="bg-blue-900 text-white rounded-full px-6 py-3 flex items-center gap-2 shadow">
+          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow">
             <FaApple className="w-5 h-5" />
             Sign Up With Apple
           </Button>
@@ -143,7 +143,7 @@ export function LoginForm(): JSX.Element {
 
         <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-blue-700 font-medium">
+          <Link href="/signup" className="text-primary font-medium">
             Create an Account
           </Link>
         </p>

@@ -1,18 +1,11 @@
 "use server";
 
-import { Role } from "@/types";
+import { User } from "@/types";
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export type Session = {
-  user: {
-    id: string;
-    fullName: string;
-    email: string;
-    role: Role;
-    isEmailVerified: boolean;
-  };
+  user: User;
   accessToken: string;
   refreshToken: string;
 };
@@ -53,7 +46,7 @@ export async function getSession() {
     return payload as Session;
   } catch (err) {
     console.error("Failed to verify the session", err);
-    redirect("/login");
+    // redirect("/login");
   }
 }
 

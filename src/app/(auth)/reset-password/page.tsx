@@ -1,5 +1,4 @@
 import ComingSoon from "@/components/comingSoon";
-import Footer from "@/components/footer";
 import HeroReset from "./heroReset";
 import PasswordResetForm from "./passwordResetForm";
 
@@ -14,7 +13,6 @@ async function ResetPassword({
       <HeroReset />
       <PasswordResetForm token={token} />
       <ComingSoon />
-      <Footer />
     </main>
   );
 }
