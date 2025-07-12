@@ -32,7 +32,7 @@ export default function Account2fa() {
       </div>
 
       {/* Deactivate Account Section */}
-      <div className="bg-[#FFF0F0] w-full rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-[#FC5757] bg-opacity-[8%] w-full rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <div className="bg-[#FFE2E2] text-[#EB3D3D] w-10 h-10 flex items-center justify-center rounded-full">
             <Trash2 size={20} />

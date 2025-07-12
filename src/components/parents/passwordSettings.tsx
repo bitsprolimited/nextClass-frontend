@@ -1,54 +1,84 @@
-// components/settings/PasswordSettings.tsx
+"use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PasswordMeter from "@/components/auth/passwordMeter";
 import { Label } from "@/components/ui/label";
-import PasswordMeter from "../auth/passwordMeter";
-// import PasswordStrengthMeter from "@/components/settings/PasswordStrengthMeter"; // Your existing component
 
 export default function PasswordSettings() {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Integrate API here
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    console.log("Updating password:", password);
+  };
+
   return (
-    <section className="space-y-2 border-b pb-6">
-      <div>
-        <h2 className="text-[32px] font-semibold text-[#2c241b]">
-          Password Settings
-        </h2>
-        <p className="text-sm text-muted-foreground">Reset your Password</p>
+    <section className="w-full max-w-4xl mx-auto space-y-4">
+      {/* Header */}
+      <div className="space-y-1">
+        <h2 className="text-3xl font-bold text-[#2C241B]">Password Settings</h2>
+        <p className="text-gray-500 text-sm">Reset your Password</p>
+        <div className="border-t mt-2" />
+        <p className="text-sm text-muted-foreground font-medium mt-2">
+          Password{" "}
+          <span className="text-xs text-gray-400 ml-2">
+            Last Update 3 weeks ago
+          </span>
+        </p>
       </div>
 
-      <div className="bg-[#031D95] bg-opacity-[8%] p-6 rounded-xl space-y-4 w-full flex justify-between">
-        <div>
-          <div className="space-y-2">
-            <Label htmlFor="new-password" className="text-sm font-medium">
-              New Password
-            </Label>
+      {/* Form Card */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-[#031D95]/[0.06] p-6 rounded-xl relative flex flex-col md:flex-row gap-6 items-start"
+      >
+        {/* Inputs */}
+        <div className="flex-1 w-full space-y-4">
+          <div>
             <Input
-              id="new-password"
               type="password"
-              placeholder="Enter password"
-              className="bg-white"
+              placeholder="New Password"
+              className="bg-[#E2E6F9] h-12 text-sm px-4"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirm-password" className="text-sm font-medium">
-              Confirm Password
-            </Label>
+          <div>
             <Input
-              id="confirm-password"
               type="password"
-              placeholder="Confirm password"
-              className="bg-white"
+              placeholder="Confirm Password"
+              className="bg-[#E2E6F9] h-12 text-sm px-4"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
         </div>
-        <div>
-          <PasswordMeter password="example" />{" "}
-          {/* Replace with real password state */}
-          <Button className="bg-[#FFA300] text-white rounded-full px-8 py-2 mt-4 hover:bg-[#e39500]">
+
+        {/* Password Meter */}
+        <div className="w-full md:w-[250px] mt-1">
+          <PasswordMeter password={password} />
+        </div>
+
+        {/* Submit Button */}
+        <div className="w-full md:absolute md:bottom-6 md:right-[-100px]">
+          <Button
+            type="submit"
+            className="bg-secondary hover:bg-[#e49500] text-white rounded-full w-full md:w-auto px-10 py-4 text-base"
+          >
             Update Password
           </Button>
         </div>
-      </div>
+      </form>
     </section>
   );
 }
