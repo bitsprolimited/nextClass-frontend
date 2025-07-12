@@ -44,13 +44,7 @@ export function LoginForm(): JSX.Element {
     mutationFn: login,
     onSuccess: async (data) => {
       await createSession({
-        user: {
-          id: data.user.id,
-          fullName: data.user.fullName,
-          role: data.user.role,
-          email: data.user.email,
-          isEmailVerified: data.user.isEmailVerified,
-        },
+        user: { ...data.user },
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
       });

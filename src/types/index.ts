@@ -35,13 +35,12 @@ export interface Child {
   age: number;
   grade: string;
   email: string;
-  gender: string;
+  gender: "male" | "female" | "other";
   dateOfBirth: string;
   interests: string[];
   createdAt: string;
   updatedAt: string;
 }
-
 
 export interface User {
   id: string;

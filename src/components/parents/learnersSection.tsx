@@ -1,20 +1,21 @@
 "use client";
-import Image from "next/image";
-import { MoreVertical } from "lucide-react";
+import { useModalStore } from "@/store/useModal";
 import { Child } from "@/types";
+import { MoreVertical } from "lucide-react";
+import Image from "next/image";
 import AddLearnerModal from "../modals/AddLearnerModal";
-import { useState } from "react";
 import { Button } from "../ui/button";
+import EditLearnerModal from "../modals/EditLearnerModal";
 
 export default function LearnersSection({ learners }: { learners?: Child[] }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openModal } = useModalStore();
   return (
     <section className="w-full max-w-6xl mx-auto mt-6 shadow-md">
       <div className="bg-[#F4F4F4] p-6 rounded-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-[#2c241b]">Learners</h2>
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => openModal(AddLearnerModal, {})}
             variant="link"
             className="text-sm font-medium text-[#031D95] hover:underline"
           >
@@ -42,14 +43,21 @@ export default function LearnersSection({ learners }: { learners?: Child[] }) {
                     <p className="text-sm font-semibold">{learner.name}</p>
                     <span className="text-xs">{`${learner.age}, ${learner.grade}`}</span>
                   </div>
-                  <MoreVertical className="absolute top-2 right-2 w-4 h-4 text-white" />
+                  <Button
+                    onClick={() =>
+                      openModal(EditLearnerModal, { learner: learner })
+                    }
+                    variant="link"
+                    className="absolute top-2 right-2 hover:no-underline"
+                  >
+                    <MoreVertical className="w-4 h-4 text-white" />
+                  </Button>
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
-      <AddLearnerModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
     </section>
   );
 }

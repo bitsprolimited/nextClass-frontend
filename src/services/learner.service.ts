@@ -20,3 +20,11 @@ export const addLearner = async (data: AddLearnerDTO) => {
   const response = await axiosInstance.post("/user/learners", data);
   return response.data;
 };
+
+export const editLearner = async (
+  data: Omit<AddLearnerDTO, "gender"> & { id: string }
+) => {
+  const { id, ...rest } = data;
+  const response = await axiosInstance.patch(`/user/learners/${id}`, rest);
+  return response.data;
+};

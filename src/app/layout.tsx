@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
 import { Toaster } from "sonner";
 import { AeroTrial, StudioSans } from "./fonts";
+import Modal from "@/components/modals/Modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster richColors />
+          <Modal />
         </body>
       </html>
     </ReactQueryClientProvider>
