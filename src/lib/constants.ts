@@ -38,7 +38,7 @@ export const navItems = {
     },
     {
       label: "Schedule",
-      href: "/schedule",
+      href: "/dashboard/parent/schedule",
     },
   ],
   tutor: [
