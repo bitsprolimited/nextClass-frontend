@@ -17,7 +17,7 @@ export type Tutor = {
 function FeaturedTutorCard({ tutor }: { tutor: Tutor }): React.JSX.Element {
   return (
     <Card className="group border-none shadow-none w-full max-w-[360px]">
-      <CardContent className="p-0">
+      <CardContent className="p-0 w-full flex flex-col">
         <div className="relative">
           <div className="w-full h-[300px]">
             <Image
@@ -51,6 +51,10 @@ function FeaturedTutorCard({ tutor }: { tutor: Tutor }): React.JSX.Element {
             <span>{tutor.lectures} Lectures</span>
           </div>
         </div>
+
+        <Button className="inline-flex text-xl h-auto py-4 px-10 rounded-full bg-secondary hover:bg-primary mx-auto mt-10 max-w-[270px] w-full">
+          Book Class
+        </Button>
       </CardContent>
     </Card>
   );
@@ -71,9 +75,6 @@ function RecentlyCalledTutors(): React.JSX.Element {
             ))}
           </div>
         </div>
-        <Button className="text-xl h-auto py-4 px-10 rounded-full bg-secondary hover:bg-primary">
-          View All Tutors
-        </Button>
       </div>
     </section>
   );

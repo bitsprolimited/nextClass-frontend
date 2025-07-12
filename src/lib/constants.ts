@@ -1,27 +1,61 @@
 import { FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 
-export const navItems = [
-  {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "About",
-    href: "/about-us",
-  },
-  {
-    label: "Tutors",
-    href: "/tutors",
-  },
-  {
-    label: "Blog",
-    href: "/blog",
-  },
-  {
-    label: "Contact",
-    href: "/contact",
-  },
-];
+export const navItems = {
+  root: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "About",
+      href: "/about-us",
+    },
+    {
+      label: "Tutors",
+      href: "/tutors",
+    },
+    {
+      label: "Blog",
+      href: "/blog",
+    },
+    {
+      label: "Schedule",
+      href: "/schedule",
+    },
+  ],
+  parent: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Tutors",
+      href: "/tutors",
+    },
+    {
+      label: "Messages",
+      href: "/messages",
+    },
+    {
+      label: "Schedule",
+      href: "/schedule",
+    },
+  ],
+  tutor: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Messages",
+      href: "/messages",
+    },
+    {
+      label: "Contact",
+      href: "/contact",
+    },
+  ],
+};
 
 export const HERO_IMAGES = [
   {
@@ -277,3 +311,50 @@ export const ARTICLES = [
     shares: 45,
   },
 ];
+
+export const GRADES = [
+  "Pre-K",
+  "Kindergarten",
+  "Grade 1",
+  "Grade 2",
+  "Grade 3",
+  "Grade 4",
+  "Grade 5",
+  "Grade 6",
+  "Grade 7",
+  "Grade 8",
+  "Grade 9",
+  "Grade 10",
+  "Grade 11",
+  "Grade 12",
+];
+
+export const SUBJECTS = [
+  "English",
+  "Math",
+  "Science",
+  "Fine Arts",
+  "Coding & Tech",
+  "Music",
+];
+
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+// Generate years from current year down to 2005
+export const YEARS = Array.from(
+  { length: new Date().getFullYear() - 2004 },
+  (_, i) => (new Date().getFullYear() - i).toString()
+);

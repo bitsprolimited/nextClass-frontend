@@ -1,22 +1,32 @@
 "use client";
-import Image from "next/image";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Users,
-  Clock,
-  DollarSign,
-  PlayCircle,
-} from "lucide-react";
-import { JSX } from "react";
+import ErrorComponent from "@/components/ErrorComponent";
+import Loader from "@/components/Loader";
 import LearnersSection from "@/components/parents/learnersSection";
 import LessonNotesSection from "@/components/parents/lessonNotesSection";
-import ReviewsPanel from "@/components/tutors/ReviewsPanel";
 import TransactionsHistory from "@/components/parents/transactionHistory";
 import Link from "next/link";
+import ReviewsPanel from "@/components/tutors/ReviewsPanel";
+import { useUser } from "@/hooks/useUser";
+import {
+  Clock,
+  DollarSign,
+  Mail,
+  MapPin,
+  Phone,
+  PlayCircle,
+  Users,
+} from "lucide-react";
+import Image from "next/image";
+import { JSX } from "react";
 
 export const Profile = (): JSX.Element => {
+  const { data: user, isLoading, isError } = useUser();
+
+  if (isLoading) return <Loader />;
+  if (isError || !user) return <ErrorComponent />;
+
+  const address = Object.values(user.user.address).join(", ");
+
   return (
     <div className="flex flex-col gap-8 items-center py-10">
       {/* Top Section */}
@@ -55,34 +65,30 @@ export const Profile = (): JSX.Element => {
               width={68}
               height={32}
             />
-            <h1 className="font-aero">Ryan Patterson</h1>
+            <h1 className="font-aero">{user.user.fullName}</h1>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-8 mt-8 text-[#2c241b]">
             <div className="flex flex-col gap-2">
               <Clock className="w-5 h-5" />
-              <span>55 classes Attended</span>
+              <span>0 classes Attended</span>
             </div>
             <div className="flex flex-col gap-2">
               <DollarSign className="w-5 h-5" />
-              <span>$980 paid</span>
+              <span>$0 paid</span>
             </div>
             <div className="flex flex-col gap-2">
               <Users className="w-5 h-5" />
-              <span>4 Learners</span>
+              <span>{user.user?.children?.length || 0} Learners</span>
             </div>
             <div className="flex flex-col gap-2 text-green-700">
               <PlayCircle className="w-5 h-5" />
-              <span>1 Ongoing Class</span>
-            </div>
-            <div className="flex flex-col gap-2 col-span-2">
-              <MapPin className="w-5 h-5 text-[#292D32]" />
-              <span>15, Frank Sinatra Drive, LA</span>
+              <span>0 Ongoing Class</span>
             </div>
           </div>
 
           <div className="text-right text-sm text-[#031d9580] font-medium mt-6">
-            JOINED 29, MAY 2025
+            JOINED {}
           </div>
         </div>
       </div>
@@ -94,7 +100,9 @@ export const Profile = (): JSX.Element => {
           <div className="bg-[#4c76ff45] border border-[#4c75ff] p-4 rounded-lg">
             <Phone className="w-[34px] h-[34px]" />
           </div>
-          <p className="text-[#292d32] font-medium text-lg">+1 234 567 890</p>
+          <p className="text-[#292d32] font-medium text-lg">
+            {user.user.phoneNumber}
+          </p>
         </div>
 
         {/* Email */}
@@ -103,7 +111,7 @@ export const Profile = (): JSX.Element => {
             <Mail className="w-[34px] h-[34px]" color="#039536" />
           </div>
           <p className="text-[#292d32] font-medium text-lg">
-            patterson@xyzmail.com
+            {user.user.email}
           </p>
         </div>
 
@@ -112,14 +120,12 @@ export const Profile = (): JSX.Element => {
           <div className="bg-[#ff4cff45] border border-[#ff4cff] p-4 rounded-lg">
             <MapPin className="w-[34px] h-[34px]" color="#8B0395" />
           </div>
-          <p className="text-[#2c241b] font-medium text-lg">
-            15, Frank Sinatra Drive, LA
-          </p>
+          <p className="text-[#2c241b] font-medium text-lg">{address}</p>
         </div>
       </div>
       {/* Divider */}
       <hr className="w-full max-w-6xl border-t border-gray-300 my-8" />
-      <LearnersSection />
+      <LearnersSection learners={user.user.children} />
       <LessonNotesSection />
       <ReviewsPanel />
       <TransactionsHistory />

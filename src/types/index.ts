@@ -29,12 +29,38 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
   className?: string;
 }
 
+export interface Child {
+  _id: string;
+  name: string;
+  age: number;
+  grade: string;
+  email: string;
+  gender: "male" | "female" | "other";
+  dateOfBirth: string;
+  interests: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface User {
   id: string;
   email: string;
   fullName: string;
-  role: Role;
+  status: "active" | "inactive" | "suspended";
+  phoneNumber: string;
+  address: Address;
+  timezone: string;
   isEmailVerified: boolean;
+  qualifications: string[];
+  rating: number;
+  subjects: string[];
+  experience?: number;
+  hourlyRate?: number;
+  role: Role;
+  children: Child[];
+  ratingCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthResponse {
@@ -66,15 +92,3 @@ export interface LoginResponse extends AuthResponse {
   refreshToken: string;
 }
 // export interface SignupResponse extends AuthResponse {}
-
-export interface TutorUser extends User {
-  role: Role.TEACHER;
-  subjects?: string[];
-  experience?: number;
-  hourlyRate?: number;
-}
-
-export interface ParentUser extends User {
-  role: Role.PARENT;
-  children?: string[];
-}

@@ -8,6 +8,9 @@ export function useSession() {
       const { data } = await axios.get("/api/auth/getSession");
       return data.session;
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     retry: false,
   });
 }

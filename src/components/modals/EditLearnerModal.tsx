@@ -3,44 +3,51 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { GRADES, MONTHS, SUBJECTS, YEARS } from "@/lib/constants";
 import { LearnerFormData, learnerFormSchema } from "@/lib/schema";
 import { calculateAge, createDateOfBirth } from "@/lib/utils";
-import { addLearner, AddLearnerDTO } from "@/services/learner.service";
+import { AddLearnerDTO, editLearner } from "@/services/learner.service";
+import { useModalStore } from "@/store/useModal";
+import { Child } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { useModalStore } from "@/store/useModal";
 import SuccessDialog from "./SuccessModal";
 
-interface AddLearnerModalProps {
+interface EditLearnerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  learner: Child;
 }
 
-export default function AddLearnerModal({
+export default function EditLearnerModal({
   isOpen,
   onClose,
-}: AddLearnerModalProps) {
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const [selectedGrade, setSelectedGrade] = useState<string>("");
+  learner,
+}: EditLearnerModalProps) {
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>(
+    learner.interests || []
+  );
+  const [selectedGrade, setSelectedGrade] = useState<string>(
+    learner.grade || ""
+  );
   const queryClient = useQueryClient();
   const { openModal } = useModalStore();
 
@@ -55,13 +62,19 @@ export default function AddLearnerModal({
   } = useForm<LearnerFormData>({
     resolver: zodResolver(learnerFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      birthMonth: "",
-      birthYear: "",
-      gender: "male",
-      grade: "",
-      interests: [],
+      name: learner.name,
+      email: learner.email,
+      birthMonth: learner.dateOfBirth
+        ? new Date(learner.dateOfBirth).toLocaleString("default", {
+            month: "long",
+          })
+        : "",
+      birthYear: learner.dateOfBirth
+        ? new Date(learner.dateOfBirth).getFullYear().toString()
+        : "",
+      gender: learner.gender,
+      grade: learner.grade || "",
+      interests: learner.interests || [],
     },
     mode: "all",
   });
@@ -70,25 +83,23 @@ export default function AddLearnerModal({
   const watchedBirthMonth = watch("birthMonth");
   const watchedBirthYear = watch("birthYear");
 
-  const addLearnerMutation = useMutation({
-    mutationFn: addLearner,
+  const editLearnerMutation = useMutation({
+    mutationFn: editLearner,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      reset();
       setSelectedSubjects([]);
       setSelectedGrade("");
       openModal(SuccessDialog, {
-        title: "Learner Added",
+        title: "Learner Edited",
         highlight: "Successfully",
-        message:
-          "You have successfully created a new account for your learner. Ask them to log in ",
+        message: "You have successfully edited a learner.",
         buttonText: "Proceed",
       });
-      toast.success("Learner added successfully!");
+      toast.success("Learner edited successfully!");
     },
     onError: (error) => {
-      console.error("Error adding learner:", error);
-      toast.error("Failed to add learner. Please try again.");
+      console.error("Error editing learner:", error);
+      toast.error("Failed to edit learner. Please try again.");
     },
   });
 
@@ -96,17 +107,17 @@ export default function AddLearnerModal({
     const age = calculateAge(data.birthMonth, data.birthYear);
     const dateOfBirth = createDateOfBirth(data.birthMonth, data.birthYear);
 
-    const requestData: AddLearnerDTO = {
+    const requestData: Omit<AddLearnerDTO, "gender"> & { id: string } = {
+      id: learner._id,
       name: data.name,
       age: age,
-      gender: data.gender,
       grade: selectedGrade || undefined,
       email: data.email || undefined,
       dateOfBirth: dateOfBirth || undefined,
       interests: selectedSubjects.length > 0 ? selectedSubjects : undefined,
     };
 
-    addLearnerMutation.mutate(requestData);
+    editLearnerMutation.mutate(requestData);
   };
 
   const handleGradeSelect = (grade: string) => {
@@ -151,10 +162,10 @@ export default function AddLearnerModal({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] items-center justify-center overflow-y-auto">
         <DialogHeader className="max-w-[478px]">
           <DialogTitle className="text-3xl font-semibold text-primary">
-            Add Learner&apos;s Details
+            Edit Learner&apos;s Details
           </DialogTitle>
           <p className="text-[#757575] text-lg">
-            Add the details of your child/ward who is to partake of these
+            Edit the details of your child/ward who is to partake of these
             lessons
           </p>
         </DialogHeader>
@@ -412,13 +423,11 @@ export default function AddLearnerModal({
             type="submit"
             className="w-full bg-[#FFA300] hover:bg-[#FFA300]/90 text-white py-4 mt-6 rounded-full h-auto"
             disabled={
-              addLearnerMutation.isPending ||
+              editLearnerMutation.isPending ||
               (currentAge > 0 && (currentAge < 3 || currentAge > 18))
             }
           >
-            {addLearnerMutation.isPending
-              ? "Adding Learner..."
-              : "Add New Learner"}
+            {editLearnerMutation.isPending ? "Editing Learner..." : "Edit"}
           </Button>
         </form>
       </DialogContent>

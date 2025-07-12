@@ -6,16 +6,37 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { useSession } from "@/hooks/useSession";
 import { navItems } from "@/lib/constants";
+import { Session } from "@/services/session";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import ProfileMenu from "./ProfileMenu";
 
-function Header(): React.JSX.Element {
+function Header({
+  session,
+}: {
+  session: Session | null | undefined;
+}): React.JSX.Element {
   const pathname = usePathname();
-  const { data: session, error } = useSession();
+
+  const hideNav =
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/signup/tutor" ||
+    pathname === "/reset-password" ||
+    pathname === "/forgot-password" ||
+    pathname === "/verify-email";
+
+  const currentNavItems = !session
+    ? navItems.root
+    : session.user.role === "parent"
+    ? navItems.parent
+    : session.user.role === "teacher"
+    ? navItems.tutor
+    : navItems.root;
+
   return (
     <header
       className={`${
@@ -26,47 +47,48 @@ function Header(): React.JSX.Element {
     >
       <div className="w-full max-w-4xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
-          <Image
-            src="/images/logo.png"
-            alt="Next class Logo"
-            width={100}
-            height={24}
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <NavigationMenu className="mx-auto">
-          <NavigationMenuList className="gap-10 flex items-center">
-            {navItems.map((item) => (
-              <NavigationMenuItem key={item.href}>
-                <Link href={item.href} passHref>
-                  <span
-                    className={`px-0 hover:text-secondary group inline-flex h-9 w-max items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all ${
-                      pathname === item.href ? "text-secondary font-bold" : ""
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </Link>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-
-        {!session || error ? (
-          <Link href="/login">
-            <Button className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
-              Login
-            </Button>
+          <Link href="/">
+            <Image
+              src="/images/logo.png"
+              alt="Next class Logo"
+              width={100}
+              height={24}
+              className="h-full w-full object-cover"
+            />
           </Link>
-        ) : (
-          <a href={"/api/auth/signout"}>
-            <Button
-              className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full"
-              variant="outline"
-            >
-              Logout
-            </Button>
-          </a>
+        </div>
+        {!hideNav && (
+          <div className="flex items-center justify-between w-full">
+            <NavigationMenu className="mx-auto">
+              <NavigationMenuList className="gap-10 flex items-center">
+                {currentNavItems.map((item) => (
+                  <NavigationMenuItem key={item.href}>
+                    <Link href={item.href} passHref>
+                      <span
+                        className={`px-0 hover:text-secondary group inline-flex h-9 w-max items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all ${
+                          pathname === item.href
+                            ? "text-secondary font-bold"
+                            : ""
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+
+            {!session ? (
+              <Link href="/login">
+                <Button className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
+                  Login
+                </Button>
+              </Link>
+            ) : (
+              <ProfileMenu user={session.user} />
+            )}
+          </div>
         )}
       </div>
     </header>
