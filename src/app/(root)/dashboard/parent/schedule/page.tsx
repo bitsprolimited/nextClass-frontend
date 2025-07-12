@@ -3,7 +3,7 @@
 import HeroSchedule from "./hero-schedule";
 import ClassTabs from "./schedule";
 
-const page = () => {
+const Page = () => {
   return (
     <main className=" ">
       <HeroSchedule />
@@ -12,4 +12,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

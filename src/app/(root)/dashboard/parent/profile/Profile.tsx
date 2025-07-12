@@ -52,7 +52,7 @@ export const Profile = (): JSX.Element => {
 
             <Link href="/dashboard/parent/edit" passHref>
               <button className="text-sm font-medium text-[#031D95] hover:underline">
-                View All
+                Edit Profile
               </button>
             </Link>
           </div>
@@ -87,9 +87,9 @@ export const Profile = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="text-right text-sm text-[#031d9580] font-medium mt-6">
+          {/* <div className="text-right text-sm text-[#031d9580] font-medium mt-6">
             JOINED {}
-          </div>
+          </div> */}
         </div>
       </div>
 
