@@ -1,11 +1,13 @@
 "use client";
 
-import ClassHistory from "./schedule";
+import HeroSchedule from "./hero-schedule";
+import ClassTabs from "./schedule";
 
 const Page = () => {
   return (
     <main className=" ">
-      <ClassHistory />
+      <HeroSchedule />
+      <ClassTabs />
     </main>
   );
 };
