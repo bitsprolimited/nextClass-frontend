@@ -1,9 +1,8 @@
 "use client";
 
 import ClassHistory from "./schedule";
-import ClassesTab from "./schedule";
 
-const page = () => {
+const Page = () => {
   return (
     <main className=" ">
       <ClassHistory />
@@ -11,4 +10,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
