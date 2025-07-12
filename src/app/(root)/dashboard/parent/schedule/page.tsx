@@ -1,12 +1,11 @@
 "use client";
 
-import ClassHistory from "./schedule";
-import ClassesTab from "./schedule";
+import ClassTabs from "./schedule";
 
 const page = () => {
   return (
     <main className=" ">
-      <ClassHistory />
+      <ClassTabs />
     </main>
   );
 };
