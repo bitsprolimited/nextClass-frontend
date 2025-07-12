@@ -54,10 +54,55 @@ function ProfileMenu({ user }: { user: User }) {
             }}
           >
             <Link
+              href="/dashboard/parent/transaction"
+              className="block px-4 py-2 text-gray-700 hover:bg-[#D9D9D9]"
+            >
+              Transaction
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+          className="hover:bg-[#D9D9D9]"
+            asChild
+            onSelect={(e) => {
+              e.preventDefault();
+              setIsProfileMenuOpen(false);
+            }}
+          >
+            <Link
+              href="/dashboard/parent/lesson"
+              className="block px-4 py-2 text-gray-700 hover:bg-[#D9D9D9]"
+            >
+              Lesson Notes
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+          className="hover:bg-[#D9D9D9]"
+            asChild
+            onSelect={(e) => {
+              e.preventDefault();
+              setIsProfileMenuOpen(false);
+            }}
+          >
+            <Link
               href="/dashboard/parent/profile"
               className="block px-4 py-2 text-gray-700 hover:bg-[#D9D9D9]"
             >
               Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+          className="hover:bg-[#D9D9D9]"
+            asChild
+            onSelect={(e) => {
+              e.preventDefault();
+              setIsProfileMenuOpen(false);
+            }}
+          >
+            <Link
+              href="/dashboard/parent/account-settings"
+              className="block px-4 py-2 text-gray-700 hover:bg-[#D9D9D9]"
+            >
+              Settings
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="bg-[#9A98C1]" />
