@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import PasswordMeter from "@/components/auth/passwordMeter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import PasswordMeter from "@/components/auth/passwordMeter";
-import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 export default function PasswordSettings() {
   const [password, setPassword] = useState("");
