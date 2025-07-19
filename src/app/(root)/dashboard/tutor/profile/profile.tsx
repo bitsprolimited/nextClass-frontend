@@ -1,26 +1,19 @@
 "use client";
-import ErrorComponent from "@/components/ErrorComponent";
-import Loader from "@/components/Loader";
-import LearnersSection from "@/components/parents/learnersSection";
-import LessonNotesSection from "@/components/parents/lessonNotesSection";
-import TransactionsHistory from "@/components/parents/transactionHistory";
+
 import Link from "next/link";
-import ReviewsPanel from "@/components/tutors/ReviewsPanel";
-import { useUser } from "@/hooks/useUser";
+
 import {
   BookOpen,
-  Calendar,
   Clock,
   DollarSign,
   Mail,
   MapPin,
   Phone,
-  PlayCircle,
   Star,
   Users,
 } from "lucide-react";
 import Image from "next/image";
-import { JSX } from "react";
+
 import AboutTutor from "@/components/tutors/AboutTutor";
 import MyQualificationsSection from "@/components/tutors/QualificationsSection";
 

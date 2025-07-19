@@ -1,4 +1,5 @@
 // components/HeroSection.tsx
+import { Link } from "lucide-react";
 import Image from "next/image";
 
 export default function HeroSection(): React.JSX.Element {
@@ -17,12 +18,12 @@ export default function HeroSection(): React.JSX.Element {
                 <nav className="mt-2 text-sm text-white">
                   <ol className="list-reset flex">
                     <li>
-                      <a href="/" className="underline">
+                      <Link href="/" className="underline">
                         Home
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <span className="mx-2">//</span>
+                      <span className="mx-2">{"//"}</span>
                     </li>
                     <li className="text-secondary">Messages</li>
                   </ol>

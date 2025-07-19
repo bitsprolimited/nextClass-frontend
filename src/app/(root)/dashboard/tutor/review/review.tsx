@@ -1,7 +1,5 @@
 "use client";
-import LearnersSection from "@/components/parents/learnersSection";
-import LessonNotesSection from "@/components/parents/lessonNotesSection";
-import SearchAndFilter from "@/components/parents/searchFilter";
+
 import ReviewsPanel from "@/components/tutors/ReviewsPanel";
 import ReviewStats from "@/components/tutors/reviewStats";
 

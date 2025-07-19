@@ -1,6 +1,5 @@
 // components/QualificationCard.tsx
 import { Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
 
 type Qualification = {
   id: string;
