@@ -354,3 +354,43 @@ export const YEARS = Array.from(
   { length: new Date().getFullYear() - 2004 },
   (_, i) => (new Date().getFullYear() - i).toString()
 );
+// data/chatData.ts
+export const conversations = [
+  {
+    id: 1,
+    name: "King James",
+    avatar: "/images/ryan.png",
+    lastMessage: "Hi, thanks much for the...",
+    timeAgo: "2days ago",
+    active: true,
+  },
+  {
+    id: 2,
+    name: "Queen Esther",
+    avatar: "/images/ryan.png",
+    lastMessage: "Hi, thanks much for the...",
+    timeAgo: "2days ago",
+  },
+  {
+    id: 3,
+    name: "Marvin Gaye",
+    avatar: "/images/Author.png",
+    lastMessage: "Hi, thanks much for the...",
+    timeAgo: "2days ago",
+  },
+];
+
+export const messages = [
+  {
+    id: 1,
+    sender: "them",
+    text: `Hello, Good morning.\nI wanted to confirm if you will be available for today's session`,
+    timestamp: "10:03am",
+  },
+  {
+    id: 2,
+    sender: "me",
+    text: `Hello, Good morning.\nI wanted to confirm that I will be available, thanks.`,
+    timestamp: "10:03am",
+  },
+];

@@ -8,7 +8,7 @@ export default function Layout({
 }>) {
   return (
     <>
-      <Header />
+      <Header session={undefined} />
       {children}
       <Footer />
     </>
