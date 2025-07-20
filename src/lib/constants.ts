@@ -18,10 +18,6 @@ export const navItems = {
       label: "Blog",
       href: "/blog",
     },
-    {
-      label: "Schedule",
-      href: "/schedule",
-    },
   ],
   parent: [
     {
@@ -51,8 +47,8 @@ export const navItems = {
       href: "/messages",
     },
     {
-      label: "Contact",
-      href: "/contact",
+      label: "Schedule",
+      href: "/dashboard/tutor/schedule",
     },
   ],
 };

@@ -1,36 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// store/useModal.ts
+import { ModalComponents } from "@/types";
 import { create } from "zustand";
-import React from "react";
 
-interface OpenModalInstance {
-  id: string;
-  component: React.ComponentType<any>;
-  props: any;
-}
+export type ModalType = keyof ModalComponents;
 
-interface ModalState {
-  openModals: OpenModalInstance[];
-  openModal: (component: React.ComponentType<any>, props?: any) => string;
-  closeModal: (id: string) => void;
-  closeAllModals: () => void;
-}
+type ModalState = {
+  modalType: ModalType | null;
+  modalProps: ModalComponents[ModalType]["props"] | null;
+  openModal: <T extends ModalType>(
+    type: T,
+    props: ModalComponents[T]["props"]
+  ) => void;
+  closeModal: () => void;
+  openSuccessModal: (props: ModalComponents["success"]["props"]) => void;
+  openAddLearnerModal: (props: ModalComponents["addLearner"]["props"]) => void;
+  openEditLearnerModal: (
+    props: ModalComponents["editLearner"]["props"]
+  ) => void;
+};
 
-// Create the Zustand store
 export const useModalStore = create<ModalState>((set) => ({
-  openModals: [],
-  openModal: (component, props = {}) => {
-    const id = crypto.randomUUID();
-    set((state) => ({
-      openModals: [...state.openModals, { id, component, props }],
-    }));
-    return id;
-  },
-  closeModal: (id) => {
-    set((state) => ({
-      openModals: state.openModals.filter((modal) => modal.id !== id),
-    }));
-  },
-  closeAllModals: () => {
-    set({ openModals: [] });
-  },
+  modalType: null,
+  modalProps: null,
+  openModal: (type, props) => set({ modalType: type, modalProps: props }),
+  closeModal: () => set({ modalType: null, modalProps: null }),
+  openSuccessModal: (props) => set({ modalType: "success", modalProps: props }),
+  openAddLearnerModal: (props) =>
+    set({ modalType: "addLearner", modalProps: props }),
+  openEditLearnerModal: (props) =>
+    set({ modalType: "editLearner", modalProps: props }),
 }));

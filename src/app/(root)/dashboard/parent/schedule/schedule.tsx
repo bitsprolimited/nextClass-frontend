@@ -61,7 +61,7 @@ const historyData = [
 
 export default function ClassTabs() {
   return (
-    <Tabs defaultValue="history" className="w-full max-w-6xl mx-auto">
+    <Tabs defaultValue="history" className="w-full max-w-6xl mx-auto my-[60px]">
       {/* Tabs Header */}
       <TabsList className="flex justify-start gap-10 mb-4 bg-transparent px-4 sm:px-10">
         <TabsTrigger

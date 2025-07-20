@@ -53,7 +53,7 @@ export function LoginForm(): JSX.Element {
         router.push("/dashboard/parent");
         return;
       }
-      router.push("/dashboad/tutor");
+      router.push("/dashboard/tutor");
     },
     onError: (error) => {
       toast.error("Login failed", {

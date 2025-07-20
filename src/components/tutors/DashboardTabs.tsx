@@ -8,7 +8,7 @@ export default function DashboardTabs() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 mb-20 max-w-7xl mx-auto">
       <Tabs defaultValue="description" className="w-full">
         {/* Tabs Nav */}
         <TabsList className="flex justify-start gap-8  bg-transparent p-0">
@@ -17,7 +17,7 @@ export default function DashboardTabs() {
               <TabsTrigger
                 key={tab}
                 value={tab}
-                className="rounded-none shadow-none data-[state=active]:border-b-2 data-[state=active]:border-blue-800 data-[state=active]:text-blue-800 px-1 py-2 font-medium capitalize text-gray-500"
+                className="rounded-none data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-2 font-medium capitalize text-[#A4A4A4]"
               >
                 {tab}
               </TabsTrigger>
@@ -28,7 +28,7 @@ export default function DashboardTabs() {
         {/* Description Content */}
         <TabsContent
           value="description"
-          className="max-w-5xl mx-auto mt-6 bg-[#F9F6F2] p-8 rounded-md text-gray-900"
+          className="mt-6 bg-[#F9F6F2] p-8 rounded-md text-gray-900"
         >
           <h4 className="text-sm font-bold text-blue-900 uppercase mb-4">
             About Rachel
@@ -66,19 +66,19 @@ export default function DashboardTabs() {
         {/* Other Tabs Placeholder */}
         <TabsContent
           value="schedule"
-          className="max-w-5xl mx-auto mt-6 text-gray-600"
+          className="mt-6 text-gray-600"
         >
           Schedule content goes here.
         </TabsContent>
         <TabsContent
           value="reviews"
-          className="max-w-5xl mx-auto  mt-6 bg-[#F9F6F2] p-8 rounded-md text-gray-900"
+          className="mt-6 bg-[#F9F6F2] p-8 rounded-md text-gray-900"
         >
           <ReviewsPanel />
         </TabsContent>
         <TabsContent
           value="qualifications"
-          className="max-w-5xl mx-auto mt-6 bg-[#F9F6F2] p-8 rounded-md text-gray-900"
+          className="mt-6 bg-[#F9F6F2] p-8 rounded-md text-gray-900"
         >
           <h4 className="text-sm font-bold text-blue-900 uppercase mb-4">
             About Rachel

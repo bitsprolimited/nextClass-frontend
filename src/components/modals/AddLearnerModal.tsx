@@ -21,16 +21,15 @@ import { GRADES, MONTHS, SUBJECTS, YEARS } from "@/lib/constants";
 import { LearnerFormData, learnerFormSchema } from "@/lib/schema";
 import { calculateAge, createDateOfBirth } from "@/lib/utils";
 import { addLearner, AddLearnerDTO } from "@/services/learner.service";
+import { useModalStore } from "@/store/useModal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { useModalStore } from "@/store/useModal";
-import SuccessDialog from "./SuccessModal";
 
-interface AddLearnerModalProps {
+export interface AddLearnerModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
@@ -77,7 +76,7 @@ export default function AddLearnerModal({
       reset();
       setSelectedSubjects([]);
       setSelectedGrade("");
-      openModal(SuccessDialog, {
+      openModal("success", {
         title: "Learner Added",
         highlight: "Successfully",
         message:

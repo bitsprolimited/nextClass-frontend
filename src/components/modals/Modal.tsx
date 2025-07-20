@@ -1,24 +1,30 @@
-"use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 import { useModalStore } from "@/store/useModal";
-import React from "react";
+import AddLearnerModal from "./AddLearnerModal";
+import SuccessDialog from "./SuccessModal";
+import EditLearnerModal from "./EditLearnerModal";
 
-const Modal = () => {
-  const { openModals, closeModal } = useModalStore();
+const MODAL_REGISTRY = {
+  success: SuccessDialog,
+  addLearner: AddLearnerModal,
+  editLearner: EditLearnerModal,
+  // future: OtherModals...
+} as const;
 
-  return (
-    <>
-      {openModals.map((modalInstance) => (
-        <React.Fragment key={modalInstance.id}>
-          {/* Render the specific modal component */}
-          <modalInstance.component
-            isOpen={true}
-            onClose={() => closeModal(modalInstance.id)}
-            {...modalInstance.props}
-          />
-        </React.Fragment>
-      ))}
-    </>
-  );
-};
+export default function Modal() {
+  const { modalType, modalProps, closeModal } = useModalStore();
 
-export default Modal;
+  if (!modalType || !modalProps) return null;
+
+  const ModalComponent = MODAL_REGISTRY[modalType];
+
+  const props = {
+    ...modalProps,
+    isOpen: true,
+    onClose: closeModal,
+  } as any;
+
+  return <ModalComponent {...props} />;
+}
