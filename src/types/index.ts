@@ -1,5 +1,6 @@
 import { AddLearnerModalProps } from "@/components/modals/AddLearnerModal";
 import { EditLearnerModalProps } from "@/components/modals/EditLearnerModal";
+import { SetAvailabilityModalProps } from "@/components/modals/SetAvailabilityModal";
 import { SuccessDialogProps } from "@/components/modals/SuccessModal";
 import { ComponentType } from "react";
 
@@ -16,7 +17,10 @@ export type ModalComponents = {
     props: Omit<EditLearnerModalProps, "isOpen" | "onClose">;
     component: ComponentType<EditLearnerModalProps>;
   };
-  // Add more modals here...
+  setAvailability: {
+    props: Omit<SetAvailabilityModalProps, "isOpen" | "onClose">;
+    component: ComponentType<SetAvailabilityModalProps>;
+  };
 };
 
 export enum Role {

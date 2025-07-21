@@ -4,7 +4,7 @@ import { Trash2 } from "lucide-react";
 
 export default function Account2fa() {
   return (
-    <section className="space-y-10 font-['Montserrat']">
+    <section className="space-y-10 font-montserrat">
       {/* Title */}
       <div>
         <h2 className="text-[32px] sm:text-3xl font-bold text-[#1D1D1F] mb-1 font-['Lexend']">
@@ -20,7 +20,7 @@ export default function Account2fa() {
         <div className="flex items-center gap-4">
           <Switch id="2fa" defaultChecked />
           <div>
-            <h3 className="text-base font-semibold text-[#1D1D1F] font-['Montserrat']">
+            <h3 className="text-base font-semibold text-[#1D1D1F] font-montserrat">
               Two-factor Authentication
             </h3>
             <p className="text-sm text-[#6e6e6e] mt-1">
@@ -38,7 +38,7 @@ export default function Account2fa() {
             <Trash2 size={20} />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-[#1D1D1F] font-['Montserrat']">
+            <h3 className="text-base font-semibold text-[#1D1D1F] font-montserrat">
               Deactivate Account
             </h3>
             <p className="text-sm text-[#6e6e6e] mt-1 ">

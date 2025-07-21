@@ -5,12 +5,13 @@ import { useModalStore } from "@/store/useModal";
 import AddLearnerModal from "./AddLearnerModal";
 import SuccessDialog from "./SuccessModal";
 import EditLearnerModal from "./EditLearnerModal";
+import SetAvailabilityModal from "./SetAvailabilityModal";
 
 const MODAL_REGISTRY = {
   success: SuccessDialog,
   addLearner: AddLearnerModal,
   editLearner: EditLearnerModal,
-  // future: OtherModals...
+  setAvailability: SetAvailabilityModal,
 } as const;
 
 export default function Modal() {

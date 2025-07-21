@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import type { AlertProps } from "./Alert";
 import AlertComponent from "./Alert";
+import { useModalStore } from "@/store/useModal";
 
 const alerts: AlertProps[] = [
   {
@@ -51,7 +52,6 @@ const alerts: AlertProps[] = [
     Icon: Calendar,
     button: {
       text: "Set Your Schedule and Availability",
-      href: "/dashboard/tutor/schedule",
       className: "bg-primary hover:bg-secondary",
     },
     variant: "info",
@@ -82,6 +82,7 @@ const alerts: AlertProps[] = [
 
 export default function AlertRotator() {
   const [current, setCurrent] = useState(0);
+  const { openModal } = useModalStore();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -91,5 +92,13 @@ export default function AlertRotator() {
     return () => clearInterval(interval);
   }, []);
 
-  return <AlertComponent {...alerts[current]} />;
+  const currentAlert = alerts[current];
+
+  const handleButtonClick = () => {
+    if (currentAlert.title === "Set Your Schedule and Availability") {
+      openModal("setAvailability", {});
+    }
+  };
+
+  return <AlertComponent {...currentAlert} onButtonClick={handleButtonClick} />;
 }

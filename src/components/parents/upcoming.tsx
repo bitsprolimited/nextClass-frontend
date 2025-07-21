@@ -39,7 +39,7 @@ export default function Upcoming() {
               </TabsTrigger>
               <TabsTrigger
                 value="history"
-                className="[font-family:'Montserrat-Medium',Helvetica] font-medium text-[#52565b] text-sm tracking-[1px] leading-[15.4px] whitespace-nowrap p-0 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="font-montserrat font-medium text-[#52565b] text-sm tracking-[1px] leading-[15.4px] whitespace-nowrap p-0 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 CLASS HISTORY
               </TabsTrigger>
@@ -68,7 +68,7 @@ export default function Upcoming() {
                 <div className="flex w-[656px] items-start justify-between">
                   <div className="flex flex-col gap-3 items-start">
                     <CalendarIcon className="w-6 h-6" />
-                    <div className="w-[166px] [font-family:'Montserrat-Medium',Helvetica] font-medium text-[#2c241b] text-2xl leading-[26.2px]">
+                    <div className="w-[166px] font-montserrat font-medium text-[#2c241b] text-2xl leading-[26.2px]">
                       {classItem.date}
                       <br />
                       <span className="text-[#2c241b99] text-xl">
@@ -77,24 +77,24 @@ export default function Upcoming() {
                     </div>
                   </div>
 
-                  <div className="opacity-20 [font-family:'Montserrat-Light',Helvetica] font-light text-[#2c241b] text-[64px] leading-normal">
+                  <div className="opacity-20 font-montserrat font-light text-[#2c241b] text-[64px] leading-normal">
                     |
                   </div>
 
                   <div className="flex flex-col gap-3 items-start">
                     <ClockIcon className="w-6 h-6" />
-                    <div className="[font-family:'Montserrat-Medium',Helvetica] font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
+                    <div className="font-montserrat font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
                       {classItem.duration}
                     </div>
                   </div>
 
-                  <div className="opacity-20 [font-family:'Montserrat-Light',Helvetica] font-light text-[#2c241b] text-[64px] leading-normal">
+                  <div className="opacity-20 font-montserrat font-light text-[#2c241b] text-[64px] leading-normal">
                     |
                   </div>
 
                   <div className="flex flex-col gap-3 items-start">
                     <BookOpenIcon className="w-6 h-6" />
-                    <div className="[font-family:'Montserrat-Medium',Helvetica] font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
+                    <div className="font-montserrat font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
                       {classItem.subject}
                     </div>
                   </div>
@@ -105,13 +105,13 @@ export default function Upcoming() {
                     variant="ghost"
                     className="px-10 py-0 h-auto rounded-[50px]"
                   >
-                    <span className="font-htmldemo-net-montserrat-medium-title font-medium text-[#d43838] text-[16px] leading-[55px] whitespace-nowrap">
+                    <span className="font-montserrat font-medium text-[#d43838] text-[16px] leading-[55px] whitespace-nowrap">
                       Cancel Class
                     </span>
                   </Button>
 
                   <Button className="px-10 py-0 h-auto bg-[#031d95] rounded-[50px]">
-                    <span className="font-htmldemo-net-montserrat-medium-title font-medium text-white text-[16px] leading-[55px] whitespace-nowrap">
+                    <span className="font-montserrat font-medium text-white text-[16px] leading-[55px] whitespace-nowrap">
                       Reshedule Class
                     </span>
                   </Button>

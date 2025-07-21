@@ -12,11 +12,6 @@ type ModalState = {
     props: ModalComponents[T]["props"]
   ) => void;
   closeModal: () => void;
-  openSuccessModal: (props: ModalComponents["success"]["props"]) => void;
-  openAddLearnerModal: (props: ModalComponents["addLearner"]["props"]) => void;
-  openEditLearnerModal: (
-    props: ModalComponents["editLearner"]["props"]
-  ) => void;
 };
 
 export const useModalStore = create<ModalState>((set) => ({
@@ -24,9 +19,4 @@ export const useModalStore = create<ModalState>((set) => ({
   modalProps: null,
   openModal: (type, props) => set({ modalType: type, modalProps: props }),
   closeModal: () => set({ modalType: null, modalProps: null }),
-  openSuccessModal: (props) => set({ modalType: "success", modalProps: props }),
-  openAddLearnerModal: (props) =>
-    set({ modalType: "addLearner", modalProps: props }),
-  openEditLearnerModal: (props) =>
-    set({ modalType: "editLearner", modalProps: props }),
 }));

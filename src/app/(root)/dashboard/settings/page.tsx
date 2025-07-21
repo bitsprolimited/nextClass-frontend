@@ -5,7 +5,7 @@ import HeroSettings from "./hero-settings";
 
 const page = () => {
   return (
-    <main className="font-['Montserrat'] ">
+    <main className="font-montserrat ">
       <HeroSettings />
       <AccountSettingsPage />
     </main>
