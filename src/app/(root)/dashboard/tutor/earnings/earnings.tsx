@@ -1,7 +1,6 @@
 "use client";
 
 import BookingsTabs from "@/components/tutors/BookingTabs";
-import ReviewsPanel from "@/components/tutors/ReviewsPanel";
 
 import StatCards from "@/components/tutors/statCards";
 import SearchAndFilter from "@/components/tutors/TransactionSearchFilter";
