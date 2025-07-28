@@ -18,7 +18,7 @@ function ErrorComponent() {
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Link href="#">
-            <Button className="bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary h-auto rounded-full hover:bg-secondary">Go back home</Button>
+            <Button className="bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-2xs focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary h-auto rounded-full hover:bg-secondary">Go back home</Button>
           </Link>
         </div>
       </div>

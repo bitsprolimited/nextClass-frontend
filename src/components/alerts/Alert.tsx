@@ -8,52 +8,89 @@ export interface AlertProps {
   title: string | React.JSX.Element;
   message: string | React.JSX.Element;
   variant?: "info" | "success" | "warning" | "error";
-  button?: {
-    text: string;
-    href?: string;
-    className?: string;
-  };
+  button?:
+    | {
+        text: string;
+        href?: string;
+        className?: string;
+      }
+    | React.ReactNode;
   Icon: React.ElementType;
   onButtonClick?: () => void;
   onClose?: () => void;
 }
 
-const variantBgColors = {
-  info: "bg-[#3941D51a]",
-  success: "bg-[#39D56D1a]",
-  warning: "bg-[#D58C391a]",
-  error: "bg-[#D539391a]",
+const variantStyles = {
+  info: {
+    bg: "bg-[#3941D51a]",
+    text: "text-[#3941D5]",
+  },
+  success: {
+    bg: "bg-[#39D56D1a]",
+    text: "text-[#21AC5E]",
+  },
+  warning: {
+    bg: "bg-[#D58C391a]",
+    text: "text-[#D58C39]",
+  },
+  error: {
+    bg: "bg-[#D539391a]",
+    text: "text-[#D53939]",
+  },
 };
-
-const variantTextColors = {
-  info: "text-[#3941D5]",
-  success: "text-[#21AC5E]",
-  warning: "text-[#D58C39]",
-  error: "text-[#D53939]",
-};
-
 
 export default function AlertComponent({
   title,
-  Icon,
   message,
   variant = "info",
+  Icon,
   button,
   onButtonClick,
   onClose,
 }: AlertProps) {
+  const { bg, text } = variantStyles[variant];
+
+  const renderButton = () => {
+    if (!button) return null;
+
+    if (React.isValidElement(button)) return button;
+
+    const {
+      text: btnText,
+      href,
+      className,
+    } = button as {
+      text: string;
+      href?: string;
+      className?: string;
+    };
+
+    return (
+      <Button
+        className={cn(
+          "text-sm font-semibold px-4 py-3 h-auto rounded-full",
+          className
+        )}
+        onClick={onButtonClick}
+        asChild={!!href}
+      >
+        {href ? <a href={href}>{btnText}</a> : <>{btnText}</>}
+      </Button>
+    );
+  };
+
   return (
     <Alert
       className={cn(
-        "bg-[#d58c391a] rounded-lg flex items-center justify-between gap-4 px-6 py-5",
-        variantBgColors[variant]
+        "rounded-lg flex items-center justify-between gap-4 px-6 py-5",
+        bg
       )}
     >
       <div className="flex flex-col items-start w-full max-w-[867px] gap-3">
         <div className="text-sm sm:text-base flex items-center gap-3">
-          <Icon className={`w-8 h-8 ${variantTextColors[variant]}`} />
+          <Icon className={cn("w-8 h-8", text)} />
           <AlertTitle
-            className={`font-aeroTrial sm:text-lg font-medium m-0 ${variantTextColors[variant]}`}
+            className={cn("font-aero-trial sm:text-lg font-medium m-0", text)}
           >
             {title}
           </AlertTitle>
@@ -62,24 +99,16 @@ export default function AlertComponent({
           {message}
         </AlertDescription>
       </div>
-      {button && (
-        <Button
-          className={cn(
-            "text-sm font-semibold px-4 py-3 h-auto rounded-full",
-            button.className
-          )}
-          onClick={onButtonClick}
-        >
-          {button.text}
-        </Button>
-      )}
+
+      {renderButton()}
+
       <Button
         variant="ghost"
         onClick={onClose}
         className="text-red-600 shrink-0 p-3 size-1 text-xl font-bold rounded-full border border-red-600 hover:bg-transparent hover:text-red-600"
       >
         <X />
-        <span className="sr-only">close</span>
+        <span className="sr-only">Close</span>
       </Button>
     </Alert>
   );

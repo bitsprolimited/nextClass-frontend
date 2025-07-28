@@ -47,7 +47,7 @@ export default function Profile() {
         </div>
 
         {/* Info Card */}
-        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow w-full">
+        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow-sm w-full">
           <div className="flex justify-between items-center mb-6">
             <span className="bg-[#031d95] text-white text-sm px-4 py-1 rounded-md font-medium">
               Parent

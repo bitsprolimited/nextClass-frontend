@@ -46,7 +46,7 @@ export default function Dashboard() {
         <div className="w-full max-w-7xl mx-auto py-[60px] space-y-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-              <h1 className="text-[48px] font-medium text-[#2C1E1E] tracking-normal font-aeroTrial">
+              <h1 className="text-[48px] font-medium text-[#2C1E1E] tracking-normal font-aero-trial">
                 My Dashboard
               </h1>
               <p className="text-[#544E4E] text-lg mt-1">
@@ -124,7 +124,7 @@ export default function Dashboard() {
 
                           <Separator
                             orientation="vertical"
-                            className="h-[60px] bg-zeus opacity-20 border-1"
+                            className="h-[60px] bg-zeus opacity-20 border"
                           />
 
                           {/* Duration */}
@@ -137,7 +137,7 @@ export default function Dashboard() {
 
                           <Separator
                             orientation="vertical"
-                            className="h-[60px] bg-zeus opacity-20 border-1"
+                            className="h-[60px] bg-zeus opacity-20 border"
                           />
 
                           {/* Subject */}
@@ -209,7 +209,7 @@ export default function Dashboard() {
 
                           <Separator
                             orientation="vertical"
-                            className="h-[60px] bg-zeus opacity-20 border-1"
+                            className="h-[60px] bg-zeus opacity-20 border"
                           />
 
                           {/* Duration */}
@@ -222,7 +222,7 @@ export default function Dashboard() {
 
                           <Separator
                             orientation="vertical"
-                            className="h-[60px] bg-zeus opacity-20 border-1"
+                            className="h-[60px] bg-zeus opacity-20 border"
                           />
 
                           {/* Subject */}

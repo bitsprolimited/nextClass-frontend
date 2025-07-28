@@ -57,7 +57,7 @@ const HeroStudentAvatar = () => {
                 className={`w-full ${index > 0 ? "-ml-5" : ""}`}
               />
             ))}
-            <div className="w-[60px] h-[60px] -ml-5 bg-secondary rounded-full flex flex-col justify-center items-center text-white flex-shrink-0 p-1">
+            <div className="w-[60px] h-[60px] -ml-5 bg-secondary rounded-full flex flex-col justify-center items-center text-white shrink-0 p-1">
               <span>500+</span>
               <span className="text-[10px] uppercase">Online</span>
             </div>

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
 // const protectedRoutes: string[] = [];
-const publicRoutes = ["/login", "/signup", '/', "/forgot-password"];
+const publicRoutes = ["/login", "/signup", "/", "/forgot-password"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -29,6 +29,18 @@ export default async function middleware(req: NextRequest) {
         req.nextUrl
       )
     );
+  }
+
+  if (path.includes("/admin") && session?.user.role !== "admin") {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
+  }
+
+  if (path.includes("/tutor") && session?.user.role !== "teacher") {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
+  }
+
+  if (path.includes("/parent") && session?.user.role !== "parent") {
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
   NextResponse.next();

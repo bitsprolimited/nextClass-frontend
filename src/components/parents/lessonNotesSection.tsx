@@ -50,7 +50,7 @@ const notes: Note[] = [
 
 export default function LessonNotesSection() {
   return (
-    <section className="w-full max-w-6xl mx-auto mt-10">
+    <section className="w-full max-w-6xl mx-auto shadow-md rounded-2xl">
       <div className="bg-[#F4F4F4] p-6 rounded-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-[#2c241b]">Lesson Notes</h2>

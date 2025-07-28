@@ -11,7 +11,7 @@ export default function HeroSection(): React.JSX.Element {
             {/* Text Content */}
             <div className="flex justify-center items-center h-full w-full">
               <div className="flex flex-col items-start mx-auto">
-                <h1 className="text-[58px] font-aeroTrial font-medium text-white">
+                <h1 className="text-[58px] font-aero-trial font-medium text-white">
                   Messages
                 </h1>
                 {/* Static breadcrumb */}

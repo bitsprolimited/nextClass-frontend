@@ -17,3 +17,56 @@ export const learnerFormSchema = z.object({
 });
 
 export type LearnerFormData = z.infer<typeof learnerFormSchema>;
+
+export const timeSlotSchema = z.object({
+  startTime: z.string().min(1, "Start time is required"),
+  endTime: z.string().min(1, "End time is required"),
+});
+
+export const dayAvailabilitySchema = z.object({
+  dayOfWeek: z.number().min(0).max(6),
+  slots: z.array(timeSlotSchema),
+  isAvailable: z.boolean(),
+});
+
+export const bankDetailsSchema = z.object({
+  bankName: z.string().min(1, "Bank name is required"),
+  accountNumber: z.string().min(1, "Account number is required"),
+  accountName: z.string().min(1, "Account name is required"),
+});
+
+export const pricingSchema = z.object({
+  ratePerSession: z.number().min(1, "Rate per session must be greater than 0"),
+});
+
+// Step 1: Select Days
+export const selectDaysSchema = z.object({
+  daySelection: z.enum(["everyday", "weekdays", "weekend", "custom"]),
+  customDays: z.array(z.number().min(0).max(6)).optional(),
+});
+
+// Step 2: Select Times
+export const selectTimesSchema = z.object({
+  availabilities: z.array(dayAvailabilitySchema),
+  timezone: z.string().min(1, "Please select a timezone."),
+});
+
+// Step 3: Payment Details
+export const paymentDetailsSchema = z.object({
+  ratePerSession: z.number().min(1, "Rate per session must be greater than 0"),
+  bankDetails: bankDetailsSchema,
+});
+
+// Complete form schema
+export const completeAvailabilitySchema = z.object({
+  availabilities: z.array(dayAvailabilitySchema),
+  bankDetails: bankDetailsSchema,
+  pricing: pricingSchema,
+});
+
+export type SelectDaysFormData = z.infer<typeof selectDaysSchema>;
+export type SelectTimesFormData = z.infer<typeof selectTimesSchema>;
+export type PaymentDetailsFormData = z.infer<typeof paymentDetailsSchema>;
+export type CompleteAvailabilityFormData = z.infer<
+  typeof completeAvailabilitySchema
+>;

@@ -42,10 +42,10 @@ function HeroSection() {
       <div className="flex flex-col justify-center items-start gap-20 w-1/2 max-w-[800px] pt-16 pl-16 ml-auto">
         <div className="flex flex-col items-start gap-[30px]">
           <div>
-            <p className="text-primary text-sm mb-4 font-studioSans">
+            <p className="text-primary text-sm mb-4 font-studio-sans">
               NO. 1 AFTERSCHOOL LESSON PLATFORM
             </p>
-            <div className="relative max-w-4xl font-aeroTrial">
+            <div className="relative max-w-4xl font-aero-trial">
               <h1 className="w-full max-w-3xl text-[75px] leading-[80px]">
                 <span className="inline-block">
                   Connect With the Perfect
@@ -76,10 +76,10 @@ function HeroSection() {
               </h1>
             </div>
           </div>
-          <p className="text-zeus text-xl font-studioSans">
+          <p className="text-zeus text-xl font-studio-sans">
             Trusted tutors. Interactive learning. Stress-free scheduling
           </p>
-          <div className="flex gap-4 font-studioSans">
+          <div className="flex gap-4 font-studio-sans">
             <Button className="bg-secondary hover:bg-primary text-white rounded-full px-12 py-3 h-auto text-xl">
               Find a tutor
             </Button>
@@ -88,7 +88,7 @@ function HeroSection() {
             </Button>
           </div>
         </div>
-        <div className="flex gap-4 items-center font-studioSans">
+        <div className="flex gap-4 items-center font-studio-sans">
           <p>Connect with us:</p>
           <div className="flex space-x-4">
             {SOCIAL_ICONS.map((Icon, idx) => (

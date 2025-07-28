@@ -3,19 +3,19 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { GRADES, MONTHS, SUBJECTS, YEARS } from "@/lib/constants";
 import { LearnerFormData, learnerFormSchema } from "@/lib/schema";
@@ -25,13 +25,13 @@ import { useModalStore } from "@/store/useModal";
 import { Child } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import SuccessDialog from "./SuccessModal";
 
-interface EditLearnerModalProps {
+export interface EditLearnerModalProps {
   isOpen: boolean;
   onClose: () => void;
   learner: Child;
@@ -89,7 +89,7 @@ export default function EditLearnerModal({
       queryClient.invalidateQueries({ queryKey: ["user"] });
       setSelectedSubjects([]);
       setSelectedGrade("");
-      openModal(SuccessDialog, {
+      openModal("success", {
         title: "Learner Edited",
         highlight: "Successfully",
         message: "You have successfully edited a learner.",
@@ -181,6 +181,7 @@ export default function EditLearnerModal({
             </Label>
             <Input
               id="name"
+              disabled={editLearnerMutation.isPending}
               placeholder="Enter Learner's Name"
               {...register("name")}
             />
@@ -195,6 +196,7 @@ export default function EditLearnerModal({
               Learner&apos;s Email (optional)
             </Label>
             <Input
+              disabled={editLearnerMutation.isPending}
               id="email"
               type="email"
               placeholder="Enter Learner's Email (optional)"
@@ -213,6 +215,7 @@ export default function EditLearnerModal({
               </Label>
               <Controller
                 name="birthMonth"
+                disabled={editLearnerMutation.isPending}
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
@@ -242,6 +245,7 @@ export default function EditLearnerModal({
               </Label>
               <Controller
                 name="birthYear"
+                disabled={editLearnerMutation.isPending}
                 control={control}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
@@ -290,12 +294,14 @@ export default function EditLearnerModal({
             </Label>
             <Controller
               name="gender"
+              disabled
               control={control}
               render={({ field }) => (
                 <RadioGroup
                   value={field.value}
                   onValueChange={field.onChange}
                   className="flex gap-3"
+                  disabled
                 >
                   <div className="flex items-center gap-1">
                     <RadioGroupItem value="male" id="male" />
@@ -328,12 +334,19 @@ export default function EditLearnerModal({
               {selectedGrade ? (
                 <Badge
                   variant="secondary"
-                  className="border border-[#031D95] px-3 py-1 text-sm rounded-full text-primary bg-[#DFDDFF] hover:bg-[#DFDDFF]"
+                  className={`border border-[#031D95] px-3 py-1 text-sm rounded-full text-primary bg-[#DFDDFF] hover:bg-[#DFDDFF] ${
+                    editLearnerMutation.isPending &&
+                    "pointer-events-none opacity-50"
+                  }`}
                 >
                   {selectedGrade}
                   <button
                     type="button"
-                    onClick={() => removeGrade()}
+                    onClick={() => {
+                      if (editLearnerMutation.isPending) {
+                        removeGrade();
+                      }
+                    }}
                     className="ml-2 text-xs hover:text-red-300"
                   >
                     ×
@@ -356,8 +369,15 @@ export default function EditLearnerModal({
                     selectedGrade === grade
                       ? "bg-[#DFDDFF] text-primary border-[#031D95]"
                       : "border-[#031D95] text-[#031D95] hover:bg-[#DFDDFF]"
+                  } ${
+                    editLearnerMutation.isPending &&
+                    "pointer-events-none opacity-50"
                   }`}
-                  onClick={() => handleGradeSelect(grade)}
+                  onClick={() => {
+                    if (editLearnerMutation.isPending) {
+                      handleGradeSelect(grade);
+                    }
+                  }}
                 >
                   {grade}
                 </Badge>
@@ -378,15 +398,22 @@ export default function EditLearnerModal({
                   <Badge
                     key={subject}
                     variant="secondary"
-                    className="border border-[#031D95] px-3 py-1 text-sm rounded-full text-primary bg-[#DFDDFF] hover:bg-[#DFDDFF]"
+                    className={`border border-[#031D95] px-3 py-1 text-sm rounded-full text-primary bg-[#DFDDFF] hover:bg-[#DFDDFF] ${
+                      editLearnerMutation.isPending &&
+                      "pointer-events-none opacity-50"
+                    }`}
                   >
                     {subject}
                     <button
                       type="button"
-                      onClick={() => removeSubject(subject)}
+                      onClick={() => {
+                        if (editLearnerMutation.isPending) {
+                          removeSubject(subject);
+                        }
+                      }}
                       className="ml-2 text-xs hover:text-red-300"
                     >
-                      ×
+                      x
                     </button>
                   </Badge>
                 ))
@@ -409,8 +436,15 @@ export default function EditLearnerModal({
                     selectedSubjects.includes(subject)
                       ? "bg-[#DFDDFF] text-primary border-[#031D95]"
                       : "border-[#031D95] text-[#031D95] hover:bg-[#DFDDFF]"
+                  } ${
+                    editLearnerMutation.isPending &&
+                    "pointer-events-none opacity-50"
                   }`}
-                  onClick={() => handleSubjectSelect(subject)}
+                  onClick={() => {
+                    if (editLearnerMutation.isPending) {
+                      handleSubjectSelect(subject);
+                    }
+                  }}
                 >
                   {subject}
                 </Badge>
@@ -427,7 +461,11 @@ export default function EditLearnerModal({
               (currentAge > 0 && (currentAge < 3 || currentAge > 18))
             }
           >
-            {editLearnerMutation.isPending ? "Editing Learner..." : "Edit"}
+            {editLearnerMutation.isPending ? (
+              <Loader2 className="size-4 mr-2 animate-spin" />
+            ) : (
+              "Save"
+            )}
           </Button>
         </form>
       </DialogContent>

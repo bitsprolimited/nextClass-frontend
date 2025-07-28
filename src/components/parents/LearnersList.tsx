@@ -1,6 +1,5 @@
 import { useModalStore } from "@/store/useModal";
 import { Child } from "@/types";
-import AddLearnerModal from "../modals/AddLearnerModal";
 
 interface LearnersListProps {
   learners?: Child[];
@@ -30,7 +29,10 @@ export default function LearnersList({ learners }: LearnersListProps) {
                   </p>
                 </div>
               </div>
-              <button className="text-white text-xl font-bold leading-none">
+              <button
+                onClick={() => openModal("editLearner", { learner: student })}
+                className="text-white text-xl font-bold leading-none"
+              >
                 ⋮
               </button>
             </div>
@@ -44,7 +46,7 @@ export default function LearnersList({ learners }: LearnersListProps) {
         </h3>
         <p className="text-sm text-black mt-2">What are you learning today?</p>
         <button
-          onClick={() => openModal(AddLearnerModal, {})}
+          onClick={() => openModal("addLearner", {})}
           className="mt-4 w-full border border-[#031D95] text-[#031D95] rounded-full px-4 py-3 text-sm font-medium hover:bg-[#031D95] hover:text-white transition"
         >
           Add a Learner +
