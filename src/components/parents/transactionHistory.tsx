@@ -41,7 +41,7 @@ export default function TransactionsHistory() {
       {transactions.map((tx, index) => (
         <div
           key={index}
-          className="bg-[#FBF8F3] rounded-xl px-6 py-6 shadow-sm"
+          className="bg-[#FBF8F3] rounded-xl px-6 py-6 shadow-xs"
         >
           <div className="flex gap-6 items-start">
             {/* Image */}

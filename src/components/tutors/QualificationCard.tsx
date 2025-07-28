@@ -22,7 +22,7 @@ export default function QualificationCard({
   onEdit: (id: string) => void;
 }) {
   return (
-    <div className="bg-white p-4 rounded-xl border shadow-sm relative w-full max-w-[500px]">
+    <div className="bg-white p-4 rounded-xl border shadow-xs relative w-full max-w-[500px]">
       <div className="flex justify-between items-center mb-2">
         <div>
           <p className="text-sm italic text-[#F4B400]">Diploma in</p>

@@ -41,7 +41,7 @@ function Header({
     <header
       className={`${
         pathname === "/"
-          ? "absolute top-0 w-full shadow bg-white/80 backdrop-blur-md z-50"
+          ? "absolute top-0 w-full shadow-sm bg-white/80 backdrop-blur-md z-50"
           : ""
       } flex items-center justify-between px-4 py-8 w-full`}
     >

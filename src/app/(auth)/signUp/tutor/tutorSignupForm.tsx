@@ -258,14 +258,14 @@ export default function TutorSignupForm(): JSX.Element {
             <div className="flex gap-4 justify-center mt-4">
               <Button
                 type="button"
-                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow border"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm border"
               >
                 <FaGoogle className="w-5 h-5" />
                 Sign Up With Google
               </Button>
               <Button
                 type="button"
-                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm"
               >
                 <FaApple className="w-5 h-5" />
                 Sign Up With Apple

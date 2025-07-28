@@ -90,7 +90,7 @@ export default function AlertComponent({
         <div className="text-sm sm:text-base flex items-center gap-3">
           <Icon className={cn("w-8 h-8", text)} />
           <AlertTitle
-            className={cn("font-aeroTrial sm:text-lg font-medium m-0", text)}
+            className={cn("font-aero-trial sm:text-lg font-medium m-0", text)}
           >
             {title}
           </AlertTitle>

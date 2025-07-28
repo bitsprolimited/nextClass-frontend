@@ -62,7 +62,7 @@ const PasswordMeter: React.FC<PasswordMeterProps> = ({ password }) => {
   const level = getStrengthLabel(score);
 
   return (
-    <div className="rounded-xl shadow p-4 bg-white border border-gray-200 max-w-md w-full">
+    <div className="rounded-xl shadow-sm p-4 bg-white border border-gray-200 max-w-md w-full">
       <p className="text-sm font-medium text-gray-800 mb-1">
         Password Strength
       </p>

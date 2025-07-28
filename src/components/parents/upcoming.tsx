@@ -56,12 +56,12 @@ export default function Upcoming() {
               }`}
             >
               <div
-                className="relative w-36 h-36 rounded-[10px] border border-solid border-[#ada1a1] bg-cover bg-[50%_50%]"
+                className="relative w-36 h-36 rounded-[10px] border border-solid border-[#ada1a1] bg-cover bg-position-[50%_50%]"
                 style={{ backgroundImage: `url(${classItem.image})` }}
               />
 
               <div className="flex flex-col items-end justify-center gap-[22px]">
-                <h2 className="self-stretch [font-family:'Aero_Trial-Medium',Helvetica] font-medium text-[#2c241b] text-[32px] leading-normal">
+                <h2 className="self-stretch font-['Aero_Trial-Medium',Helvetica] font-medium text-[#2c241b] text-[32px] leading-normal">
                   {classItem.title}
                 </h2>
 
@@ -126,10 +126,10 @@ export default function Upcoming() {
         <CardContent className="p-0">
           <div className="flex flex-col items-start gap-[110px]">
             <div className="flex flex-col items-start gap-1">
-              <h3 className="w-[295px] [font-family:'Aero_Trial-Medium',Helvetica] font-medium text-[#ffa300] text-3xl tracking-[0.60px] leading-normal">
+              <h3 className="w-[295px] font-['Aero_Trial-Medium',Helvetica] font-medium text-[#ffa300] text-3xl tracking-[0.60px] leading-normal">
                 Add a Learner today
               </h3>
-              <p className="w-[271px] [font-family:'Studio_Sans_DEMO-Regular',Helvetica] font-normal text-[#2c241b] text-base leading-7">
+              <p className="w-[271px] font-['Studio_Sans_DEMO-Regular',Helvetica] font-normal text-[#2c241b] text-base leading-7">
                 What are you learning today?
               </p>
             </div>

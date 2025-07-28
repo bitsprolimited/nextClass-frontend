@@ -179,7 +179,7 @@ export default function EmailVerificationPage() {
                     placeholder="Enter your email address"
                     value={userEmail}
                     onChange={(e) => setUserEmail(e.target.value)}
-                    className="flex-1 bg-transparent border-none outline-none text-amber-800 placeholder-amber-500"
+                    className="flex-1 bg-transparent border-none outline-hidden text-amber-800 placeholder-amber-500"
                   />
                 </div>
               </div>
@@ -242,7 +242,7 @@ export default function EmailVerificationPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full">
           {/* Logo/Brand Section */}
           <div className="text-center mb-8">

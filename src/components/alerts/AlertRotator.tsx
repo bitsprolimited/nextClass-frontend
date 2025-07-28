@@ -13,6 +13,17 @@ import { useModalStore } from "@/store/useModal";
 
 const alerts: AlertProps[] = [
   {
+    title: "Set Your Schedule and Availability",
+    message:
+      "Your account has been verified. Kindly set your availability to engage parents/students in an introductory call",
+    Icon: Calendar,
+    button: {
+      text: "Set Your Schedule and Availability",
+      className: "bg-primary hover:bg-secondary",
+    },
+    variant: "info",
+  },
+  {
     title: "Awaiting Verification",
     Icon: TriangleAlert,
     message:
@@ -46,17 +57,6 @@ const alerts: AlertProps[] = [
     variant: "success",
   },
   {
-    title: "Set Your Schedule and Availability",
-    message:
-      "Your account has been verified. Kindly set your availability to engage parents/students in an introductory call",
-    Icon: Calendar,
-    button: {
-      text: "Set Your Schedule and Availability",
-      className: "bg-primary hover:bg-secondary",
-    },
-    variant: "info",
-  },
-  {
     title: (
       <>
         You have been booked for an introductory call on
@@ -87,7 +87,7 @@ export default function AlertRotator() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % alerts.length);
-    }, 10000); // 10 seconds
+    }, 5000); // 10 seconds
 
     return () => clearInterval(interval);
   }, []);

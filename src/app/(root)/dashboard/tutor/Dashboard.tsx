@@ -22,7 +22,7 @@ export default function Dashboard() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div className="flex flex-col item-start gap-1">
-              <h1 className="text-5xl font-medium font-aeroTrial text-zeus">
+              <h1 className="text-5xl font-medium font-aero-trial text-zeus">
                 My Dashboard
               </h1>
               <p className="text-zeus">Are you ready to teach today?</p>

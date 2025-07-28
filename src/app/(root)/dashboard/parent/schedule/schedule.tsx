@@ -101,7 +101,7 @@ export default function ClassTabs() {
 
               {/* Middle: Content */}
               <div className="flex flex-col justify-between gap-3">
-                <h2 className="text-[24px] sm:text-[28px] font-bold text-[#2c241b] leading-snug font-aeroTrial">
+                <h2 className="text-[24px] sm:text-[28px] font-bold text-[#2c241b] leading-snug font-aero-trial">
                   {item.title}
                 </h2>
 
@@ -171,7 +171,7 @@ export default function ClassTabs() {
 
               {/* Class Content */}
               <div className="flex flex-col items-start justify-center gap-[22px] w-full">
-                <h2 className="text-[32px] font-medium text-[#2c241b] leading-normal font-aeroTrial flex items-start">
+                <h2 className="text-[32px] font-medium text-[#2c241b] leading-normal font-aero-trial flex items-start">
                   {item.title}
                 </h2>
 

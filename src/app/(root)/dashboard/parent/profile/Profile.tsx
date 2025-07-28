@@ -45,7 +45,7 @@ export const Profile = (): JSX.Element => {
         </div>
 
         {/* Info Card */}
-        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow w-full">
+        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow-sm w-full">
           <div className="flex justify-between items-center">
             <span className="bg-[#031d95] text-white text-sm px-4 py-1 rounded-md font-medium">
               Parent
@@ -66,7 +66,7 @@ export const Profile = (): JSX.Element => {
               width={68}
               height={32}
             /> */}
-            <h1 className="font-aeroTrial capitalize font-medium">
+            <h1 className="font-aero-trial capitalize font-medium">
               {user.user.fullName}
             </h1>
           </div>

@@ -96,7 +96,7 @@ function ProfileMenu({ user }: { user: User }) {
       <Button
         type="button"
         variant="outline"
-        className="relative border border-primary size-8 rounded-full flex  items-center justify-center bg-[#031D95]/10 hover:bg-transparent p-1 text-primary hover:text-primary focus:outline-none flex-shrink-0 transition-all duration-200"
+        className="relative border border-primary size-8 rounded-full flex  items-center justify-center bg-[#031D95]/10 hover:bg-transparent p-1 text-primary hover:text-primary focus:outline-hidden shrink-0 transition-all duration-200"
       >
         <span className="absolute -inset-1.5" />
         <span className="sr-only">View notifications</span>
@@ -108,7 +108,7 @@ function ProfileMenu({ user }: { user: User }) {
         onOpenChange={setIsProfileMenuOpen}
       >
         <div>
-          <DropdownMenuTrigger className="relative flex items-center rounded-full  focus:outline-none focus:ring-2 group focus:ring-white focus:ring-offset-2 text-xs sm:text-sm md:text-base">
+          <DropdownMenuTrigger className="relative flex items-center rounded-full  focus:outline-hidden focus:ring-2 group focus:ring-white focus:ring-offset-2 text-xs sm:text-sm md:text-base">
             <span className="absolute -inset-1.5" />
             <span className="sr-only">Open user menu</span>
             <Avatar className="h-8 w-8">
@@ -126,7 +126,7 @@ function ProfileMenu({ user }: { user: User }) {
             />
           </DropdownMenuTrigger>
         </div>
-        <DropdownMenuContent className="z-[999] mt-2 p-0 origin-top-right w-full rounded-md bg-white shadow-lg  focus:outline-none">
+        <DropdownMenuContent className="z-999 mt-2 p-0 origin-top-right w-full rounded-md bg-white shadow-lg  focus:outline-hidden">
           {currentLinks.map((link, i) => (
             <DropdownMenuItem
               key={i}

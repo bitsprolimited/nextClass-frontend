@@ -39,7 +39,7 @@ export default function PasswordSettings() {
       {/* Form Card */}
       <form
         onSubmit={handleSubmit}
-        className="bg-[#031D95]/[0.06] p-6 rounded-xl relative flex flex-col md:flex-row gap-6 items-start"
+        className="bg-[#031D95]/6 p-6 rounded-xl relative flex flex-col md:flex-row gap-6 items-start"
       >
         {/* Inputs */}
         <div className="flex-1 w-full space-y-4">
