@@ -61,7 +61,7 @@ const historyData = [
 
 export default function ClassTabs() {
   return (
-    <Tabs defaultValue="history" className="w-full max-w-6xl mx-auto">
+    <Tabs defaultValue="history" className="w-full max-w-6xl mx-auto my-[60px]">
       {/* Tabs Header */}
       <TabsList className="flex justify-start gap-10 mb-4 bg-transparent px-4 sm:px-10">
         <TabsTrigger
@@ -101,7 +101,7 @@ export default function ClassTabs() {
 
               {/* Middle: Content */}
               <div className="flex flex-col justify-between gap-3">
-                <h2 className="text-[24px] sm:text-[28px] font-bold text-[#2c241b] leading-snug font-aeroTrial">
+                <h2 className="text-[24px] sm:text-[28px] font-bold text-[#2c241b] leading-snug font-aero-trial">
                   {item.title}
                 </h2>
 
@@ -171,14 +171,14 @@ export default function ClassTabs() {
 
               {/* Class Content */}
               <div className="flex flex-col items-start justify-center gap-[22px] w-full">
-                <h2 className="text-[32px] font-medium text-[#2c241b] leading-normal font-aeroTrial flex items-start">
+                <h2 className="text-[32px] font-medium text-[#2c241b] leading-normal font-aero-trial flex items-start">
                   {item.title}
                 </h2>
 
                 <div className="flex flex-wrap items-start justify-between gap-6 w-full max-w-[656px]">
                   <div className="flex flex-col gap-3 items-start">
                     <CalendarIcon className="w-6 h-6 text-[#2c241b]" />
-                    <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-['Montserrat']">
+                    <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-montserrat">
                       {item.date}
                       <br />
                       <span className="text-xl text-[#2c241b99]">
@@ -193,7 +193,7 @@ export default function ClassTabs() {
 
                   <div className="flex flex-col gap-3 items-start">
                     <ClockIcon className="w-6 h-6 text-[#2c241b]" />
-                    <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-['Montserrat'] whitespace-nowrap">
+                    <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-montserrat whitespace-nowrap">
                       {item.duration}
                     </div>
                   </div>
@@ -204,7 +204,7 @@ export default function ClassTabs() {
 
                   <div className="flex flex-col gap-3 items-start">
                     <BookOpenIcon className="w-6 h-6 text-[#2c241b]" />
-                    <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-['Montserrat'] whitespace-nowrap">
+                    <div className="text-2xl font-medium text-[#2c241b] leading-[26.2px] font-montserrat whitespace-nowrap">
                       {item.subject}
                     </div>
                   </div>

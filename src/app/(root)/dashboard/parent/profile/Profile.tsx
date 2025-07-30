@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { JSX } from "react";
+import { format } from "date-fns";
 
 export const Profile = (): JSX.Element => {
   const { data: user, isLoading, isError } = useUser();
@@ -28,7 +29,7 @@ export const Profile = (): JSX.Element => {
   const address = Object.values(user.user.address).join(", ");
 
   return (
-    <div className="flex flex-col gap-8 items-center py-10">
+    <div className="flex flex-col gap-[100px] items-center py-[60px]">
       {/* Top Section */}
       <div className="flex flex-col md:flex-row items-center gap-10 w-full max-w-6xl">
         {/* Profile Image */}
@@ -44,28 +45,30 @@ export const Profile = (): JSX.Element => {
         </div>
 
         {/* Info Card */}
-        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow w-full">
-          <div className="flex justify-between items-center mb-6">
+        <div className="bg-[#f4f4f4] p-6 md:p-8 rounded-xl shadow-sm w-full">
+          <div className="flex justify-between items-center">
             <span className="bg-[#031d95] text-white text-sm px-4 py-1 rounded-md font-medium">
               Parent
             </span>
 
             <Link href="/dashboard/parent/edit" passHref>
-              <button className="text-sm font-medium text-[#031D95] hover:underline">
+              <button className="text-sm font-medium text-[#031D95] underline hover:no-underline">
                 Edit Profile
               </button>
             </Link>
           </div>
 
-          <div className="mt-4 flex items-center gap-2 text-2xl md:text-3xl font-semibold text-[#2c241b]">
-            <Image
+          <div className="mt-8 flex items-center gap-2 text-2xl md:text-[60px] font-semibold text-[#2c241b]">
+            {/* <Image
               src="/images/USA.png"
               alt="US Flag"
               className="inline-block rounded-sm"
               width={68}
               height={32}
-            />
-            <h1 className="font-aero">{user.user.fullName}</h1>
+            /> */}
+            <h1 className="font-aero-trial capitalize font-medium">
+              {user.user.fullName}
+            </h1>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-8 mt-8 text-[#2c241b]">
@@ -87,14 +90,14 @@ export const Profile = (): JSX.Element => {
             </div>
           </div>
 
-          {/* <div className="text-right text-sm text-[#031d9580] font-medium mt-6">
-            JOINED {}
-          </div> */}
+          <div className="text-right text-sm text-[#031d9580] font-medium mt-6 uppercase">
+            Joined {format(user.user.createdAt, "PPP")}
+          </div>
         </div>
       </div>
 
       {/* Contact Info */}
-      <div className="w-full max-w-6xl mt-8 p-6 flex flex-wrap gap-6 justify-center md:justify-between">
+      <div className="w-full max-w-6xl px-6 py-10 border-b border-[#9A98C1] flex flex-wrap gap-6 justify-center md:justify-between">
         {/* Phone */}
         <div className="flex items-center gap-4">
           <div className="bg-[#4c76ff45] border border-[#4c75ff] p-4 rounded-lg">
@@ -123,8 +126,6 @@ export const Profile = (): JSX.Element => {
           <p className="text-[#2c241b] font-medium text-lg">{address}</p>
         </div>
       </div>
-      {/* Divider */}
-      <hr className="w-full max-w-6xl border-t border-gray-300 my-8" />
       <LearnersSection learners={user.user.children} />
       <LessonNotesSection />
       <ReviewsPanel />

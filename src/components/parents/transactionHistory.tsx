@@ -26,7 +26,7 @@ const transactions = [
 
 export default function TransactionsHistory() {
   return (
-    <section className="w-full max-w-6xl mx-auto mt-10 space-y-6">
+    <section className="w-full max-w-6xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center px-2">
         <h2 className="text-xl font-semibold text-[#2c241b]">
@@ -41,7 +41,7 @@ export default function TransactionsHistory() {
       {transactions.map((tx, index) => (
         <div
           key={index}
-          className="bg-[#FBF8F3] rounded-xl px-6 py-6 shadow-sm"
+          className="bg-[#FBF8F3] rounded-xl px-6 py-6 shadow-xs"
         >
           <div className="flex gap-6 items-start">
             {/* Image */}

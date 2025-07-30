@@ -28,7 +28,7 @@ function Content({
           {steps.map((step, index) => (
             <div className="flex items-start gap-4" key={index}>
               <div className="flex items-center justify-center mt-1">
-                <div className="w-5 h-5 flex-shrink-0 rounded-full bg-primary" />
+                <div className="w-5 h-5 shrink-0 rounded-full bg-primary" />
               </div>
               <div className="flex-col">
                 <h3 className="font-bold text-[#2e2e2e] text-xl">
@@ -57,7 +57,7 @@ function HowItWorksSection(): React.JSX.Element {
           <h2 className="font-medium text-zeus text-5xl">How it Works</h2>
         </div>
 
-        <Tabs defaultValue="parents" className="w-full max-w-screen-2xl">
+        <Tabs defaultValue="parents" className="w-full max-w-(--breakpoint-2xl)">
           <TabsList className="w-full flex justify-start bg-transparent p-0 h-auto gap-6 mb-[50px]">
             <TabsTrigger
               className="data-[state=active]:text-primary data-[state=active]:underline data-[state=active]:underline-offset-4 data-[state=inactive]:text-[#a4a4a4] text-3xl text-center h-auto bg-transparent"

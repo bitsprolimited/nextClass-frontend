@@ -1,3 +1,28 @@
+import { AddLearnerModalProps } from "@/components/modals/AddLearnerModal";
+import { EditLearnerModalProps } from "@/components/modals/EditLearnerModal";
+import { SetAvailabilityModalProps } from "@/components/modals/SetAvailabilityModal";
+import { SuccessDialogProps } from "@/components/modals/SuccessModal";
+import { ComponentType } from "react";
+
+export type ModalComponents = {
+  success: {
+    props: Omit<SuccessDialogProps, "isOpen" | "onClose">;
+    component: ComponentType<SuccessDialogProps>;
+  };
+  addLearner: {
+    props: Omit<AddLearnerModalProps, "isOpen" | "onClose">;
+    component: ComponentType<AddLearnerModalProps>;
+  };
+  editLearner: {
+    props: Omit<EditLearnerModalProps, "isOpen" | "onClose">;
+    component: ComponentType<EditLearnerModalProps>;
+  };
+  setAvailability: {
+    props: Omit<SetAvailabilityModalProps, "isOpen" | "onClose">;
+    component: ComponentType<SetAvailabilityModalProps>;
+  };
+};
+
 export enum Role {
   ADMIN = "admin",
   PARENT = "parent",
@@ -48,6 +73,7 @@ export interface User {
   fullName: string;
   status: "active" | "inactive" | "suspended";
   phoneNumber: string;
+  profilePicture?: string;
   address: Address;
   timezone: string;
   isEmailVerified: boolean;

@@ -39,7 +39,7 @@ export default function Upcoming() {
               </TabsTrigger>
               <TabsTrigger
                 value="history"
-                className="[font-family:'Montserrat-Medium',Helvetica] font-medium text-[#52565b] text-sm tracking-[1px] leading-[15.4px] whitespace-nowrap p-0 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+                className="font-montserrat font-medium text-[#52565b] text-sm tracking-[1px] leading-[15.4px] whitespace-nowrap p-0 data-[state=active]:bg-transparent data-[state=active]:shadow-none"
               >
                 CLASS HISTORY
               </TabsTrigger>
@@ -56,19 +56,19 @@ export default function Upcoming() {
               }`}
             >
               <div
-                className="relative w-36 h-36 rounded-[10px] border border-solid border-[#ada1a1] bg-cover bg-[50%_50%]"
+                className="relative w-36 h-36 rounded-[10px] border border-solid border-[#ada1a1] bg-cover bg-position-[50%_50%]"
                 style={{ backgroundImage: `url(${classItem.image})` }}
               />
 
               <div className="flex flex-col items-end justify-center gap-[22px]">
-                <h2 className="self-stretch [font-family:'Aero_Trial-Medium',Helvetica] font-medium text-[#2c241b] text-[32px] leading-normal">
+                <h2 className="self-stretch font-['Aero_Trial-Medium',Helvetica] font-medium text-[#2c241b] text-[32px] leading-normal">
                   {classItem.title}
                 </h2>
 
                 <div className="flex w-[656px] items-start justify-between">
                   <div className="flex flex-col gap-3 items-start">
                     <CalendarIcon className="w-6 h-6" />
-                    <div className="w-[166px] [font-family:'Montserrat-Medium',Helvetica] font-medium text-[#2c241b] text-2xl leading-[26.2px]">
+                    <div className="w-[166px] font-montserrat font-medium text-[#2c241b] text-2xl leading-[26.2px]">
                       {classItem.date}
                       <br />
                       <span className="text-[#2c241b99] text-xl">
@@ -77,24 +77,24 @@ export default function Upcoming() {
                     </div>
                   </div>
 
-                  <div className="opacity-20 [font-family:'Montserrat-Light',Helvetica] font-light text-[#2c241b] text-[64px] leading-normal">
+                  <div className="opacity-20 font-montserrat font-light text-[#2c241b] text-[64px] leading-normal">
                     |
                   </div>
 
                   <div className="flex flex-col gap-3 items-start">
                     <ClockIcon className="w-6 h-6" />
-                    <div className="[font-family:'Montserrat-Medium',Helvetica] font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
+                    <div className="font-montserrat font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
                       {classItem.duration}
                     </div>
                   </div>
 
-                  <div className="opacity-20 [font-family:'Montserrat-Light',Helvetica] font-light text-[#2c241b] text-[64px] leading-normal">
+                  <div className="opacity-20 font-montserrat font-light text-[#2c241b] text-[64px] leading-normal">
                     |
                   </div>
 
                   <div className="flex flex-col gap-3 items-start">
                     <BookOpenIcon className="w-6 h-6" />
-                    <div className="[font-family:'Montserrat-Medium',Helvetica] font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
+                    <div className="font-montserrat font-medium text-[#2c241b] text-2xl leading-[26.2px] whitespace-nowrap">
                       {classItem.subject}
                     </div>
                   </div>
@@ -105,13 +105,13 @@ export default function Upcoming() {
                     variant="ghost"
                     className="px-10 py-0 h-auto rounded-[50px]"
                   >
-                    <span className="font-htmldemo-net-montserrat-medium-title font-medium text-[#d43838] text-[16px] leading-[55px] whitespace-nowrap">
+                    <span className="font-montserrat font-medium text-[#d43838] text-[16px] leading-[55px] whitespace-nowrap">
                       Cancel Class
                     </span>
                   </Button>
 
                   <Button className="px-10 py-0 h-auto bg-[#031d95] rounded-[50px]">
-                    <span className="font-htmldemo-net-montserrat-medium-title font-medium text-white text-[16px] leading-[55px] whitespace-nowrap">
+                    <span className="font-montserrat font-medium text-white text-[16px] leading-[55px] whitespace-nowrap">
                       Reshedule Class
                     </span>
                   </Button>
@@ -126,10 +126,10 @@ export default function Upcoming() {
         <CardContent className="p-0">
           <div className="flex flex-col items-start gap-[110px]">
             <div className="flex flex-col items-start gap-1">
-              <h3 className="w-[295px] [font-family:'Aero_Trial-Medium',Helvetica] font-medium text-[#ffa300] text-3xl tracking-[0.60px] leading-normal">
+              <h3 className="w-[295px] font-['Aero_Trial-Medium',Helvetica] font-medium text-[#ffa300] text-3xl tracking-[0.60px] leading-normal">
                 Add a Learner today
               </h3>
-              <p className="w-[271px] [font-family:'Studio_Sans_DEMO-Regular',Helvetica] font-normal text-[#2c241b] text-base leading-7">
+              <p className="w-[271px] font-['Studio_Sans_DEMO-Regular',Helvetica] font-normal text-[#2c241b] text-base leading-7">
                 What are you learning today?
               </p>
             </div>

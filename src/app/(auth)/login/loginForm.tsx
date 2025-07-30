@@ -53,7 +53,7 @@ export function LoginForm(): JSX.Element {
         router.push("/dashboard/parent");
         return;
       }
-      router.push("/dashboad/tutor");
+      router.push("/dashboard/tutor");
     },
     onError: (error) => {
       toast.error("Login failed", {
@@ -123,11 +123,11 @@ export function LoginForm(): JSX.Element {
         </p>
 
         <div className="flex gap-4 justify-center mt-4">
-          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow border">
+          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm border">
             <FaGoogle className="w-5 h-5" />
             Sign Up With Google
           </Button>
-          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow">
+          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm">
             <FaApple className="w-5 h-5" />
             Sign Up With Apple
           </Button>
