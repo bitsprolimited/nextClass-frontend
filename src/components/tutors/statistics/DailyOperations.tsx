@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Legend,
 } from "recharts";
 import { CalendarDays, MoreVertical } from "lucide-react";
 import Image from "next/image";
