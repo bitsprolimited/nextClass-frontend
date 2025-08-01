@@ -30,7 +30,7 @@ export const navItems = {
     },
     {
       label: "Messages",
-      href: "/messages",
+      href: "/dashboard/messages",
     },
     {
       label: "Schedule",
@@ -44,7 +44,7 @@ export const navItems = {
     },
     {
       label: "Messages",
-      href: "/messages",
+      href: "/dashboard/messages",
     },
     {
       label: "Schedule",

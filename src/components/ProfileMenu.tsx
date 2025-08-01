@@ -60,22 +60,22 @@ const links = {
     },
     {
       name: "Earnings",
-      href: "/dashboard/parent/transactions",
+      href: "/dashboard/tutor/earnings",
       icon: Layers,
     },
     {
       name: "Statistics",
-      href: "/dashboard/parent/lesson",
+      href: "/dashboard/tutor/statistics",
       icon: PieChart,
     },
     {
       name: "Reviews",
-      href: "/dashboard/parent/lesson",
+      href: "/dashboard/tutor/reviews",
       icon: ThumbsUp,
     },
     {
       name: "View Profile",
-      href: "/dashboard/parent/profile",
+      href: "/dashboard/tutor/profile",
       icon: UserCircle2,
     },
     {
