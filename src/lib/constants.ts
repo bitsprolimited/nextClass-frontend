@@ -395,7 +395,15 @@ export const messages = [
   },
 ];
 
-export const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+export const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 export const times = [
   {
@@ -591,3 +599,15 @@ export const times = [
     time: "23:30",
   },
 ];
+import * as z from "zod";
+
+export const bioDataSchema = z.object({
+  fullName: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().min(10),
+  country: z.string(),
+  state: z.string(),
+  city: z.string(),
+  address: z.string(),
+  about: z.string(),
+});
