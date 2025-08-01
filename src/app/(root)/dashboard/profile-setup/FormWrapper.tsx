@@ -37,7 +37,7 @@ export default function FormWrapper() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f4f9] py-12 px-10 max-w-6xl w-full mx-auto">
+    <div className="min-h-screen bg-[#f6f4f9] py-12 px-10 max-w-6xl w-full mx-auto my-10">
       <div className="max-w-[418px] w-full mx-auto space-y-10 px-8 py-10">
         {/* Stepper */}
         <CustomStepper

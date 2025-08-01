@@ -1,4 +1,4 @@
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -25,7 +25,7 @@ export default function StepFour({ onBack, onSubmit }: StepFourProps) {
         onClick={onBack}
         className="flex items-center text-sm text-muted-foreground"
       >
-        <ArrowLeft className="w-4 h-4 mr-1" />
+        <ChevronLeft size={20} className="text-secondary" />
         Back to Identity Verification
       </button>
 
@@ -60,7 +60,7 @@ export default function StepFour({ onBack, onSubmit }: StepFourProps) {
       {/* Submit */}
       <Button
         onClick={onSubmit}
-        className="bg-[#fca311] hover:bg-[#fca311]/90 w-full h-12 rounded-full text-white text-base font-medium"
+        className="w-full bg-secondary h-auto p-4 text-white mt-6 rounded-full"
       >
         Submit All Details
       </Button>

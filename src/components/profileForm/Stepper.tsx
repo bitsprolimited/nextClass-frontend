@@ -4,7 +4,6 @@ import {
   Stepper,
   StepperItem,
   StepperTrigger,
-  StepperIndicator,
   StepperSeparator,
 } from "@/components/ui/stepper";
 import { Check } from "lucide-react";
