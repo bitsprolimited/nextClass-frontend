@@ -208,7 +208,7 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
           onClick={onNext}
           className="bg-secondary h-12 px-10 text-white rounded-full font-semibold"
         >
-          Continue To Career Experience
+          Continue To Introduction Video
         </Button>
       </div>
     </form>
