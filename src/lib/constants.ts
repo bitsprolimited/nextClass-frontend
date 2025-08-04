@@ -48,7 +48,7 @@ export const navItems = {
     },
     {
       label: "Schedule",
-      href: "/dashboard/tutor/schedule",
+      href: "/dashboard/schedule",
     },
   ],
 };

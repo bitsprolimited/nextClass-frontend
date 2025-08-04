@@ -74,6 +74,7 @@ export interface User {
   status: "active" | "inactive" | "suspended";
   phoneNumber: string;
   profilePicture?: string;
+  isProfileComplete: boolean;
   address: Address;
   timezone: string;
   isEmailVerified: boolean;

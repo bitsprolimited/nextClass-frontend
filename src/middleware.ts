@@ -39,6 +39,14 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
+  if (
+    path.includes("/tutor") &&
+    session?.user.role == "teacher" &&
+    !session?.user.isProfileComplete
+  ) {
+    return NextResponse.redirect(new URL("/dashboard/profile-setup", req.url));
+  }
+
   if (path.includes("/parent") && session?.user.role !== "parent") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
