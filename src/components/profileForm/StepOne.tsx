@@ -28,8 +28,16 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
         <span className="font-semibold text-foreground">Bio </span>
         <span className="text-secondary font-bold">Data</span>
       </h2>
-      <Input placeholder="Full Name" {...register("fullName")} />
-      <Input placeholder="Email Address" {...register("email")} />
+      <Input
+        placeholder="Full Name"
+        {...register("fullName")}
+        className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white"
+      />
+      <Input
+        placeholder="Email Address"
+        {...register("email")}
+        className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white"
+      />
       <div className="flex gap-2 w-full">
         {/* Country Code */}
         <div className="flex-[0.4] relative">
@@ -37,7 +45,7 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
             type="text"
             value="+234"
             disabled
-            className="w-full bg-white border border-gray-300 rounded-md py-2 pl-3 pr-6 text-gray-700 text-sm outline-none"
+            className="h-12 w-full bg-white border border-gray-300 rounded-lg px-4 text-gray-700 text-sm outline-none"
           />
           <div className="absolute top-1/2 right-2 transform -translate-y-1/2 text-orange-500 text-xs pointer-events-none">
             <ChevronDown size={20} className="text-secondary" />
@@ -49,12 +57,12 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
           type="text"
           placeholder="0xxxxxxxxx00"
           {...register("phone")}
-          className="flex-1 bg-white border border-gray-300 rounded-md py-2 px-3 text-gray-700 text-sm outline-none"
+          className="h-12 flex-1 bg-white border border-gray-300 rounded-lg px-4 text-gray-700 text-sm outline-none"
         />
       </div>
 
       <Select {...register("country")}>
-        <SelectTrigger className="bg-white">
+        <SelectTrigger className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white">
           <SelectValue placeholder="Select Country" />
         </SelectTrigger>
         <SelectContent className="bg-white">
@@ -64,7 +72,7 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
 
       <div className="flex gap-2">
         <Select {...register("state")}>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white">
             <SelectValue placeholder="Select State" />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -73,7 +81,7 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
         </Select>
 
         <Select {...register("city")}>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white">
             <SelectValue placeholder="Select City" />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -85,12 +93,12 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
       <Textarea
         placeholder="Tell us a little about yourself"
         {...register("about")}
-        className="bg-white h-30"
+        className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white resize-none"
       />
 
       <Button
         type="button"
-        className="w-full bg-secondary h-auto p-4 text-white mt-6 rounded-full"
+        className="w-full bg-secondary h-12 text-white mt-6 rounded-full font-semibold"
         onClick={onNext}
       >
         Continue To Career Experience
