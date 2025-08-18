@@ -14,12 +14,10 @@ import {
 } from "@/components/ui/select";
 import {
   CalendarIcon,
-  Upload,
   X,
   Pencil,
   Trash2,
   Plus,
-  CloudUpload,
   CloudUploadIcon,
 } from "lucide-react";
 import {
@@ -49,7 +47,7 @@ export default function EditProfilePage() {
   ];
 
   // Qualification data state
-  const [qualifications, setQualifications] = useState([
+  const [qualifications] = useState([
     {
       id: 1,
       type: "Diploma",
@@ -391,9 +389,11 @@ export default function EditProfilePage() {
                   <SelectItem value="National ID">National ID</SelectItem>
                   <SelectItem value="Passport">Passport</SelectItem>
                   <SelectItem value="Driver's License">
-                    Driver's License
+                    Driver&apos;s License
                   </SelectItem>
-                  <SelectItem value="Voter's Card">Voter's Card</SelectItem>
+                  <SelectItem value="Voter's Card">
+                    Voter&apos;ss Card
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <Select>
