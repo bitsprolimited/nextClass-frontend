@@ -47,7 +47,7 @@ const cities = {
 // Define props interface
 interface EditProfileFormProps {
   userId: string;
-  userDetails: any;
+  userDetails: ProfileFormSchema;
 }
 
 // Update user profile - modified to match API format
