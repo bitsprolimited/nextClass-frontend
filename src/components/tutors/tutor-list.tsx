@@ -12,6 +12,7 @@ import {
   Calendar,
   Clock,
   DollarSign,
+  Filter,
   Search,
   Star,
   Watch,
@@ -309,18 +310,31 @@ function TutorList(): React.JSX.Element {
   return (
     <section className="py-[140px] px-4">
       <div className="container flex flex-col items-center justify-center gap-[60px] w-full max-w-7xl mx-auto">
+        {/* Search & Filters Wrapper */}
         <div className="flex flex-col items-start p-5 gap-2 bg-[#f5f4f8] w-full">
-          <div className="flex w-full justify-between items-center py-3 pr-6 shadow-[0px_4px_4px_#031d9540] focus-within:ring-1 focus-within:ring-primary rounded-sm">
-            <Input
-              type="text"
-              className="h-[60px] px-5 py-[20px] w-full shadow-none border-none font-medium text-[#757575] text-2xl bg-transparent focus-visible:ring-0"
-              placeholder="Search subjects or tutors here..."
-            />
-            <Button className="px-[50px] py-4 rounded-full h-auto font-medium text-lg hover:bg-secondary">
-              <Search className="w-4 h-4" /> Search
+          {/* Search Row */}
+          <div className="flex w-full items-center gap-3">
+            {/* Input + Search (pilled container on mobile, inline on desktop) */}
+            <div className="flex w-full justify-between items-center py-2 pr-2 shadow-[0px_4px_4px_#031d9540] focus-within:ring-1 focus-within:ring-primary rounded-full">
+              <Input
+                type="text"
+                className="h-[50px] px-4 w-full shadow-none border-none font-medium text-[#757575] text-base sm:text-lg bg-transparent focus-visible:ring-0"
+                placeholder="Search Subjects or Tutors here"
+              />
+              <Button className="px-5 sm:px-8 py-2 sm:py-3 rounded-full h-auto font-medium text-sm sm:text-base hover:bg-secondary">
+                <Search className="w-4 h-4 mr-1" /> Search
+              </Button>
+            </div>
+
+            {/* Filter Button (only visible on mobile) */}
+            <Button className="flex sm:hidden flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-[#D9E2FF] text-primary font-medium shadow-sm">
+              <Filter className="w-5 h-5" />
+              <span className="text-xs">Filter</span>
             </Button>
           </div>
-          <div className="flex items-start gap-9 pt-5 w-full self-stretch">
+
+          {/* Dropdown Filters (hidden on mobile, shown on desktop) */}
+          <div className="hidden sm:flex items-start gap-9 pt-5 w-full self-stretch">
             {FILTERS.map((filter, index) => (
               <div className="w-full" key={index}>
                 <Select>
@@ -333,12 +347,10 @@ function TutorList(): React.JSX.Element {
                 </Select>
               </div>
             ))}
-            {/* <Button className="text-xl h-auto py-4 px-10 rounded-full bg-secondary hover:bg-primary">
-            Filter
-          </Button> */}
           </div>
         </div>
-        <div></div>
+
+        {/* Tutors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {TUTORS.map((tutor, index) => (
             <TutorCard key={index} tutorData={tutor} />

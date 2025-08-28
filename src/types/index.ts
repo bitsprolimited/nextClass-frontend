@@ -118,3 +118,31 @@ export interface LoginResponse extends AuthResponse {
   refreshToken: string;
 }
 // export interface SignupResponse extends AuthResponse {}
+
+export interface Teacher {
+  id: string;
+  fullName: string;
+  email: string;
+  subjects: string[];
+  experience: number;
+  qualifications: string[];
+  bio: string;
+  hourlyRate: number;
+  rating: number;
+  ratingCount: number;
+  profilePicture?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Pagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+}
+
+export interface TeacherResponse {
+  teachers: Teacher[];
+  pagination: Pagination;
+}

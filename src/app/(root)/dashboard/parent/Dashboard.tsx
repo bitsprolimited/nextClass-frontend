@@ -50,22 +50,23 @@ export default function Dashboard() {
       {/* Header Section */}
       <div className="flex w-full bg-[#F8F7FC] px-6">
         <div className="w-full max-w-7xl mx-auto py-[60px] space-y-10">
-          <div className="flex md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="flex  md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
             <div>
               <h1 className="text-[20px] md:text-[48px] font-medium text-[#2C1E1E] tracking-normal font-aero-trial">
                 My Dashboard
               </h1>
-              <p className="text-[#544E4E] text-lg mt-1">
+              <p className="text-[#544E4E] text-base md:text-lg mt-1">
                 Are you ready to teach today?
               </p>
             </div>
 
             <Link href="/dashboard/parent/profile" passHref>
-              <Button className="bg-secondary hover:bg-primary h-auto text-white rounded-full px-8 py-3 text-base font-medium">
-                View Calendar
+              <Button className="bg-[#FFA500] hover:bg-[#FFA500]/90 text-white rounded-full px-6 py-2 md:px-8 md:py-3 text-[12px] md:text-base font-medium w-full md:w-auto">
+                View Schedule
               </Button>
             </Link>
           </div>
+
           {/* Alert Banner */}
           <AlertRotator />
 
@@ -98,7 +99,7 @@ export default function Dashboard() {
                   {classData.map((item, index) => (
                     <div
                       key={index}
-                      className={`flex flex-col sm:flex-row w-full max-w-[852px] sm:items-start gap-4 sm:gap-6 mx-auto rounded-xl p-4 sm:p-6 ${
+                      className={`flex  sm:flex-row w-full max-w-[852px] sm:items-start gap-4 sm:gap-6 mx-auto rounded-xl p-4 sm:p-6 ${
                         index > 0 ? "mt-4 sm:mt-8" : ""
                       }`}
                       style={{ background: "transparent" }}
