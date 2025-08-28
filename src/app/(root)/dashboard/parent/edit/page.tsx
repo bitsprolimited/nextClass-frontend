@@ -1,13 +1,19 @@
-"use client";
+"use server";
 
+import { getCurrentUser, getCurrentUserId } from "@/services/session";
 import EditProfile from "./editProfile";
 import HeroLesson from "./heroEdit";
 
-const page = () => {
+const page = async () => {
+  const userId = await getCurrentUserId();
+  const userDetails = await getCurrentUser();
+  if (!userId || !userDetails) {
+    return <div>Unauthorized</div>;
+  }
   return (
     <main className=" ">
       <HeroLesson />
-      <EditProfile />
+      <EditProfile userId={userId} userDetails={userDetails} />
     </main>
   );
 };

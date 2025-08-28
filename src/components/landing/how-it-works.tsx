@@ -57,8 +57,11 @@ function HowItWorksSection(): React.JSX.Element {
           <h2 className="font-medium text-zeus text-5xl">How it Works</h2>
         </div>
 
-        <Tabs defaultValue="parents" className="w-full max-w-(--breakpoint-2xl)">
-          <TabsList className="w-full flex justify-start bg-transparent p-0 h-auto gap-6 mb-[50px]">
+        <Tabs
+          defaultValue="parents"
+          className="w-full max-w-(--breakpoint-2xl)"
+        >
+          <TabsList className="w-full flex justify-center sm:justify-start bg-transparent p-0 h-auto gap-6 mb-[50px]">
             <TabsTrigger
               className="data-[state=active]:text-primary data-[state=active]:underline data-[state=active]:underline-offset-4 data-[state=inactive]:text-[#a4a4a4] text-3xl text-center h-auto bg-transparent"
               value="parents"
@@ -72,6 +75,7 @@ function HowItWorksSection(): React.JSX.Element {
               Tutors
             </TabsTrigger>
           </TabsList>
+
           <TabsContent value="parents" className="w-full">
             <Content img={STEPS.parents.img} steps={STEPS.parents.steps} />
           </TabsContent>

@@ -32,7 +32,7 @@ const settingsMeta: {
 }[] = [
   {
     key: "parentsResponse",
-    title: "Parents Response Notifications",
+    title: "Tutor Response Notifications",
     description: "Stay informed with notifications regarding your paid cards.",
   },
   {
@@ -43,7 +43,7 @@ const settingsMeta: {
   },
   {
     key: "marketingPromos",
-    title: "Marketing & Promotional Notifications",
+    title: "Our Products",
     description:
       "Occasionally receive emails about our product updates, relevant events and discounts.",
   },
@@ -71,23 +71,21 @@ export default function NotificationSettings() {
         [channel]: value,
       },
     }));
-
-    // Future: Send API request here
-    // await updateNotificationSettingAPI(type, channel, value);
   };
 
   return (
-    <section className="space-y-6 max-w-4xl mx-auto">
+    <section className="space-y-6 max-w-4xl mx-auto px-4">
       {/* Header */}
       <div>
-        <h2 className="text-[32px] font-bold text-[#2C241B]">
+        <h2 className="text-2xl md:text-3xl lg:text-[32px] font-bold text-[#2C241B]">
           Notification Settings
         </h2>
-        <p className="text-[#7D7D7D] text-sm">Personalise your notifications</p>
+        <p className="text-xs md:text-sm text-[#7D7D7D] border-b border-[#ddd] pb-4">
+          Personalise your notifications
+        </p>
       </div>
 
       <div className="w-full divide-y divide-[#E5E5E5]">
-        {/* Loop through notifications */}
         {settingsMeta.map(({ key, title, description }) => (
           <div
             key={key}
@@ -95,17 +93,19 @@ export default function NotificationSettings() {
           >
             {/* Title + Description */}
             <div className="flex-1">
-              <h3 className="text-base font-semibold text-[#2C241B]">
+              <h3 className="text-sm md:text-base lg:text-lg font-semibold text-[#2C241B]">
                 {title}
               </h3>
-              <p className="text-sm text-[#7D7D7D] mt-1">{description}</p>
+              <p className="text-xs md:text-sm text-[#7D7D7D] mt-1 w-[400px]">
+                {description}
+              </p>
             </div>
 
             {/* Toggle Switches */}
-            <div className="flex gap-6 min-w-[180px] items-center justify-between md:justify-end">
+            <div className="flex items-center gap-6 ml-auto">
               {(["inApp", "email"] as Channel[]).map((channel) => (
                 <div key={channel} className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-[#2C241B] capitalize">
+                  <span className="text-xs md:text-sm font-medium text-[#2C241B] capitalize">
                     {channel === "inApp" ? "In-App" : "Email"}
                   </span>
                   <Switch

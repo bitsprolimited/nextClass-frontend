@@ -12,6 +12,7 @@ import {
   Calendar,
   Clock,
   DollarSign,
+  Filter,
   Search,
   Star,
   Watch,
@@ -156,67 +157,151 @@ export const TUTORS = [
 
 function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
   return (
-    <Card className="relative max-w-[400px] hover:bg-primary bg-white rounded-[10px] p-4 border-none group">
-      <div className="w-[120px] h-[120px] mx-auto absolute  left-1/2 -top-[60px] -translate-x-1/2">
-        <Avatar className="w-full h-full shadow-[0px_4px_4px_#00000040]">
-          <AvatarImage src={tutorData.image} />
-          <AvatarFallback>{tutorData.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-      </div>
-      <CardContent className="flex flex-col gap-4 mt-4 pt-10">
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-2xl text-zeus">🇳🇬</span>
-            <h2 className="font-medium text-2xl text-zeus group-hover:text-white">
-              {tutorData.name}
-            </h2>
-          </div>
-          <div className="flex items-center gap-1">
-            <p className="text-zeus text-[10px] font-medium group-hover:text-gray-200">
-              {tutorData.rating}
-            </p>
+    <Card className="relative w-full max-w-[400px] md:max-w-none bg-white rounded-[10px] p-0 border-none">
+      {/* ==== MOBILE VERSION ==== */}
+      <div className="flex flex-col md:hidden">
+        {/* Avatar + Name + Rating */}
+        <div className="flex gap-3 items-center p-4">
+          <Avatar className="w-[60px] h-[60px] shadow-[0px_4px_4px_#00000040]">
+            <AvatarImage src={tutorData.image} />
+            <AvatarFallback>{tutorData.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-sm text-zeus">🇳🇬</span>
+              <h2 className="font-medium text-base text-zeus">
+                {tutorData.name}
+              </h2>
+            </div>
             <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, index) => (
-                <Star
-                  key={index}
-                  className="fill-yellow-500 text-yellow-500 w-3 h-3"
-                />
+              <p className="text-zeus text-xs font-medium">
+                {tutorData.rating}
+              </p>
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, index) => (
+                  <Star
+                    key={index}
+                    className="fill-yellow-500 text-yellow-500 w-3 h-3"
+                  />
+                ))}
+              </div>
+              <p className="opacity-50 text-zeus text-xs">
+                ({tutorData.reviewCount})
+              </p>
+            </div>
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2 py-2">
+              {tutorData.badges.map((badge, index) => (
+                <Badge key={index} className={`${badge.color} text-xs`}>
+                  {badge.text}
+                </Badge>
               ))}
             </div>
-            <p className="opacity-50 text-zeus text-[10px] group-hover:text-gray-200">
-              ({tutorData.reviewCount})
-            </p>
           </div>
         </div>
-        <div className="flex justify-between flex-wrap gap-2">
-          {tutorData.badges.map((badge, index) => (
-            <Badge
-              key={index}
-              className={`${badge.color} text-xs group-hover:bg-white`}
-            >
-              {badge.text}
-            </Badge>
-          ))}
-        </div>
-        <div className="w-full group-hover:hidden">
-          <ul className="flex flex-wrap justify-between gap-[8px_20px]">
+
+        {/* Details in gray container */}
+        <div className="bg-[#f5f4f8] px-4 py-3 w-full">
+          <ul className="flex flex-wrap gap-x-4 gap-y-2">
             {tutorData.details.map((detail, index) => (
-              <li key={index} className="flex items-center gap-3">
-                <detail.icon className="w-4 h-4" />
-                <p className={cn(detail.color, "font-medium")}>{detail.text}</p>
+              <li
+                key={index}
+                className="flex items-center gap-2 text-sm min-w-[45%]"
+              >
+                <detail.icon className="w-4 h-4 shrink-0" />
+                <p className={cn(detail.color, "font-medium break-words")}>
+                  {detail.text}
+                </p>
               </li>
             ))}
           </ul>
         </div>
-        <div className="group-hover:flex hidden justify-center gap-2 mt-10">
-          <Button className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2">
-            View Profile
+
+        {/* Action Buttons in blue footer */}
+        <div className="bg-[#002b9a] flex justify-center gap-2 px-4 py-4">
+          <Button className="w-1/2 h-auto bg-white text-secondary hover:bg-gray-100">
+            View Full Profile
           </Button>
-          <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
+          <Button className="w-1/2 h-auto border border-white text-white bg-transparent hover:bg-white hover:text-secondary">
             Schedule a Meeting
           </Button>
         </div>
-      </CardContent>
+      </div>
+
+      {/* ==== DESKTOP VERSION ==== */}
+      <div className="hidden md:block">
+        <CardContent className="flex flex-col gap-4 mt-4 pt-10 group hover:bg-primary rounded-[10px]">
+          {/* Avatar */}
+          <div className="w-[120px] h-[120px] mx-auto absolute left-1/2 -top-[60px] -translate-x-1/2">
+            <Avatar className="w-full h-full shadow-[0px_4px_4px_#00000040]">
+              <AvatarImage src={tutorData.image} />
+              <AvatarFallback>{tutorData.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+          </div>
+
+          {/* Name + Rating */}
+          <div className="flex flex-col items-center gap-2 mt-16">
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-2xl text-zeus">🇳🇬</span>
+              <h2 className="font-medium text-2xl text-zeus group-hover:text-white">
+                {tutorData.name}
+              </h2>
+            </div>
+            <div className="flex items-center gap-1">
+              <p className="text-zeus text-[10px] font-medium group-hover:text-gray-200">
+                {tutorData.rating}
+              </p>
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, index) => (
+                  <Star
+                    key={index}
+                    className="fill-yellow-500 text-yellow-500 w-3 h-3"
+                  />
+                ))}
+              </div>
+              <p className="opacity-50 text-zeus text-[10px] group-hover:text-gray-200">
+                ({tutorData.reviewCount})
+              </p>
+            </div>
+          </div>
+
+          {/* Badges */}
+          <div className="flex justify-between flex-wrap gap-2">
+            {tutorData.badges.map((badge, index) => (
+              <Badge
+                key={index}
+                className={`${badge.color} text-xs group-hover:bg-white`}
+              >
+                {badge.text}
+              </Badge>
+            ))}
+          </div>
+
+          {/* Details */}
+          <div className="w-full group-hover:hidden">
+            <ul className="flex flex-wrap justify-between gap-[8px_20px]">
+              {tutorData.details.map((detail, index) => (
+                <li key={index} className="flex items-center gap-3">
+                  <detail.icon className="w-4 h-4" />
+                  <p className={cn(detail.color, "font-medium")}>
+                    {detail.text}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Hover Buttons */}
+          <div className="hidden group-hover:flex justify-center gap-2 mt-10">
+            <Button className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2">
+              View Profile
+            </Button>
+            <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
+              Schedule a Meeting
+            </Button>
+          </div>
+        </CardContent>
+      </div>
     </Card>
   );
 }
@@ -225,18 +310,31 @@ function TutorList(): React.JSX.Element {
   return (
     <section className="py-[140px] px-4">
       <div className="container flex flex-col items-center justify-center gap-[60px] w-full max-w-7xl mx-auto">
+        {/* Search & Filters Wrapper */}
         <div className="flex flex-col items-start p-5 gap-2 bg-[#f5f4f8] w-full">
-          <div className="flex w-full justify-between items-center py-3 pr-6 shadow-[0px_4px_4px_#031d9540] focus-within:ring-1 focus-within:ring-primary rounded-sm">
-            <Input
-              type="text"
-              className="h-[60px] px-5 py-[20px] w-full shadow-none border-none font-medium text-[#757575] text-2xl bg-transparent focus-visible:ring-0"
-              placeholder="Search subjects or tutors here..."
-            />
-            <Button className="px-[50px] py-4 rounded-full h-auto font-medium text-lg hover:bg-secondary">
-              <Search className="w-4 h-4" /> Search
+          {/* Search Row */}
+          <div className="flex w-full items-center gap-3">
+            {/* Input + Search (pilled container on mobile, inline on desktop) */}
+            <div className="flex w-full justify-between items-center py-2 pr-2 shadow-[0px_4px_4px_#031d9540] focus-within:ring-1 focus-within:ring-primary rounded-full">
+              <Input
+                type="text"
+                className="h-[50px] px-4 w-full shadow-none border-none font-medium text-[#757575] text-base sm:text-lg bg-transparent focus-visible:ring-0"
+                placeholder="Search Subjects or Tutors here"
+              />
+              <Button className="px-5 sm:px-8 py-2 sm:py-3 rounded-full h-auto font-medium text-sm sm:text-base hover:bg-secondary">
+                <Search className="w-4 h-4 mr-1" /> Search
+              </Button>
+            </div>
+
+            {/* Filter Button (only visible on mobile) */}
+            <Button className="flex sm:hidden flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-[#D9E2FF] text-primary font-medium shadow-sm">
+              <Filter className="w-5 h-5" />
+              <span className="text-xs">Filter</span>
             </Button>
           </div>
-          <div className="flex items-start gap-9 pt-5 w-full self-stretch">
+
+          {/* Dropdown Filters (hidden on mobile, shown on desktop) */}
+          <div className="hidden sm:flex items-start gap-9 pt-5 w-full self-stretch">
             {FILTERS.map((filter, index) => (
               <div className="w-full" key={index}>
                 <Select>
@@ -249,12 +347,10 @@ function TutorList(): React.JSX.Element {
                 </Select>
               </div>
             ))}
-            {/* <Button className="text-xl h-auto py-4 px-10 rounded-full bg-secondary hover:bg-primary">
-            Filter
-          </Button> */}
           </div>
         </div>
-        <div></div>
+
+        {/* Tutors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {TUTORS.map((tutor, index) => (
             <TutorCard key={index} tutorData={tutor} />
