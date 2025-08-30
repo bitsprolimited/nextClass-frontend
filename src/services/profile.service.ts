@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import axiosInstance from "@/lib/axios";
 
 export type UpdateParentProfilePayload = {
   email: string;
@@ -14,13 +12,10 @@ export type UpdateParentProfilePayload = {
   };
 };
 
-export async function updateParentProfile(
+export const updateParentProfile = async (
   userId: string,
   payload: UpdateParentProfilePayload
-) {
-  const { data } = await axios.patch(
-    `${BASE_URL}/api/v1/user/${userId}`,
-    payload
-  );
-  return data;
-}
+) => {
+  const response = await axiosInstance.patch(`/user/${userId}`, payload);
+  return response.data;
+};
