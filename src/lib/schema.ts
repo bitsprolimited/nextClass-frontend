@@ -1,3 +1,20 @@
+export const profileSchema = z.object({
+  email: z.string().email("Enter a valid email"),
+  password: z.string().optional(),
+  address: z.object({
+    street: z.string().min(5, "Enter a valid address"),
+    city: z.string().min(1, "Select a city"),
+    state: z.string().min(1, "Select a state"),
+    country: z.string().min(1, "Select a country"),
+  }),
+  fullName: z.string().min(2, "Full name is required").optional(),
+  phone: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .optional(),
+});
+
+export type ProfileFormSchema = z.infer<typeof profileSchema>;
 import { z } from "zod";
 
 // Zod schema for form validation

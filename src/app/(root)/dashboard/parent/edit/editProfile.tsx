@@ -2,7 +2,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { profileSchema, ProfileFormSchema } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,80 +13,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { updateParentProfile } from "@/services/profile.service";
+import { useEffect, useMemo } from "react";
+import { Country, State, City } from "country-state-city";
 
-// Define schema to match the API format
-const profileSchema = z.object({
-  email: z.string().email("Enter a valid email"),
-  password: z.string().optional(), // Optional since we might not always update password
-  address: z.object({
-    street: z.string().min(5, "Enter a valid address"),
-    city: z.string().min(1, "Select a city"),
-    state: z.string().min(1, "Select a state"),
-    country: z.string().min(1, "Select a country"),
-  }),
-  // Keep other fields if needed
-  fullName: z.string().min(2, "Full name is required").optional(),
-  phone: z
-    .string()
-    .min(10, "Phone number must be at least 10 digits")
-    .optional(),
-});
-
-type ProfileFormSchema = z.infer<typeof profileSchema>;
-
-const countries = ["USA", "Nigeria", "Ghana", "Kenya", "South Africa"];
-const states = ["NY", "CA", "TX", "Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
-const cities = {
-  NY: ["New York", "Buffalo", "Rochester", "Albany"],
-  CA: ["Los Angeles", "San Francisco", "San Diego", "Sacramento"],
-  Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
-  Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
-};
+// Dynamic country, state, city lists
+const countryList = Country.getAllCountries();
 
 // Define props interface
 interface EditProfileFormProps {
   userId: string;
   userDetails: ProfileFormSchema;
 }
-
-// Update user profile - modified to match API format
-const updateUserProfile = async ({
-  userId,
-  data,
-}: {
-  userId: string;
-  data: ProfileFormSchema;
-}) => {
-  // Prepare the data in the correct format
-  const requestData = {
-    email: data.email,
-    password: data.password || undefined, // Only include if provided
-    address: {
-      street: data.address.street,
-      city: data.address.city,
-      state: data.address.state,
-      country: data.address.country,
-    },
-    // Include other fields if your API expects them
-    fullName: data.fullName,
-    phone: data.phone,
-  };
-
-  const response = await fetch(`/v1/user/${userId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(requestData),
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to update profile");
-  }
-
-  return response.json();
-};
 
 export default function EditProfileForm({
   userId,
@@ -96,7 +34,18 @@ export default function EditProfileForm({
 
   // Update user mutation
   const mutation = useMutation({
-    mutationFn: updateUserProfile,
+    mutationFn: (payload: { userId: string; data: ProfileFormSchema }) =>
+      updateParentProfile(payload.userId, {
+        email: payload.data.email,
+        fullName: payload.data.fullName ?? "",
+        phoneNumber: payload.data.phone ?? "",
+        address: {
+          street: payload.data.address.street,
+          city: payload.data.address.city,
+          state: payload.data.address.state,
+          country: payload.data.address.country,
+        },
+      }),
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["user", userId] });
@@ -114,7 +63,6 @@ export default function EditProfileForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       email: userDetails?.email || "",
-      password: "", // Empty by default for security
       fullName: userDetails?.fullName || "",
       phone: userDetails?.phone || "",
       address: {
@@ -131,7 +79,7 @@ export default function EditProfileForm({
     if (userDetails) {
       reset({
         email: userDetails.email || "",
-        password: "", // Don't pre-fill password for security
+
         fullName: userDetails.fullName || "",
         phone: userDetails.phone || "",
         address: {
@@ -147,14 +95,34 @@ export default function EditProfileForm({
   const selectedCountry = watch("address.country");
   const selectedState = watch("address.state");
 
+  // Get states for selected country
+  const stateList = useMemo(() => {
+    if (!selectedCountry) return [];
+    const countryObj = countryList.find(
+      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
+    );
+    return countryObj ? State.getStatesOfCountry(countryObj.isoCode) : [];
+  }, [selectedCountry]);
+
+  // Get cities for selected state
+  const cityList = useMemo(() => {
+    if (!selectedCountry || !selectedState) return [];
+    const countryObj = countryList.find(
+      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
+    );
+    const stateObj = stateList.find(
+      (s) => s.name === selectedState || s.isoCode === selectedState
+    );
+    return countryObj && stateObj
+      ? City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode)
+      : [];
+  }, [selectedCountry, selectedState, stateList]);
+
   const onSubmit = (data: ProfileFormSchema) => {
     mutation.mutate({ userId, data });
   };
 
-  const availableCities =
-    selectedState && cities[selectedState as keyof typeof cities]
-      ? cities[selectedState as keyof typeof cities]
-      : [];
+  const availableCities = cityList;
 
   return (
     <section className="w-full flex justify-center items-center my-10">
@@ -181,17 +149,6 @@ export default function EditProfileForm({
         />
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
-
-        {/* Password (optional) */}
-        <Input
-          type="password"
-          placeholder="New Password (leave blank to keep current)"
-          className="py-4 pl-5 h-auto"
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
 
         {/* Phone */}
@@ -225,9 +182,9 @@ export default function EditProfileForm({
                 <SelectValue placeholder="Select Country" />
               </SelectTrigger>
               <SelectContent>
-                {countries.map((country) => (
-                  <SelectItem key={country} value={country}>
-                    {country}
+                {countryList.map((country) => (
+                  <SelectItem key={country.isoCode} value={country.name}>
+                    {country.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -256,9 +213,9 @@ export default function EditProfileForm({
                     <SelectValue placeholder="Select State" />
                   </SelectTrigger>
                   <SelectContent>
-                    {states.map((state) => (
-                      <SelectItem key={state} value={state}>
-                        {state}
+                    {stateList.map((state) => (
+                      <SelectItem key={state.isoCode} value={state.name}>
+                        {state.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -287,8 +244,8 @@ export default function EditProfileForm({
                   </SelectTrigger>
                   <SelectContent>
                     {availableCities.map((city) => (
-                      <SelectItem key={city} value={city}>
-                        {city}
+                      <SelectItem key={city.name} value={city.name}>
+                        {city.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
