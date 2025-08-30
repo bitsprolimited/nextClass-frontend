@@ -35,7 +35,7 @@ export async function createSession(payload: Session) {
 export async function getSession() {
   const cookieStore = await cookies();
   const cookie = cookieStore.get("session")?.value;
-  
+
   if (!cookie) return null;
 
   try {
@@ -56,3 +56,12 @@ export async function deleteSession() {
   cookieStore.delete("session");
 }
 
+export async function getCurrentUser() {
+  const session = await getSession();
+  return session?.user || null;
+}
+
+export async function getCurrentUserId() {
+  const session = await getSession();
+  return session?.user?.id || null;
+}

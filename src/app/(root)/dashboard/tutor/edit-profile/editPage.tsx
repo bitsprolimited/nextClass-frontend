@@ -391,7 +391,9 @@ export default function EditProfilePage() {
                   <SelectItem value="Driver's License">
                     Driver&apos;s License
                   </SelectItem>
-                  <SelectItem value="Voter's Card">Voter&apos;s Card</SelectItem>
+                  <SelectItem value="Voter's Card">
+                    Voter&apos;s Card
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <Select>
