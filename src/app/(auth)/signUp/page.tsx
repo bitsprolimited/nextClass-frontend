@@ -16,7 +16,7 @@ function Login() {
         img={{
           secondary: {
             src: "/images/signup-Saly-17.png",
-            className: "top-0 left-0 w-[240px]",
+            className: "top-0 left-0 w-[190px]",
           },
           primary: {
             src: "/images/signup-Saly-16.png",

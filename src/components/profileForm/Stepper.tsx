@@ -2,66 +2,59 @@
 
 import {
   Stepper,
+  StepperIndicator,
   StepperItem,
-  StepperTrigger,
   StepperSeparator,
+  StepperTitle,
+  StepperTrigger,
 } from "@/components/ui/stepper";
-import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StepperProps {
   currentStep: number;
   totalSteps: number;
   onStepChange?: (step: number) => void;
+  completedSteps?: { [key: number]: boolean };
 }
+
+const steps = [
+  { number: 1, title: "Bio Data" },
+  { number: 2, title: "Career Experience" },
+  { number: 3, title: "Identity Document" },
+  { number: 4, title: "Introduction Video" },
+];
 
 export default function CustomStepper({
   currentStep,
-  totalSteps,
   onStepChange,
 }: StepperProps) {
   return (
     <div className="w-full">
-      {/* Step Count */}
-      <div className="text-sm font-medium text-[#FFA500] mb-4">
-        {currentStep + 1}/{totalSteps}
-      </div>
-
       <Stepper
         value={currentStep + 1}
         onValueChange={(val) => onStepChange?.(val - 1)}
         className="flex items-center justify-between"
       >
-        {Array.from({ length: totalSteps }).map((_, index) => {
-          const isCompleted = index < currentStep;
-          const isActive = index === currentStep;
-
+        {steps.map((step, index) => {
           return (
-            <StepperItem key={index} step={index + 1} className="flex-1">
-              <StepperTrigger className="flex flex-col items-center gap-2">
-                <div
+            <StepperItem
+              key={index}
+              step={index + 1}
+              className="relative not-last:flex-1 items-end"
+            >
+              <StepperTrigger className="flex-col gap-3 rounded">
+                <StepperTitle
                   className={cn(
-                    "relative flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all",
+                    "opacity-0 transition-all duration-200 text-secondary",
                     {
-                      "bg-white border-[#001E62]": isCompleted,
-                      "bg-[#001E62] border-transparent ring-4 ring-[#DCE2F3]":
-                        isActive,
-                      "bg-[#DCE2F3] border-[#001E62]":
-                        !isCompleted && !isActive,
+                      "opacity-100": currentStep === step.number,
                     }
                   )}
-                >
-                  {isCompleted ? (
-                    <Check className="w-4 h-4 text-[#001E62]" />
-                  ) : isActive ? (
-                    <div className="w-2.5 h-2.5 rounded-full bg-white" />
-                  ) : null}
-                </div>
+                >{`${currentStep}/${steps.length}`}</StepperTitle>
+                <StepperIndicator className="data-[state=active]:border-primary size-5 data-[state=active]:border-2 data-[state=active]:bg-transparent [&_span]:sr-only [&_svg]:size-3" />
               </StepperTrigger>
-
-              {/* Line Separator */}
-              {index < totalSteps - 1 && (
-                <StepperSeparator className="h-[2px] bg-slate-200 w-full " />
+              {step.number < steps.length && (
+                <StepperSeparator className="mb-2" />
               )}
             </StepperItem>
           );

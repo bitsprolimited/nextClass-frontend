@@ -3,7 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
 // const protectedRoutes: string[] = [];
-const publicRoutes = ["/login", "/signup", "/", "/forgot-password"];
+const publicRoutes = [
+  "/login",
+  "/signup",
+  "/signup/tutor",
+  "/",
+  "/forgot-password",
+];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -35,21 +41,21 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
-  if (path.includes("/tutor") && session?.user.role !== "teacher") {
+  if (path.startsWith("/dashboard/tutor") && session?.user.role !== "teacher") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
-  if (
-    path.includes("/tutor") &&
-    session?.user.role == "teacher" &&
-    !session?.user.isProfileComplete
-  ) {
-    return NextResponse.redirect(new URL("/dashboard/profile-setup", req.url));
-  }
-
-  if (path.includes("/parent") && session?.user.role !== "parent") {
+  if (path.startsWith("/dashboard/parent") && session?.user.role !== "parent") {
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
+
+  // if (
+  //   path.includes("dashboard/tutor") &&
+  //   session?.user.role == "teacher" &&
+  //   !session?.user.isProfileComplete
+  // ) {
+  //   return NextResponse.redirect(new URL("/dashboard/profile-setup", req.url));
+  // }
 
   NextResponse.next();
 }

@@ -1,4 +1,72 @@
+import { Option } from "@/components/ui/multiselect";
 import { FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+
+export const subjects: Option[] = [
+  {
+    value: "mathematics",
+    label: "Mathematics",
+  },
+  {
+    value: "english",
+    label: "English Language",
+  },
+  {
+    value: "physics",
+    label: "Physics",
+  },
+  {
+    value: "chemistry",
+    label: "Chemistry",
+  },
+  {
+    value: "biology",
+    label: "Biology",
+  },
+  {
+    value: "literature",
+    label: "Literature in English",
+  },
+  {
+    value: "government",
+    label: "Government",
+  },
+  {
+    value: "economics",
+    label: "Economics",
+  },
+  {
+    value: "geography",
+    label: "Geography",
+  },
+  {
+    value: "history",
+    label: "History",
+  },
+  {
+    value: "french",
+    label: "French",
+  },
+  {
+    value: "computer_science",
+    label: "Computer Science",
+  },
+  {
+    value: "agriculture",
+    label: "Agricultural Science",
+  },
+  {
+    value: "civic",
+    label: "Civic Education",
+  },
+  {
+    value: "commerce",
+    label: "Commerce",
+  },
+  {
+    value: "accounting",
+    label: "Accounting",
+  },
+];
 
 export const navItems = {
   root: [

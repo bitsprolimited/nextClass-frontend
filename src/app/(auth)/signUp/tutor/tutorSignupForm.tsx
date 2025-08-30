@@ -89,7 +89,7 @@ export default function TutorSignupForm(): JSX.Element {
   return (
     <div className="flex flex-col items-end w-[70%] mx-auto">
       <Link href="/signup" className="my-4">
-        <Button className="bg-[#F5F4F8] text-[20px] text-[#031D95] px-4 py-3 rounded-full">
+        <Button className="bg-[#F5F4F8] hover:text-white text-[20px] text-[#031D95] px-4 py-3 rounded-full">
           Sign up as a parent
         </Button>
       </Link>

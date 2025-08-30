@@ -7,6 +7,10 @@
 @theme {
   --font-aero-trial: var(--font-aero-trial);
   --font-studio-sans: var(--font-studio-sans);
+  --font-playfair-display: var(--font-playfair-display);
+  --font-montserrat: var(--font-montserrat);
+  --font-geist-sans: var(--font-geist-sans);
+  --font-geist-mono: var(--font-geist-mono);
 
   --color-abbey: hsl(var(--abbey));
   --color-zeus: hsl(var(--zeus));

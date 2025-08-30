@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Playfair_Display,
+  Montserrat,
+} from "next/font/google";
 import "./globals.css";
 import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
 import { Toaster } from "sonner";
@@ -8,6 +13,16 @@ import Modal from "@/components/modals/Modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const MontserratFont = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair-display",
   subsets: ["latin"],
 });
 
@@ -30,7 +45,7 @@ export default function RootLayout({
     <ReactQueryClientProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${AeroTrial.variable} ${StudioSans.variable} antialiased font`}
+          className={`${geistSans.variable} ${geistMono.variable} ${AeroTrial.variable} ${StudioSans.variable} ${playfairDisplay.variable} ${MontserratFont.variable} antialiased font`}
         >
           {children}
           <Toaster richColors />
