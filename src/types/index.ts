@@ -67,6 +67,45 @@ export interface Child {
   updatedAt: string;
 }
 
+export interface Qualification {
+  _id: string;
+  type: string; // e.g. "certificate"
+  courseName: string;
+  issuingInstitution: string;
+  expiryDate: string; // ISO Date string
+  certificateUrl: string;
+  createdAt: string;
+}
+
+export interface Availability {
+  _id: string;
+  dayOfWeek: number; // 0-6 (Sunday-Saturday)
+  slots: TimeSlot[];
+  isAvailable: boolean;
+}
+
+export interface TimeSlot {
+  startTime: string; // "HH:mm"
+  endTime: string; // "HH:mm"
+}
+
+export interface BankDetails {
+  accountNumber: string;
+  accountName: string;
+  bankName: string;
+}
+
+export interface IdentityDocument {
+  _id: string;
+  idType: string; // e.g. "passport"
+  issuingAuthority: string;
+  issueDate: string;
+  expiryDate: string;
+  documentUrl: string;
+  isVerified: boolean;
+  uploadedAt: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -78,7 +117,8 @@ export interface User {
   address: Address;
   timezone: string;
   isEmailVerified: boolean;
-  qualifications: string[];
+  qualifications: Qualification[];
+  grades: string[];
   rating: number;
   subjects: string[];
   experience?: number;
@@ -90,6 +130,13 @@ export interface User {
   updatedAt: string;
 }
 
+export interface Teacher extends User {
+  role: Role.TEACHER;
+  bankDetails?: BankDetails;
+  identityDocument?: IdentityDocument;
+  introductionVideoUrl?: string;
+  availability?: Availability[];
+}
 export interface AuthResponse {
   accessToken: string;
   user: User;
@@ -119,22 +166,6 @@ export interface LoginResponse extends AuthResponse {
   refreshToken: string;
 }
 // export interface SignupResponse extends AuthResponse {}
-
-export interface Teacher {
-  id: string;
-  fullName: string;
-  email: string;
-  subjects: string[];
-  experience: number;
-  qualifications: string[];
-  bio: string;
-  hourlyRate: number;
-  rating: number;
-  ratingCount: number;
-  profilePicture?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
 
 export interface Pagination {
   page: number;

@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
@@ -6,11 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTutors } from "@/hooks/useTutors";
 import { cn } from "@/lib/utils";
+import { Teacher } from "@/types";
 import {
   BookOpen,
-  Calendar,
-  Clock,
   DollarSign,
   Filter,
   Search,
@@ -18,10 +19,13 @@ import {
   Watch,
 } from "lucide-react";
 import React from "react";
+import ErrorComponent from "../ErrorComponent";
+import Loader from "../Loader";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
+import { Rating } from "../ui/rating";
 
 const FILTERS = [
   {
@@ -48,7 +52,7 @@ const FILTERS = [
 
 type Tutor = {
   name: string;
-  rating: string;
+  rating: number;
   image: string;
   reviewCount: number;
   badges: { text: string; color: string }[];
@@ -59,105 +63,9 @@ type Tutor = {
   }[];
 };
 
-export const TUTORS = [
-  {
-    name: "Ade Adeyemi",
-    rating: "4.5/5",
-    image: "/images/tutor-1.png",
-    reviewCount: 5,
-    badges: [
-      { text: "Grade 1-4", color: "text-[#7c4cff] bg-[#7c4cff4c]" },
-      { text: "Age 4-6", color: "text-[#4c76ff] bg-[#4c76ff4c]" },
-      { text: "4 Subjects", color: "text-[#ff9d4c] bg-[#ff9d4c4c]" },
-    ],
-    details: [
-      {
-        icon: Clock,
-        text: "30mins/class",
-      },
-      {
-        icon: DollarSign,
-        text: "$1000/class",
-      },
-      {
-        icon: Calendar,
-        text: "mon - fri",
-      },
-      {
-        icon: Watch,
-        text: "1 ongoing class",
-        color: "text-[#7c4cff]",
-      },
-      { icon: BookOpen, text: "Maths, Physics, Chemistry" },
-    ],
-  },
-  {
-    name: "Ade Adeyemi",
-    rating: "4.5/5",
-    image: "/images/tutor-1.png",
-    reviewCount: 5,
-    badges: [
-      { text: "Grade 1-4", color: "text-[#7c4cff] bg-[#7c4cff4c]" },
-      { text: "Age 4-6", color: "text-[#4c76ff] bg-[#4c76ff4c]" },
-      { text: "4 Subjects", color: "text-[#ff9d4c] bg-[#ff9d4c4c]" },
-    ],
-    details: [
-      {
-        icon: Clock,
-        text: "30mins/class",
-      },
-      {
-        icon: DollarSign,
-        text: "$1000/class",
-      },
-      {
-        icon: Calendar,
-        text: "mon - fri",
-      },
-      {
-        icon: Watch,
-        text: "1 ongoing class",
-        color: "text-[#7c4cff]",
-      },
-      { icon: BookOpen, text: "Maths, Physics, Chemistry" },
-    ],
-  },
-  {
-    name: "Ade Adeyemi",
-    rating: "4.5/5",
-    image: "/images/tutor-1.png",
-    reviewCount: 5,
-    badges: [
-      { text: "Grade 1-4", color: "text-[#7c4cff] bg-[#7c4cff4c]" },
-      { text: "Age 4-6", color: "text-[#4c76ff] bg-[#4c76ff4c]" },
-      { text: "4 Subjects", color: "text-[#ff9d4c] bg-[#ff9d4c4c]" },
-    ],
-    details: [
-      {
-        icon: Clock,
-        text: "30mins/class",
-      },
-      {
-        icon: DollarSign,
-        text: "$1000/class",
-      },
-      {
-        icon: Calendar,
-        text: "mon - fri",
-      },
-      {
-        icon: Watch,
-        text: "1 ongoing class",
-        color: "text-[#7c4cff]",
-      },
-      { icon: BookOpen, text: "Maths, Physics, Chemistry" },
-    ],
-  },
-];
-
 function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
   return (
-    <Card className="relative w-full max-w-[400px] md:max-w-none bg-white rounded-[10px] p-0 border-none">
+    <Card className="relative w-full max-w-[400px] bg-white rounded-[10px] p-0 border-none">
       {/* ==== MOBILE VERSION ==== */}
       <div className="flex flex-col md:hidden">
         {/* Avatar + Name + Rating */}
@@ -177,14 +85,7 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
               <p className="text-zeus text-xs font-medium">
                 {tutorData.rating}
               </p>
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, index) => (
-                  <Star
-                    key={index}
-                    className="fill-yellow-500 text-yellow-500 w-3 h-3"
-                  />
-                ))}
-              </div>
+              <Rating value={Number(tutorData.rating)} readOnly />
               <p className="opacity-50 text-zeus text-xs">
                 ({tutorData.reviewCount})
               </p>
@@ -229,8 +130,8 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
       </div>
 
       {/* ==== DESKTOP VERSION ==== */}
-      <div className="hidden md:block">
-        <CardContent className="flex flex-col gap-4 mt-4 pt-10 group hover:bg-primary rounded-[10px]">
+      <div className="hidden md:block w-full">
+        <CardContent className="flex flex-col gap-4 mt-4 pt-10 group hover:bg-primary w-full rounded-[10px]">
           {/* Avatar */}
           <div className="w-[120px] h-[120px] mx-auto absolute left-1/2 -top-[60px] -translate-x-1/2">
             <Avatar className="w-full h-full shadow-[0px_4px_4px_#00000040]">
@@ -243,7 +144,7 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
           <div className="flex flex-col items-center gap-2 mt-16">
             <div className="flex items-center gap-2">
               <span className="font-medium text-2xl text-zeus">🇳🇬</span>
-              <h2 className="font-medium text-2xl text-zeus group-hover:text-white">
+              <h2 className="capitalize font-medium text-2xl text-zeus group-hover:text-white">
                 {tutorData.name}
               </h2>
             </div>
@@ -277,28 +178,30 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
             ))}
           </div>
 
-          {/* Details */}
-          <div className="w-full group-hover:hidden">
-            <ul className="flex flex-wrap justify-between gap-[8px_20px]">
-              {tutorData.details.map((detail, index) => (
-                <li key={index} className="flex items-center gap-3">
-                  <detail.icon className="w-4 h-4" />
-                  <p className={cn(detail.color, "font-medium")}>
-                    {detail.text}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className="relative w-full">
+            {/* Details */}
+            <div className="transition-opacity duration-300 group-hover:opacity-0">
+              <ul className="flex flex-wrap justify-between gap-[8px_20px] w-full">
+                {tutorData.details.map((detail, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <detail.icon className="w-4 h-4" />
+                    <p className={cn(detail.color, "font-medium")}>
+                      {detail.text}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Hover Buttons */}
-          <div className="hidden group-hover:flex justify-center gap-2 mt-10">
-            <Button className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2">
-              View Profile
-            </Button>
-            <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
-              Schedule a Meeting
-            </Button>
+            {/* Hover Buttons */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:flex justify-center gap-2">
+              <Button className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2">
+                View Profile
+              </Button>
+              <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
+                Schedule a Meeting
+              </Button>
+            </div>
           </div>
         </CardContent>
       </div>
@@ -307,6 +210,60 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
 }
 
 function TutorList(): React.JSX.Element {
+  const { data, isLoading, error } = useTutors();
+
+  const mapTeacherToTutor = (teacher: Teacher) => ({
+    name: teacher.fullName,
+    rating: teacher.rating,
+    reviewCount: teacher.ratingCount,
+    image: teacher.profilePicture || "",
+    badges: [
+      {
+        text: teacher.grades[0],
+        color: "bg-green-100 text-green-800",
+      },
+      {
+        text: `${teacher.experience}+ yrs`,
+        color: "bg-blue-100 text-blue-800",
+      },
+      {
+        text: `${teacher.subjects?.length} subjects`,
+        color: "text-[#ff9d4c] bg-[#ff9d4c4c]",
+      },
+    ],
+    details: [
+      {
+        icon: Star,
+        text: `${teacher.rating} rating`,
+      },
+      {
+        icon: Star,
+        text: `${teacher.experience} exp`,
+      },
+      {
+        icon: DollarSign,
+        text: `$${teacher.hourlyRate}/hr`,
+      },
+      {
+        icon: Watch,
+        text: "1 ongoing class",
+        color: "text-[#7c4cff]",
+      },
+      {
+        icon: BookOpen,
+        text: `${teacher.subjects.map((subject) => subject).join(", ")}`,
+      },
+    ],
+  });
+
+  if (isLoading) {
+    return <Loader className="py-14" />;
+  }
+
+  if (error) {
+    return <ErrorComponent />;
+  }
+
   return (
     <section className="py-[140px] px-4">
       <div className="container flex flex-col items-center justify-center gap-[60px] w-full max-w-7xl mx-auto">
@@ -352,8 +309,8 @@ function TutorList(): React.JSX.Element {
 
         {/* Tutors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {TUTORS.map((tutor, index) => (
-            <TutorCard key={index} tutorData={tutor} />
+          {data?.teachers.map((teacher, i) => (
+            <TutorCard key={i} tutorData={mapTeacherToTutor(teacher)} />
           ))}
         </div>
       </div>
