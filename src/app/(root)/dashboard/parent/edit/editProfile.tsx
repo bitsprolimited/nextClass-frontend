@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateParentProfile } from "@/services/profile.service";
 import { useEffect, useMemo } from "react";
 import { Country, State, City } from "country-state-city";
+import { toast } from "sonner";
 
 // Dynamic country, state, city lists
 const countryList = Country.getAllCountries();
@@ -36,7 +37,6 @@ export default function EditProfileForm({
   const mutation = useMutation({
     mutationFn: (payload: { userId: string; data: ProfileFormSchema }) =>
       updateParentProfile(payload.userId, {
-        email: payload.data.email,
         fullName: payload.data.fullName ?? "",
         phoneNumber: payload.data.phone ?? "",
         address: {
@@ -48,7 +48,12 @@ export default function EditProfileForm({
       }),
     onSuccess: () => {
       // Invalidate and refetch
+      toast.success("Profile updated successfully");
       queryClient.invalidateQueries({ queryKey: ["user", userId] });
+    },
+    onError: (error) => {
+      toast.error("Failed to update profile");
+      console.error("Update error:", error);
     },
   });
 
@@ -62,7 +67,6 @@ export default function EditProfileForm({
   } = useForm<ProfileFormSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      email: userDetails?.email || "",
       fullName: userDetails?.fullName || "",
       phone: userDetails?.phone || "",
       address: {
@@ -74,12 +78,9 @@ export default function EditProfileForm({
     },
   });
 
-  // Reset form when user details change
   useEffect(() => {
     if (userDetails) {
       reset({
-        email: userDetails.email || "",
-
         fullName: userDetails.fullName || "",
         phone: userDetails.phone || "",
         address: {
@@ -145,11 +146,11 @@ export default function EditProfileForm({
           type="email"
           placeholder="Email Address"
           className="py-4 pl-5 h-auto"
-          {...register("email")}
+          disabled
         />
-        {errors.email && (
+        {/* {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
+        )} */}
 
         {/* Phone */}
         <div className="flex gap-2">
@@ -269,19 +270,6 @@ export default function EditProfileForm({
         {errors.address?.street && (
           <p className="text-red-500 text-sm">
             {errors.address.street.message}
-          </p>
-        )}
-
-        {/* Mutation status messages */}
-        {mutation.isError && (
-          <p className="text-red-500 text-sm">
-            Error: {mutation.error.message}
-          </p>
-        )}
-
-        {mutation.isSuccess && (
-          <p className="text-green-500 text-sm">
-            Profile updated successfully!
           </p>
         )}
 

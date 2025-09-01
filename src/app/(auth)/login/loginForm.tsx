@@ -53,6 +53,10 @@ export function LoginForm(): JSX.Element {
         router.push("/dashboard/parent");
         return;
       }
+      if (!data.user.isProfileComplete) {
+        router.push("/dashboard/profile-setup");
+        return;
+      }
       router.push("/dashboard/tutor");
     },
     onError: (error) => {

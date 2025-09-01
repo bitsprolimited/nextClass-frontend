@@ -1,9 +1,15 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
-export default function Loader() {
+export default function Loader({ className }: { className?: string }) {
   return (
-    <div className="h-[calc(100vh-100px)] flex items-center justify-center w-full">
+    <div
+      className={cn(
+        "h-[calc(100vh-100px)] flex items-center justify-center w-full",
+        className
+      )}
+    >
       <div>
         <Image
           src="/images/Logo.png"

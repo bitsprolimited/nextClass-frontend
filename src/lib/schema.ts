@@ -1,6 +1,4 @@
 export const profileSchema = z.object({
-  email: z.string().email("Enter a valid email"),
-  password: z.string().optional(),
   address: z.object({
     street: z.string().min(5, "Enter a valid address"),
     city: z.string().min(1, "Select a city"),
@@ -80,6 +78,55 @@ export const completeAvailabilitySchema = z.object({
   bankDetails: bankDetailsSchema,
   pricing: pricingSchema,
 });
+
+export const bioDataSchema = z.object({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+  country: z.string().min(1, "Please select a country"),
+  state: z.string().min(1, "Please select a state"),
+  city: z.string().min(1, "Please select a city"),
+  address: z.string().optional(),
+  bio: z
+    .string()
+    .min(10, "Please tell us more about yourself (minimum 10 characters)"),
+});
+
+export const qualificationSchema = z.object({
+  type: z.string().min(1, "Please select qualification type"),
+  courseName: z.string().min(1, "Course name is required"),
+  issuingInstitution: z.string().min(1, "Institution name is required"),
+  expiryDate: z.string().optional(),
+  // certificateFile: z.instanceof(File).optional(),
+  certificateUrl: z.string().optional(),
+});
+
+export const careerExperienceSchema = z.object({
+  subjects: z.array(z.string()).min(1, "Please select at least one subject"),
+  grades: z.array(z.string()).min(1, "Please select at least one grade"),
+  experience: z.string().min(1, "Please select years of experience"),
+  qualifications: z
+    .array(qualificationSchema)
+    .min(1, "At least one qualification is required"),
+});
+
+export const identityDocumentSchema = z.object({
+  idType: z.string().min(1, "Please select ID type"),
+  issuingAuthority: z.string().min(1, "Please select issuing authority"),
+  issueDate: z.union([z.string(), z.date()]).optional(),
+  expiryDate: z.union([z.string(), z.date()]).optional(),
+  documentUrl: z.string().optional(),
+});
+
+export const introductionVideoSchema = z.object({
+  videoFile: z.instanceof(File, { message: "Please upload or record your introduction video" }),
+  videoUrl: z.string().optional(),
+});
+
+export type BioDataFormData = z.infer<typeof bioDataSchema>;
+export type CareerExperienceFormData = z.infer<typeof careerExperienceSchema>;
+export type IdentityDocumentFormData = z.infer<typeof identityDocumentSchema>;
+export type IntroductionVideoFormData = z.infer<typeof introductionVideoSchema>;
 
 export type SelectDaysFormData = z.infer<typeof selectDaysSchema>;
 export type SelectTimesFormData = z.infer<typeof selectTimesSchema>;

@@ -16,7 +16,7 @@ function HeroSection(): React.JSX.Element {
         primary: { src: "/images/tutor-saly-16.png" },
         secondary: {
           src: "/images/tutor-saly-17.png",
-          className: "top-0 left-0",
+          className: "top-0 -left-20 w-full max-w-[400px]",
         },
       }}
       heading="All Tutors"

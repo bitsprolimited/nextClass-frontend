@@ -1,7 +1,6 @@
 import axiosInstance from "@/lib/axios";
 
 export type UpdateParentProfilePayload = {
-  email: string;
   fullName: string;
   phoneNumber: string;
   address: {

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useTutors() {
   return useQuery({
-    queryKey: ["teacherResponse"],
+    queryKey: ["tutors"],
     queryFn: getTutors,
     refetchOnWindowFocus: false,
     retry: false,

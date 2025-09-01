@@ -6,6 +6,11 @@ import { useTutors } from "@/hooks/useTutors";
 import { Button } from "../ui/button";
 
 import { Teacher } from "@/types";
+import Loader from "../Loader";
+import ErrorComponent from "../ErrorComponent";
+import { GraduationCap } from "lucide-react";
+import EmptyState from "../EmptyState";
+import Link from "next/link";
 
 function FeaturedTutorCard({ tutor }: { tutor: Teacher }): React.JSX.Element {
   return (
@@ -26,22 +31,25 @@ function FeaturedTutorCard({ tutor }: { tutor: Teacher }): React.JSX.Element {
             <span className="text-sm">per hour</span>
           </div>
         </div>
-        <div className="mt-12 px-[30px]">
-          <div className="flex items-center">
+        <div className="mt-12 px-[30px] text-center">
+          {/* <div className="flex items-center">
             <span className="text-sm text-[#9b9ea1]">By:</span>
             <span className="text-zeus ml-2 group-hover:text-secondary ease-in-out transition-all">
               {tutor.fullName}
             </span>
-          </div>
+          </div> */}
 
-          <h3 className="mt-2 font-medium text-2xl text-zeus group-hover:text-secondary ease-in-out transition-all">
-            {tutor.subjects?.join(", ")}
+          <h3 className="mt-2 capitalize font-medium text-2xl text-zeus group-hover:text-secondary ease-in-out transition-all">
+            {tutor.fullName}
           </h3>
 
-          <div className="flex items-center gap-4 mt-4 text-[#ffa300] group-hover:text-zeus ease-in-out transition-all w-full">
-            <span>{tutor.experience} yrs exp</span>
+          <div className="flex items-center justify-center gap-4 mt-4 text-[#ffa300] group-hover:text-zeus ease-in-out transition-all w-full">
+            <span>{tutor.experience} exp</span>
             <div className="w-1 h-1 rounded-full bg-[#0a4d3c]" />
-            <span>{tutor.qualifications?.length} Qualifications</span>
+            <span>
+              {tutor.qualifications?.length}{" "}
+              {`qualification${tutor.qualifications?.length === 1 ? "" : "s"}`}
+            </span>
           </div>
         </div>
       </CardContent>
@@ -51,6 +59,49 @@ function FeaturedTutorCard({ tutor }: { tutor: Teacher }): React.JSX.Element {
 
 function FeaturedTutors(): React.JSX.Element {
   const { data, isLoading, error } = useTutors();
+
+  if (isLoading) {
+    return <Loader className="py-14" />;
+  }
+
+  if (error) {
+    return <ErrorComponent />;
+  }
+
+  if (!data?.teachers || data.teachers.length === 0) {
+    return (
+      <section className="flex flex-col justify-center items-center py-14 px-4">
+        <div className="flex flex-col max-w-7xl items-center mx-auto gap-14">
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="flex flex-col items-center text-center max-w-3xl mx-auto relative">
+              <Image
+                width={100}
+                height={100}
+                src="/images/book-img.png"
+                alt=""
+                className="place-self-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              />
+              <p className="text-primary text-sm font-semibold uppercase mb-2">
+                100+ courses available
+              </p>
+              <h2 className="text-zeus text-5xl font-medium">
+                Checkout Featured Tutors
+              </h2>
+            </div>
+          </div>
+
+          <EmptyState
+            title="No tutors available"
+            description="We're currently working on bringing you amazing tutors. Please check back soon!"
+            icon={<GraduationCap className="w-16 h-16 text-gray-400" />}
+            actionLabel="Refresh"
+            onAction={() => window.location.reload()}
+            className="w-full"
+          />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex flex-col justify-center items-center py-14 px-4">
@@ -67,24 +118,26 @@ function FeaturedTutors(): React.JSX.Element {
             <p className="text-primary text-sm font-semibold uppercase mb-2">
               100+ courses available
             </p>
-            <h2 className="text-zeus text-5xl font-medium ">
-              Checkout Featured Tutors{" "}
+            <h2 className="text-zeus text-5xl font-medium">
+              Checkout Featured Tutors
             </h2>
           </div>
         </div>
+
         <div className="flex flex-col items-start gap-12 w-full">
           <h2 className="font-medium text-zeus text-3xl underline">Tutors</h2>
-          {isLoading && <div>Loading tutors...</div>}
-          {error && <div>Failed to load tutors.</div>}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {data?.teacherResponse?.teachers?.map((tutor) => (
-              <FeaturedTutorCard key={tutor.id} tutor={tutor} />
+            {data.teachers.map((tutor, i) => (
+              <FeaturedTutorCard key={tutor.id || i} tutor={tutor} />
             ))}
           </div>
         </div>
-        <Button className="text-xl h-auto py-4 px-10 rounded-full bg-secondary hover:bg-primary">
-          View All Tutors
-        </Button>
+        <Link href="/tutors">
+          <Button className="text-xl h-auto py-4 px-10 rounded-full bg-secondary hover:bg-primary">
+            View All Tutors
+          </Button>
+        </Link>
       </div>
     </section>
   );

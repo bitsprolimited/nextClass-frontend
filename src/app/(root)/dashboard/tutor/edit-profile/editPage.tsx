@@ -1,33 +1,33 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import {
   CalendarIcon,
-  X,
-  Pencil,
-  Trash2,
-  Plus,
   CloudUploadIcon,
+  Pencil,
+  Plus,
+  Trash2,
+  X
 } from "lucide-react";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { useRef, useState } from "react";
 
 // Add any other imports you need from your step components
 
@@ -392,7 +392,7 @@ export default function EditProfilePage() {
                     Driver&apos;s License
                   </SelectItem>
                   <SelectItem value="Voter's Card">
-                    Voter&apos;ss Card
+                    Voter&apos;s Card
                   </SelectItem>
                 </SelectContent>
               </Select>

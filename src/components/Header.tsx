@@ -17,7 +17,7 @@ import ProfileMenu from "./ProfileMenu";
 function Header({
   session,
 }: {
-  session: Session | null | undefined;
+  session?: Session | null | undefined;
 }): React.JSX.Element {
   const pathname = usePathname();
 
