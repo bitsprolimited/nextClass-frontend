@@ -4,8 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Clock, DollarSign, Star } from "lucide-react";
-import AboutTutor from "@/components/tutors/AboutTutor";
-import MyQualificationsSection from "@/components/tutors/QualificationsSection";
+
 import DashboardTabs from "@/components/tutors/DashboardTabs";
 
 const tutor = {
