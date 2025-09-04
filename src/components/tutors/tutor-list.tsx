@@ -19,6 +19,7 @@ import {
   Watch,
 } from "lucide-react";
 import React from "react";
+import { useRouter } from "next/navigation";
 import ErrorComponent from "../ErrorComponent";
 import Loader from "../Loader";
 import { Badge } from "../ui/badge";
@@ -64,6 +65,7 @@ type Tutor = {
 };
 
 function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
+  const router = useRouter();
   return (
     <Card className="relative w-full max-w-[400px] bg-white rounded-[10px] p-0 border-none">
       {/* ==== MOBILE VERSION ==== */}
@@ -195,7 +197,10 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
 
             {/* Hover Buttons */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:flex justify-center gap-2">
-              <Button className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2">
+              <Button
+                className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2"
+                onClick={() => router.push("/dashboard/parent/tutor-profile")}
+              >
                 View Profile
               </Button>
               <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
