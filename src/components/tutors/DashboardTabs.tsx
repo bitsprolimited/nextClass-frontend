@@ -8,7 +8,7 @@ export default function DashboardTabs() {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="mt-10 mb-20 max-w-7xl mx-auto">
+    <div className="mt-10 mb-20 max-w-6xl w-full">
       <Tabs defaultValue="description" className="w-full">
         {/* Tabs Nav */}
         <TabsList className="flex justify-start gap-8  bg-transparent p-0">
@@ -64,10 +64,7 @@ export default function DashboardTabs() {
         </TabsContent>
 
         {/* Other Tabs Placeholder */}
-        <TabsContent
-          value="schedule"
-          className="mt-6 text-gray-600"
-        >
+        <TabsContent value="schedule" className="mt-6 text-gray-600">
           Schedule content goes here.
         </TabsContent>
         <TabsContent
