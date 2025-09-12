@@ -1,6 +1,7 @@
 "use client";
 import { SOCIAL_ICONS } from "@/lib/constants";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -59,12 +60,15 @@ export default function Footer() {
           <div className="mt-4 min-w-0">
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-4 text-sm">
-              {[
-                "Privacy Policy",
-                "Terms & Conditions",
-                "Customer Support",
-                "FAQs",
-              ].map((item) => (
+              <li>
+                <Link
+                  href="/terms-conditions"
+                  className="hover:text-orange-500 transition-colors"
+                >
+                  Terms & Conditions
+                </Link>
+              </li>
+              {["Customer Support", "FAQs"].map((item) => (
                 <li key={item}>
                   <a
                     href="#"
@@ -74,6 +78,14 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="hover:text-orange-500 transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -122,17 +134,24 @@ export default function Footer() {
           <span className="text-orange-500 font-bold">BITSPRO</span>
         </p>
         <div className="space-x-4">
-          {["Terms of Service", "Privacy Policy", "Sitemap", "Security"].map(
-            (link) => (
-              <a
-                key={link}
-                href="#"
-                className="hover:text-orange-500 transition-colors"
-              >
-                {link}
-              </a>
-            )
-          )}
+          <Link
+            href="/terms-conditions"
+            className="hover:text-orange-500 transition-colors"
+          >
+            Terms & Conditions
+          </Link>
+          <Link
+            href="/privacy-policy"
+            className="hover:text-orange-500 transition-colors"
+          >
+            Privacy Policy
+          </Link>
+          <a href="#" className="hover:text-orange-500 transition-colors">
+            Sitemap
+          </a>
+          <a href="#" className="hover:text-orange-500 transition-colors">
+            Security
+          </a>
         </div>
       </div>
     </div>

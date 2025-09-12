@@ -43,27 +43,35 @@ function AboutPage() {
               <CardContent className="p-0 gap-10 flex flex-col">
                 <div className="flex flex-col gap-5">
                   <p className="text-sm text-primary">
-                    WE ARE A BLEND OF PASSION AND EXPERIENCE
+                    WE PRIORITISE PASSION AND EXCELLENCE
                   </p>
-                  <h2 className="text-abbey max-w-[500px] font-medium text-[45px]/[50px]">
-                    We have experienced instructors to help with students.
+                  <h2 className="text-[#2c241b] max-w-[500px] font-medium text-[45px]/[50px] ">
+                    A Platform Built by Parents, for Parents
                   </h2>
                   <p className="max-w-[500px] text-lg text-abbey">
-                    At Nextclass, we believe every child deserves access to
-                    personalized, quality education beyond the classroom. We
-                    connect parents with trusted, experienced tutors who offer
-                    tailored afterschool lessons that fit your child&apos;s
-                    unique learning style and schedule
+                    Nextclass is not just another tutoring app. NextClass
+                    combines live video learning, AI-powered note-taking,
+                    inappropriate content detection, and a collaborative digital
+                    whiteboard—all in one platform so learning can be engaging,
+                    interactive, and safe.
+                  </p>
+                  <p className="max-w-[500px] text-lg text-abbey">
+                    And as a parent myself, I&apos;ve built this with one key
+                    value in mind: Your child&apos;s learning journey should
+                    feel personal.
                   </p>
                 </div>
                 <div className="flex flex-col gap-5">
-                  <h3 className="text-3xl text-primary">100+ Courses</h3>
+                  <h3 className="text-3xl text-primary">
+                    The Heart Behind It All
+                  </h3>
                   <p className="max-w-[500px] text-lg text-abbey">
-                    Whether it&apos;s academic support, exam prep, or
-                    skill-building, we make it easy to find the right tutor — so
-                    your child can grow confidently and thrive. <br />
-                    Together, we&apos;re unlocking each learner&apos;s full
-                    potential, one lesson at a time
+                    At the end of the day, NextClass is more than technology;
+                    it&apos;s about helping parents like me (and you) give our
+                    kids the support they need to succeed.
+                  </p>
+                  <p className="max-w-[500px] text-lg text-abbey">
+                    Thank you for being part of this journey.
                   </p>
                 </div>
               </CardContent>
