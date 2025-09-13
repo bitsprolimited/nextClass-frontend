@@ -86,9 +86,9 @@ function AboutPage() {
           </div>
         </div>
       </section>
-      <section className="relative w-full bg-background3 pt-[140px] pb-8">
+      <section className="relative w-full bg-background3 pt-[140px] pb-8 px-2 sm:px-0">
         <div className="container mx-auto flex flex-col items-start md:flex-row justify-center gap-10">
-          <div className="flex-1 flex flex-row-reverse w-1/2 gap-2">
+          <div className="flex-1 flex sm:flex-row-reverse flex-col sm:w-1/2 w-full gap-2">
             <div className="flex flex-col gap-5">
               <h2 className="text-secondary text-[35px]/[40px]">
                 Our Mission &amp; Vision
@@ -126,7 +126,7 @@ function AboutPage() {
               />
             </div>
           </div>
-          <div className="flex flex-col w-1/2">
+          <div className="flex flex-col sm:w-1/2 w-full">
             <div className="flex flex-col gap-5">
               {CORE_VALUES.map((coreValue, index) => (
                 <div key={index} className="flex gap-8">
@@ -150,6 +150,7 @@ function AboutPage() {
           </div>
         </div>
       </section>
+
       <MeetTheTeam />
       <Testimonial />
     </main>

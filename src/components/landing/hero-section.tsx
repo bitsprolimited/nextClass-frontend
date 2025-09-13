@@ -38,24 +38,23 @@ function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen 2xl:min-h-[900px] w-full flex">
-      <div className="flex flex-col justify-center items-start gap-20 w-1/2 max-w-[800px] pt-16 pl-16 ml-auto">
-        <div className="flex flex-col items-start gap-[30px]">
-          <div>
-            <p className="text-primary text-sm mb-4 font-studio-sans">
+    <section className="min-h-screen 2xl:min-h-[900px] w-full flex flex-col-reverse md:flex-row">
+      {/* Text Section */}
+      <div className="flex flex-col justify-center items-center md:items-start gap-8 md:gap-20 w-full md:w-1/2 max-w-[800px] pt-8 md:pt-16 px-4 md:pl-16 mx-auto">
+        <div className="flex flex-col items-center md:items-start gap-5 md:gap-[30px] w-full">
+          <div className="w-full text-center md:text-left">
+            <p className="text-primary text-xs sm:text-sm mb-2 md:mb-4 font-studio-sans">
               NO. 1 AFTERSCHOOL LESSON PLATFORM
             </p>
-            <div className="relative max-w-4xl font-aero-trial">
-              <h1 className="w-full max-w-3xl text-[75px] leading-[80px]">
-                <span className="inline-block">
-                  Connect With the Perfect
-                </span>
+            <div className="relative max-w-4xl font-aero-trial mx-auto md:mx-0">
+              <h1 className="w-full max-w-3xl text-[20px] sm:text-[48px] md:text-[75px] leading-tight md:leading-[80px] ">
+                <span className="inline-block">Connect With the Perfect</span>
                 <br />
-                <span className="inline-flex items-center">
+                <span className="inline-flex items-center justify-center md:justify-start">
                   <span>Tutor </span>
-                  <span className="ml-4">-</span>
+                  <span className="ml-2 md:ml-4">-</span>
                   <motion.div
-                    className="relative w-[500px] h-[90px] overflow-hidden inline-block ml-4"
+                    className="relative w-[160px] sm:w-[250px] md:w-[500px] h-[40px] sm:h-[60px] md:h-[90px] overflow-hidden inline-block ml-2 md:ml-4"
                     style={{ perspective: "400px" }}
                     initial="hidden"
                     animate={"visible"}
@@ -64,7 +63,7 @@ function HeroSection() {
                     {items.map((item, index) => (
                       <motion.div
                         key={index}
-                        className="absolute font-extrabold text-secondary whitespace-nowrap"
+                        className="absolute font-extrabold text-secondary whitespace-nowrap text-[20px] sm:text-[32px] md:text-[48px]"
                         variants={itemVariants}
                         custom={index}
                       >
@@ -76,21 +75,21 @@ function HeroSection() {
               </h1>
             </div>
           </div>
-          <p className="text-zeus text-xl font-studio-sans">
+          <p className="text-zeus text-sm sm:text-lg md:text-xl font-studio-sans text-center md:text-left">
             Trusted tutors. Interactive learning. Stress-free scheduling
           </p>
-          <div className="flex gap-4 font-studio-sans">
-            <Button className="bg-secondary hover:bg-primary text-white rounded-full px-12 py-3 h-auto text-xl">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full justify-center md:justify-start font-studio-sans">
+            <Button className="bg-secondary hover:bg-primary text-white rounded-full px-8 py-2 sm:px-12 sm:py-3 h-auto text-base sm:text-xl">
               Find a tutor
             </Button>
-            <Button className="bg-primary hover:bg-secondary text-white rounded-full px-12 py-3 h-auto text-xl">
+            <Button className="bg-primary hover:bg-secondary text-white rounded-full px-8 py-2 sm:px-12 sm:py-3 h-auto text-base sm:text-xl">
               Become a tutor
             </Button>
           </div>
         </div>
-        <div className="flex gap-4 items-center font-studio-sans">
-          <p>Connect with us:</p>
-          <div className="flex space-x-4">
+        <div className="flex gap-2 sm:gap-4 items-center font-studio-sans justify-center md:justify-start w-full">
+          <p className="text-xs sm:text-base">Connect with us:</p>
+          <div className="flex space-x-2 sm:space-x-4">
             {SOCIAL_ICONS.map((Icon, idx) => (
               <a
                 key={idx}
@@ -103,8 +102,9 @@ function HeroSection() {
           </div>
         </div>
       </div>
-      <div className="w-1/2">
-        <div className="relative w-full h-full">
+      {/* Image Section */}
+      <div className="w-full md:w-1/2 flex justify-center items-center pt-8 md:pt-0">
+        <div className="relative w-[220px] h-[180px] sm:w-[320px] sm:h-[240px] md:w-full md:h-full flex justify-center items-center mx-auto">
           <HeroSectionCarousel />
           <HeroStudentAvatar />
         </div>

@@ -1,5 +1,7 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import { useRef } from "react";
 import { Card, CardContent } from "../ui/card";
 import { ARTICLES } from "@/lib/constants";
 
@@ -62,6 +64,8 @@ const ArticleCard = ({
 };
 
 function ArticlesSection(): React.JSX.Element {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
     <section className="flex items-center justify-center py-14">
       <div className="w-full max-w-7xl mx-auto">
@@ -80,9 +84,24 @@ function ArticlesSection(): React.JSX.Element {
             <h2 className="text-zeus text-5xl font-medium ">Latest Articles</h2>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        {/* Carousel for small screens, grid for md+ */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-12">
           {ARTICLES.map((article, index) => (
             <ArticleCard key={index} article={article} />
+          ))}
+        </div>
+        <div
+          ref={scrollRef}
+          className="flex md:hidden gap-6 overflow-x-auto pb-4"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          {ARTICLES.map((article, index) => (
+            <div
+              key={index}
+              className="min-w-[320px] max-w-[380px] flex-shrink-0"
+            >
+              <ArticleCard article={article} />
+            </div>
           ))}
         </div>
       </div>
