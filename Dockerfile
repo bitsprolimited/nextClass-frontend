@@ -9,6 +9,10 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/src/tasky/tasky
 
 FROM alpine:3.17.0 as release
 
+#Updates for security vulnerabilities
+RUN apk --no-cache update && apk --no-cache upgrade \
+    && apk --no-cache add libcrypto3 libssl3
+
 ##Created non-root user for container security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup  
 
