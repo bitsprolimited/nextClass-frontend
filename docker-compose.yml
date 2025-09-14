@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: wiz-mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: testuser
+      MONGO_INITDB_ROOT_PASSWORD: testpass
+      MONGO_INITDB_DATABASE: testdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build: .
+    container_name: wiz-app
+    depends_on:
+      - mongodb
+    environment:
+      MONGODB_URI: mongodb://testuser:testpass@mongodb:27017/testdb?authSource=admin
+    ports:
+      - "8080:8080" 
+
+volumes:
+  mongo_data:
