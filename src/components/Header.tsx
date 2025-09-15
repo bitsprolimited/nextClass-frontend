@@ -13,6 +13,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import ProfileMenu from "./ProfileMenu";
+import { MobileNav } from "./MobileNav";
 
 function Header({
   session,
@@ -58,37 +59,40 @@ function Header({
           </Link>
         </div>
         {!hideNav && (
-          <div className="flex items-center justify-between w-full">
-            <NavigationMenu className="mx-auto">
-              <NavigationMenuList className="gap-10 flex items-center">
-                {currentNavItems.map((item) => (
-                  <NavigationMenuItem key={item.href}>
-                    <Link href={item.href} passHref>
-                      <span
-                        className={`px-0 hover:text-secondary group inline-flex h-9 w-max items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all ${
-                          pathname === item.href
-                            ? "text-secondary font-bold"
-                            : ""
-                        }`}
-                      >
-                        {item.label}
-                      </span>
-                    </Link>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+          <>
+            <div className="md:flex items-center justify-between w-full hidden">
+              <NavigationMenu className="mx-auto">
+                <NavigationMenuList className="gap-10 flex items-center">
+                  {currentNavItems.map((item) => (
+                    <NavigationMenuItem key={item.href}>
+                      <Link href={item.href} passHref>
+                        <span
+                          className={`px-0 hover:text-secondary group inline-flex h-9 w-max items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all ${
+                            pathname === item.href
+                              ? "text-secondary font-bold"
+                              : ""
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
 
-            {!session ? (
-              <Link href="/login">
-                <Button className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
-                  Login
-                </Button>
-              </Link>
-            ) : (
-              <ProfileMenu user={session.user} />
-            )}
-          </div>
+              {!session ? (
+                <Link href="/login">
+                  <Button className="cursor-pointer font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary">
+                    Login
+                  </Button>
+                </Link>
+              ) : (
+                <ProfileMenu user={session.user} />
+              )}
+            </div>
+            <MobileNav currentNavItems={currentNavItems} session={session} />
+          </>
         )}
       </div>
     </header>

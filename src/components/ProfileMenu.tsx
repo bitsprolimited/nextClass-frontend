@@ -24,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-const links = {
+export const links = {
   parent: [
     {
       name: "Become a Teacher",

@@ -1,9 +1,16 @@
-import React from 'react'
+import { getSession } from "@/services/session";
+import TutorProfile from "./tutor-profile";
 
-function Page(): React.JSX.Element {
+export default async function TutorProfilePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const session = await getSession();
   return (
-    <div >Page</div>
-  )
+    <main className="flex flex-col items-center w-full">
+      <TutorProfile session={session} id={id} />
+    </main>
+  );
 }
-
-export default Page
