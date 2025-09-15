@@ -5,7 +5,7 @@ import { Card, CardContent } from "../ui/card";
 
 function AboutSection(): React.JSX.Element {
   return (
-    <section className="w-full h-full bg-[#2509790a] flex justify-center items-center py-36">
+    <section className="w-full h-full bg-[#2509790a] flex justify-center items-center py-36 px-4 sm:px-0">
       <div className="flex flex-col md:flex-row items-center justify-center gap-12 max-w-7xl h-full w-full">
         <div
           style={{ backgroundImage: "url('/images/about-section.png')" }}

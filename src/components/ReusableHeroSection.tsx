@@ -33,7 +33,10 @@ function ReusableHeroSection({
             alt={img.secondary.alt || "Decorative"}
             width={500}
             height={500}
-            className={cn("absolute -top-10 left-0", img.secondary.className)}
+            className={cn(
+              "hidden sm:block absolute -top-10 left-0",
+              img.secondary.className
+            )}
           />
         )}
         <div className="relative h-full w-full">
@@ -41,9 +44,10 @@ function ReusableHeroSection({
             <div className="flex justify-center items-center h-full w-full">
               <div className="flex flex-col items-start mx-auto">
                 <h1
-                  className={`text-[58px] font-aero-trial font-medium ${
+                  className={cn(
+                    "text-[24px] sm:text-[58px] font-aero-trial font-medium",
                     bgColor === "bg-primary" ? "text-white" : "text-zeus"
-                  }`}
+                  )}
                 >
                   {heading}
                 </h1>
@@ -52,7 +56,7 @@ function ReusableHeroSection({
             </div>
             <div
               className={cn(
-                "w-full h-full max-w-[450px] relative -bottom-20",
+                "w-[180px] h-[180px] sm:w-[450px] sm:h-[450px] relative -bottom-10 sm:-bottom-20",
                 img.primary.className
               )}
             >

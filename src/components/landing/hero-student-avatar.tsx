@@ -36,13 +36,13 @@ const HeroStudentAvatar = () => {
         repeat: Infinity,
         repeatType: "loop",
       }}
-      className="shadow-[0px_4px_24px_#000000a6] absolute bottom-16 -left-16 z-50 max-w-[400px] rounded-[10px] overflow-hidden"
+      className="shadow-[0px_4px_24px_#000000a6] absolute bottom-4 left-1 sm:bottom-16 sm:-left-16 z-50 max-w-[160px] sm:max-w-[400px] rounded-[10px] overflow-hidden"
     >
       <Card>
-        <CardContent className="flex flex-col items-center gap-5 px-6 py-4">
+        <CardContent className="flex flex-col items-center gap-2 px-2 py-1 sm:gap-5 sm:px-6 sm:py-4">
           <div className="flex flex-col items-center w-full">
-            <p className="font-bold text-xl">20,041+</p>
-            <p className="text-sm font-medium text-[606060]">
+            <p className="font-bold text-sm sm:text-xl">20,041+</p>
+            <p className="text-[10px] sm:text-sm font-medium text-[606060]">
               Students are currently Learning
             </p>
           </div>
@@ -52,14 +52,16 @@ const HeroStudentAvatar = () => {
                 key={avatar.id}
                 src={avatar.src}
                 alt={avatar.alt}
-                width={60}
-                height={60}
-                className={`w-full ${index > 0 ? "-ml-5" : ""}`}
+                width={28}
+                height={28}
+                className={`${index > 0 ? "-ml-2 sm:-ml-5" : ""}`}
               />
             ))}
-            <div className="w-[60px] h-[60px] -ml-5 bg-secondary rounded-full flex flex-col justify-center items-center text-white shrink-0 p-1">
-              <span>500+</span>
-              <span className="text-[10px] uppercase">Online</span>
+            <div className="w-[28px] h-[28px] sm:w-[60px] sm:h-[60px] -ml-2 sm:-ml-5 bg-secondary rounded-full flex flex-col justify-center items-center text-white shrink-0 p-1">
+              <span className="text-[10px] sm:text-base">500+</span>
+              <span className="text-[6px] sm:text-[10px] uppercase">
+                Online
+              </span>
             </div>
           </div>
         </CardContent>
