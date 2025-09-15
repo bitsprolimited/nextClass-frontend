@@ -66,22 +66,22 @@ export default function ClassTabs() {
       <TabsList className="flex justify-start gap-10 mb-4 bg-transparent px-4 sm:px-10">
         <TabsTrigger
           value="upcoming"
-          className="text-sm text-gray-600 data-[state=active]:text-black data-[state=active]:border-b-2 data-[state=active]:border-[#031D95] rounded-none px-0"
+          className="text-sm text-gray-600 data-[state=active]:text-black data-[state=active]:border-b-2 data-[state=active]:border-[#031D95] data-[state=active]:bg-[#031D95]/5 rounded-none px-0"
         >
-          Upcoming Classes
+          Requests
         </TabsTrigger>
         <TabsTrigger
           value="history"
-          className="text-sm text-gray-600 data-[state=active]:text-black data-[state=active]:border-b-2 data-[state=active]:border-[#031D95] rounded-none px-0"
+          className="text-sm text-gray-600 data-[state=active]:text-black data-[state=active]:border-b-2 data-[state=active]:border-[#031D95] data-[state=active]:bg-[#031D95]/5 rounded-none px-0"
         >
-          Class History
+          History
         </TabsTrigger>
       </TabsList>
 
       {/* Main Content */}
       <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl shadow-md w-full bg-[#f8f6f4] mb-3">
         {/* Upcoming Classes Tab */}
-        <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl shadow-md w-full bg-[#f8f6f4] mb-3">
+        <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl  w-full mb-3">
           {/* Upcoming Classes Tab */}
           <TabsContent value="upcoming" className="space-y-10">
             {upcomingData.map((item, index) => (
@@ -103,11 +103,11 @@ export default function ClassTabs() {
 
                 {/* Middle: Content */}
                 <div className="flex flex-col justify-between gap-2 sm:gap-3">
-                  <h2 className="text-base sm:text-lg md:text-2xl font-bold text-[#2c241b] leading-snug font-aero-trial">
+                  <h2 className="text-base sm:text-lg md:text-3xl text-[#2c241b] leading-snug font-aero-trial">
                     {item.title}
                   </h2>
 
-                  <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-base font-medium">
+                  <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-2xl font-medium">
                     <span className="flex items-center gap-2">
                       <UsersIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                       {item.student}
@@ -118,7 +118,7 @@ export default function ClassTabs() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-base font-medium">
+                  <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-2xl font-medium">
                     <span className="flex items-center gap-2">
                       <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                       {item.date}
@@ -145,7 +145,7 @@ export default function ClassTabs() {
                         Reschedule
                       </button>
                     )}
-                    <Button className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-primary text-white font-semibold text-xs sm:text-sm">
+                    <Button className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm">
                       Join Class
                     </Button>
                   </div>

@@ -24,7 +24,7 @@ const FEATURES = [
 
 function Features() {
   return (
-    <section className="flex items-center gap-6 py-[60px] max-w-fit w-full">
+    <section className="flex flex-col sm:flex-row items-center gap-6 py-[60px] max-w-fit w-full">
       {FEATURES.map((feature, index) => (
         <Card
           key={index}
