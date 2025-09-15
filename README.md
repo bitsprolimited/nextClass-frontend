@@ -21,21 +21,6 @@ Run the command `go run main.go` and the project should run on `locahost:8080`
 
 # License
 
-<<<<<<< HEAD
 This project is licensed under the terms of the MIT license.
 
 Original project: https://github.com/dogukanozdemir/golang-todo-mongodb
-=======
-3. Access the Application:
-* Open a web browser and navigate to http://localhost:80 to see the Flask application running.
-
-## GitHub Actions Workflow: Build and Push Docker Image to GCR:
-
-This repository contains a GitHub Actions workflow located at `.github/workflows/build-and-push.yml` that automatically builds and pushes a Docker image to Google Container Registry (GCR) when changes are made to the application source code or Dockerfile.
-
-## 🛠️ Prerequisites
-
-* **GitHub Secret:**
-
-    GCP_SA_KEY: Contains the JSON key of a Google Cloud Service Account with sufficient IAM permissions to push to the project's GCR.
->>>>>>> main
