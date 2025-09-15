@@ -8,19 +8,19 @@ import Link from "next/link";
 
 const CORE_VALUES = [
   {
-    title: "Trusted",
+    title: "Trust",
     description:
       "Every child deserves to learn in a space where they feel safe, supported, and understood. We rigorously vet our tutors, protect your privacy, and build tools that earn your trust every step of the way.",
   },
   {
-    title: "Simplicity",
+    title: "Flexibility",
     description:
-      "Life is complex. Learning support shouldn't be. We've designed every part of our platform to be intuitive, friendly, and friction-free—from booking a session to joining a class.",
+      "Book sessions when it works for you -no long-term commitments or confusing contracts. Life is complex. Learning support shouldn't be. We’ve designed every part of our platform to be intuitive and friendly —from booking a session to joining a class.",
   },
   {
-    title: "Accessibility",
+    title: "Transparency",
     description:
-      "No child should be left out of quality afterschool support. We're building tools that are affordable, flexible, and welcoming—no matter your background, device, or location.",
+      "View teacher profiles, experience, availability, and parent reviews—all before you book. We’re building tools that help you to articulate all your learning data—no matter your background, device, or location.",
   },
 ];
 
@@ -88,35 +88,40 @@ function AboutPage() {
       </section>
       <section className="relative w-full bg-background3 pt-[140px] pb-8 px-2 sm:px-0">
         <div className="container mx-auto flex flex-col items-start md:flex-row justify-center gap-10">
-          <div className="flex-1 flex sm:flex-row-reverse flex-col sm:w-1/2 w-full gap-2">
+          <div className="flex-1 flex sm:flex-row-reverse flex-col sm:w-1/2 w-full gap-4">
             <div className="flex flex-col gap-5">
               <h2 className="text-secondary text-[35px]/[40px]">
                 Our Mission &amp; Vision
               </h2>
               <div className="flex flex-col gap-5">
                 <h3 className="font-medium text-zeus text-[44px]/[50px]">
-                  We believe every child deserves personalized support after
-                  school.
+                  Making it easy, safe, and effective for parents to connect
+                  with trusted, high-quality educators anytime, anywhere.
+                </h3>
+                <h3 className="text-3xl text-primary">
+                  The Heart Behind It All
                 </h3>
                 <p className="text-[#52565b] text-[15px] w-full max-w-[556px]">
-                  At the heart of our mission is a simple truth: no two children
-                  learn the same way. That&apos;s why we&apos;re building more
-                  than just a tutoring platform—we&apos;re creating a safe,
-                  encouraging space where every child gets the help they need to
-                  thrive beyond the classroom.
+                  As a parent, I&apos;ve always valued education but it
+                  wasn&apos;t until I tried to find a teacher for my 14-year-old
+                  daughter that I realized how difficult and frustrating the
+                  process could be. I wanted someone qualified, engaging, and
+                  trustworthy. Someone who could connect with her, teach her at
+                  her pace, and help her grow not just academically, but
+                  personally. 
                 </p>
                 <p className="text-[#52565b] text-[15px] w-full max-w-[556px]">
-                  We connect families with passionate, vetted tutors who tailor
-                  their lessons to each child&apos;s unique pace, interests, and
-                  challenges. We&apos;re here to make learning personal, joyful,
-                  and consistent—right from home.
+                  But what I found instead was a scattered mess of directories,
+                  outdated listings, and generic tutoring platforms that
+                  didn&apos;t feel personal or trustworthy. It felt like I was
+                  searching in the dark.
                   <br />
-                  Because when children feel seen, supported, and inspired, they
-                  don&apos;t just catch up—they move ahead.
+                  That experience became the spark behind{" "}
+                  <span className="font-bold text-secondary">NextClass</span>.
                 </p>
               </div>
             </div>
-            <div className="relative -bottom-8 max-w-[295px]">
+            <div className="relative max-w-[295px] mx-auto  ">
               <Image
                 src="/images/saly-15.png"
                 alt="Student with backpack illustration"

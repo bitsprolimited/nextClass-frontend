@@ -72,7 +72,7 @@ export function LoginForm(): JSX.Element {
   };
 
   return (
-    <div className="bg-[#F5F4F8] px-8 py-10 rounded-md w-[50%] max-w-lg shadow-md my-3">
+    <div className="bg-[#F5F4F8] px-8 py-10 rounded-md w-full sm:w-[80%] md:w-[50%] max-w-lg shadow-md my-3">
       <div>
         <h2 className="text-2xl font-semibold mb-8">
           <span className="text-gray-900">Login </span>
@@ -126,12 +126,12 @@ export function LoginForm(): JSX.Element {
           You can also login with:
         </p>
 
-        <div className="flex gap-4 justify-center mt-4">
-          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm border">
+        <div className="flex gap-2 justify-between mt-4">
+          <Button className="flex-1 min-w-0 !px-6 w-full bg-primary hover:bg-secondary text-white rounded-full  py-3 flex items-center gap-2 shadow-sm border">
             <FaGoogle className="w-5 h-5" />
             Sign Up With Google
           </Button>
-          <Button className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm">
+          <Button className="flex-1 min-w-0 !px-6 w-full bg-primary hover:bg-secondary text-white rounded-full  py-3 flex items-center gap-2 shadow-sm">
             <FaApple className="w-5 h-5" />
             Sign Up With Apple
           </Button>
