@@ -1,26 +1,30 @@
-# Use a slim version of Python
-FROM python:3.12-slim
+# Building the binary of the App
+FROM golang:1.19 AS build
+
+WORKDIR /go/src/tasky
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/src/tasky/tasky
 
 
-# Update and upgrade packages, and install Flask without recommended packages
-RUN apt-get update && \
-    pip install --no-cache-dir Flask
+FROM alpine:3.17.0 as release
 
-# Create a non-root user 
-#This helps improve security by reducing the risk of potential security vulnerabilities and limiting the impact of security breaches within the container environment
-RUN adduser --disabled-password --gecos '' appuser
+#Updates for security vulnerabilities
+RUN apk --no-cache update && apk --no-cache upgrade \
+    && apk --no-cache add libcrypto3 libssl3
 
-# Switch to the non-root user
+##Created non-root user for container security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup  
+
+WORKDIR /app
+COPY --from=build  /go/src/tasky/tasky .
+COPY --from=build  /go/src/tasky/assets ./assets
+
+# Gave  non root user access to workdir to be able to run the app
+RUN chown -R appuser:appgroup /app
 USER appuser
 
-# Set the working directory in the container
-WORKDIR /app
+EXPOSE 8080
+ENTRYPOINT ["/app/tasky"]
 
-# Copy the application files and change the ownership to the non root user
-COPY --chown=appuser:appuser . .
 
-# Expose the port on which the Flask app will run
-EXPOSE 80
-
-# Run the Flask application
-CMD ["python", "testapp.py"]

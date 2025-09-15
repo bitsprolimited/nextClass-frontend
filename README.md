@@ -1,31 +1,31 @@
-# Dockerized Flask Application
-This repository contains files to build and deploy a Dockerized Flask application and automate the deployment process using Github action, leveraging Google Container Registry (GCR).
+# Docker
+A Dockerfile has been provided to run this application.  The default port exposed is 8080.
 
-## Files Included:
-* ./github/workflows/build-and-push.yaml: Defines the github action pipeline for building, tagging, and pushing the Docker image to GCR.
-* Dockerfile: Contains instructions to build a Docker image for the Flask application.
-* testapp.py: Flask application script.
-* README.md: Instructions for setting up the project and running the application.
+# Environment Variables
+The following environment variables are needed.
+|Variable|Purpose|example|
+|---|---|---|
+|`MONGODB_URI`|Address to mongo server|`mongodb://servername:27017` or `mongodb://username:password@hostname:port` or `mongodb+srv://` schema|
+|`SECRET_KEY`|Secret key for JWT tokens|`secret123`|
 
-## Prerequisites:
+Alternatively, you can create a `.env` file and load it up with the environment variables.
 
-* Docker installed on your local machine.
-* GCP account with GCR service access.
-* GCLOUD CLI Configured
+# Running with Go
 
-## Setup Instructions:
-1. Clone the Repository:
+Clone the repository into a directory of your choice Run the command `go mod tidy` to download the necessary packages.
 
-* `git@github.com:supersilo/ct-assessment.git`
+You'll need to add a .env file and add a MongoDB connection string with the name `MONGODB_URI` to access your collection for task and user storage.
+You'll also need to add `SECRET_KEY` to the .env file for JWT Authentication.
 
-* `cd ct-assessment`
+Run the command `go run main.go` and the project should run on `locahost:8080`
 
-## Testing the Application Locally:
-1. Build the Docker Image:
-* `docker build -t test-app .`
-2. Run the Docker Container:
-* `docker run -d -p 80:80 test-app`
+# License
 
+<<<<<<< HEAD
+This project is licensed under the terms of the MIT license.
+
+Original project: https://github.com/dogukanozdemir/golang-todo-mongodb
+=======
 3. Access the Application:
 * Open a web browser and navigate to http://localhost:80 to see the Flask application running.
 
@@ -38,3 +38,4 @@ This repository contains a GitHub Actions workflow located at `.github/workflows
 * **GitHub Secret:**
 
     GCP_SA_KEY: Contains the JSON key of a Google Cloud Service Account with sufficient IAM permissions to push to the project's GCR.
+>>>>>>> main
