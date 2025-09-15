@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1 {
+        text-align: center;
+      }
+      .group-header th {
+        font-size: 200%;
+      }
+      .sub-header th {
+        font-size: 150%;
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        white-space: nowrap;
+        padding: .3em;
+      }
+      table {
+        margin: 0 auto;
+      }
+      .severity {
+        text-align: center;
+        font-weight: bold;
+        color: #fafafa;
+      }
+      .severity-LOW .severity { background-color: #5fbb31; }
+      .severity-MEDIUM .severity { background-color: #e9c600; }
+      .severity-HIGH .severity { background-color: #ff8800; }
+      .severity-CRITICAL .severity { background-color: #e40000; }
+      .severity-UNKNOWN .severity { background-color: #747474; }
+      .severity-LOW { background-color: #5fbb3160; }
+      .severity-MEDIUM { background-color: #e9c60060; }
+      .severity-HIGH { background-color: #ff880060; }
+      .severity-CRITICAL { background-color: #e4000060; }
+      .severity-UNKNOWN { background-color: #74747460; }
+      table tr td:first-of-type {
+        font-weight: bold;
+      }
+      .links a,
+      .links[data-more-links=on] a {
+        display: block;
+      }
+      .links[data-more-links=off] a:nth-of-type(1n+5) {
+        display: none;
+      }
+      a.toggle-more-links { cursor: pointer; }
+    </style>
+    <title>wiz-app (alpine 3.17.0) - Trivy Report - 2025-09-14 18:44:43.103468 -0500 CDT m=+5.425572826 </title>
+    <script>
+      window.onload = function() {
+        document.querySelectorAll('td.links').forEach(function(linkCell) {
+          var links = [].concat.apply([], linkCell.querySelectorAll('a'));
+          [].sort.apply(links, function(a, b) {
+            return a.href > b.href ? 1 : -1;
+          });
+          links.forEach(function(link, idx) {
+            if (links.length > 3 && 3 === idx) {
+              var toggleLink = document.createElement('a');
+              toggleLink.innerText = "Toggle more links";
+              toggleLink.href = "#toggleMore";
+              toggleLink.setAttribute("class", "toggle-more-links");
+              linkCell.appendChild(toggleLink);
+            }
+            linkCell.appendChild(link);
+          });
+        });
+        document.querySelectorAll('a.toggle-more-links').forEach(function(toggleLink) {
+          toggleLink.onclick = function() {
+            var expanded = toggleLink.parentElement.getAttribute("data-more-links");
+            toggleLink.parentElement.setAttribute("data-more-links", "on" === expanded ? "off" : "on");
+            return false;
+          };
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <h1>wiz-app (alpine 3.17.0) - Trivy Report - 2025-09-14 18:44:43.103574 -0500 CDT m=+5.425678557</h1>
+    <table>
+      <tr class="group-header"><th colspan="6">alpine</th></tr>
+      <tr><th colspan="6">No Vulnerabilities found</th></tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+      <tr class="group-header"><th colspan="6">gobinary</th></tr>
+      <tr class="sub-header">
+        <th>Package</th>
+        <th>Vulnerability ID</th>
+        <th>Severity</th>
+        <th>Installed Version</th>
+        <th>Fixed Version</th>
+        <th>Links</th>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">github.com/dgrijalva/jwt-go</td>
+        <td>CVE-2020-26160</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v3.2.0+incompatible</td>
+        <td></td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2020-26160">https://access.redhat.com/security/cve/CVE-2020-26160</a>
+          <a href="https://github.com/dgrijalva/jwt-go">https://github.com/dgrijalva/jwt-go</a>
+          <a href="https://github.com/dgrijalva/jwt-go/commit/ec0a89a131e3e8567adcb21254a5cd20a70ea4ab">https://github.com/dgrijalva/jwt-go/commit/ec0a89a131e3e8567adcb21254a5cd20a70ea4ab</a>
+          <a href="https://github.com/dgrijalva/jwt-go/issues/422">https://github.com/dgrijalva/jwt-go/issues/422</a>
+          <a href="https://github.com/dgrijalva/jwt-go/issues/462">https://github.com/dgrijalva/jwt-go/issues/462</a>
+          <a href="https://github.com/dgrijalva/jwt-go/pull/426">https://github.com/dgrijalva/jwt-go/pull/426</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2020-26160">https://nvd.nist.gov/vuln/detail/CVE-2020-26160</a>
+          <a href="https://pkg.go.dev/vuln/GO-2020-0017">https://pkg.go.dev/vuln/GO-2020-0017</a>
+          <a href="https://snyk.io/vuln/SNYK-GOLANG-GITHUBCOMDGRIJALVAJWTGO-596515">https://snyk.io/vuln/SNYK-GOLANG-GITHUBCOMDGRIJALVAJWTGO-596515</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2020-26160">https://www.cve.org/CVERecord?id=CVE-2020-26160</a>
+        </td>
+      </tr>
+      <tr class="severity-CRITICAL">
+        <td class="pkg-name">golang.org/x/crypto</td>
+        <td>CVE-2024-45337</td>
+        <td class="severity">CRITICAL</td>
+        <td class="pkg-version">v0.0.0-20210711020723-a769d52b0f97</td>
+        <td>0.31.0</td>
+        <td class="links" data-more-links="off">
+          <a href="http://www.openwall.com/lists/oss-security/2024/12/11/2">http://www.openwall.com/lists/oss-security/2024/12/11/2</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2024-45337">https://access.redhat.com/security/cve/CVE-2024-45337</a>
+          <a href="https://github.com/golang/crypto">https://github.com/golang/crypto</a>
+          <a href="https://github.com/golang/crypto/commit/b4f1988a35dee11ec3e05d6bf3e90b695fbd8909">https://github.com/golang/crypto/commit/b4f1988a35dee11ec3e05d6bf3e90b695fbd8909</a>
+          <a href="https://go.dev/cl/635315">https://go.dev/cl/635315</a>
+          <a href="https://go.dev/issue/70779">https://go.dev/issue/70779</a>
+          <a href="https://groups.google.com/g/golang-announce/c/-nPEi39gI4Q/m/cGVPJCqdAQAJ">https://groups.google.com/g/golang-announce/c/-nPEi39gI4Q/m/cGVPJCqdAQAJ</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-45337">https://nvd.nist.gov/vuln/detail/CVE-2024-45337</a>
+          <a href="https://pkg.go.dev/vuln/GO-2024-3321">https://pkg.go.dev/vuln/GO-2024-3321</a>
+          <a href="https://security.netapp.com/advisory/ntap-20250131-0007">https://security.netapp.com/advisory/ntap-20250131-0007</a>
+          <a href="https://security.netapp.com/advisory/ntap-20250131-0007/">https://security.netapp.com/advisory/ntap-20250131-0007/</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2024-45337">https://www.cve.org/CVERecord?id=CVE-2024-45337</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/crypto</td>
+        <td>CVE-2021-43565</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210711020723-a769d52b0f97</td>
+        <td>0.0.0-20211202192323-5770296d904e</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2021-43565">https://access.redhat.com/security/cve/CVE-2021-43565</a>
+          <a href="https://go.dev/cl/368814">https://go.dev/cl/368814</a>
+          <a href="https://go.dev/issues/49932">https://go.dev/issues/49932</a>
+          <a href="https://groups.google.com/forum/#!forum/golang-announce">https://groups.google.com/forum/#!forum/golang-announce</a>
+          <a href="https://groups.google.com/forum/#%21forum/golang-announce">https://groups.google.com/forum/#%21forum/golang-announce</a>
+          <a href="https://groups.google.com/g/golang-announce/c/2AR1sKiM-Qs">https://groups.google.com/g/golang-announce/c/2AR1sKiM-Qs</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-43565">https://nvd.nist.gov/vuln/detail/CVE-2021-43565</a>
+          <a href="https://pkg.go.dev/vuln/GO-2022-0968">https://pkg.go.dev/vuln/GO-2022-0968</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2021-43565">https://www.cve.org/CVERecord?id=CVE-2021-43565</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/crypto</td>
+        <td>CVE-2022-27191</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210711020723-a769d52b0f97</td>
+        <td>0.0.0-20220314234659-1baeb1ce4c0b</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/errata/RHSA-2022:7469">https://access.redhat.com/errata/RHSA-2022:7469</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2022-27191">https://access.redhat.com/security/cve/CVE-2022-27191</a>
+          <a href="https://bugzilla.redhat.com/2064702">https://bugzilla.redhat.com/2064702</a>
+          <a href="https://bugzilla.redhat.com/2085361">https://bugzilla.redhat.com/2085361</a>
+          <a href="https://bugzilla.redhat.com/2086398">https://bugzilla.redhat.com/2086398</a>
+          <a href="https://cs.opensource.google/go/x/crypto">https://cs.opensource.google/go/x/crypto</a>
+          <a href="https://errata.almalinux.org/8/ALSA-2022-7469.html">https://errata.almalinux.org/8/ALSA-2022-7469.html</a>
+          <a href="https://go.dev/cl/392355">https://go.dev/cl/392355</a>
+          <a href="https://go.googlesource.com/crypto/+/1baeb1ce4c0b006eff0f294c47cb7617598dfb3d">https://go.googlesource.com/crypto/+/1baeb1ce4c0b006eff0f294c47cb7617598dfb3d</a>
+          <a href="https://groups.google.com/g/golang-announce">https://groups.google.com/g/golang-announce</a>
+          <a href="https://groups.google.com/g/golang-announce/c/-cp44ypCT5s">https://groups.google.com/g/golang-announce/c/-cp44ypCT5s</a>
+          <a href="https://groups.google.com/g/golang-announce/c/-cp44ypCT5s/m/wmegxkLiAQAJ">https://groups.google.com/g/golang-announce/c/-cp44ypCT5s/m/wmegxkLiAQAJ</a>
+          <a href="https://linux.oracle.com/cve/CVE-2022-27191.html">https://linux.oracle.com/cve/CVE-2022-27191.html</a>
+          <a href="https://linux.oracle.com/errata/ELSA-2022-8008.html">https://linux.oracle.com/errata/ELSA-2022-8008.html</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/DLUJZV3HBP56ADXU6QH2V7RNYUPMVBXQ/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/DLUJZV3HBP56ADXU6QH2V7RNYUPMVBXQ/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/EZ3S7LB65N54HXXBCB67P4TTOHTNPP5O/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/EZ3S7LB65N54HXXBCB67P4TTOHTNPP5O/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/HHGBEGJ54DZZGTXFUQNS7ZIG3E624YAF/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/HHGBEGJ54DZZGTXFUQNS7ZIG3E624YAF/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/J5WPM42UR6XIBQNQPNQHM32X7S4LJTRX/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/J5WPM42UR6XIBQNQPNQHM32X7S4LJTRX/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QTFOIDHQRGNI4P6LYN6ILH5G443RYYKB/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/QTFOIDHQRGNI4P6LYN6ILH5G443RYYKB/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RQXU752ALW53OJAF5MG3WMR5CCZVLWW6/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RQXU752ALW53OJAF5MG3WMR5CCZVLWW6/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/YHYRQB7TRMHDB3NEHW5XBRG7PPMUTPGV/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/YHYRQB7TRMHDB3NEHW5XBRG7PPMUTPGV/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/Z55VUVGO7E5PJFXIOVAY373NZRHBNCI5/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/Z55VUVGO7E5PJFXIOVAY373NZRHBNCI5/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ZFUNHFHQVJSADNH7EZ3B53CYDZVEEPBP/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ZFUNHFHQVJSADNH7EZ3B53CYDZVEEPBP/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ZQNPPQWSTP2IX7SHE6TS4SP4EVMI5EZK/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ZQNPPQWSTP2IX7SHE6TS4SP4EVMI5EZK/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ZY2SLWOQR4ZURQ7UBRZ7JIX6H6F5JHJR/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ZY2SLWOQR4ZURQ7UBRZ7JIX6H6F5JHJR/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/DLUJZV3HBP56ADXU6QH2V7RNYUPMVBXQ">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/DLUJZV3HBP56ADXU6QH2V7RNYUPMVBXQ</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EZ3S7LB65N54HXXBCB67P4TTOHTNPP5O">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EZ3S7LB65N54HXXBCB67P4TTOHTNPP5O</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HHGBEGJ54DZZGTXFUQNS7ZIG3E624YAF">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HHGBEGJ54DZZGTXFUQNS7ZIG3E624YAF</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/J5WPM42UR6XIBQNQPNQHM32X7S4LJTRX">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/J5WPM42UR6XIBQNQPNQHM32X7S4LJTRX</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QTFOIDHQRGNI4P6LYN6ILH5G443RYYKB">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QTFOIDHQRGNI4P6LYN6ILH5G443RYYKB</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RQXU752ALW53OJAF5MG3WMR5CCZVLWW6">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RQXU752ALW53OJAF5MG3WMR5CCZVLWW6</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YHYRQB7TRMHDB3NEHW5XBRG7PPMUTPGV">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YHYRQB7TRMHDB3NEHW5XBRG7PPMUTPGV</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z55VUVGO7E5PJFXIOVAY373NZRHBNCI5">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Z55VUVGO7E5PJFXIOVAY373NZRHBNCI5</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZFUNHFHQVJSADNH7EZ3B53CYDZVEEPBP">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZFUNHFHQVJSADNH7EZ3B53CYDZVEEPBP</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZQNPPQWSTP2IX7SHE6TS4SP4EVMI5EZK">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZQNPPQWSTP2IX7SHE6TS4SP4EVMI5EZK</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZY2SLWOQR4ZURQ7UBRZ7JIX6H6F5JHJR">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZY2SLWOQR4ZURQ7UBRZ7JIX6H6F5JHJR</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-27191">https://nvd.nist.gov/vuln/detail/CVE-2022-27191</a>
+          <a href="https://pkg.go.dev/vuln/GO-2021-0356">https://pkg.go.dev/vuln/GO-2021-0356</a>
+          <a href="https://raw.githubusercontent.com/golang/vulndb/df2d3d326300e2ae768f00351ffa96cc2c56cf54/reports/GO-2021-0356.yaml">https://raw.githubusercontent.com/golang/vulndb/df2d3d326300e2ae768f00351ffa96cc2c56cf54/reports/GO-2021-0356.yaml</a>
+          <a href="https://security.netapp.com/advisory/ntap-20220429-0002">https://security.netapp.com/advisory/ntap-20220429-0002</a>
+          <a href="https://security.netapp.com/advisory/ntap-20220429-0002/">https://security.netapp.com/advisory/ntap-20220429-0002/</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2022-27191">https://www.cve.org/CVERecord?id=CVE-2022-27191</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/crypto</td>
+        <td>CVE-2025-22869</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210711020723-a769d52b0f97</td>
+        <td>0.35.0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/errata/RHSA-2025:7484">https://access.redhat.com/errata/RHSA-2025:7484</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2025-22869">https://access.redhat.com/security/cve/CVE-2025-22869</a>
+          <a href="https://bugzilla.redhat.com/2348367">https://bugzilla.redhat.com/2348367</a>
+          <a href="https://errata.almalinux.org/10/ALSA-2025-7484.html">https://errata.almalinux.org/10/ALSA-2025-7484.html</a>
+          <a href="https://github.com/golang/crypto">https://github.com/golang/crypto</a>
+          <a href="https://github.com/golang/crypto/commit/7292932d45d55c7199324ab0027cc86e8198aa22">https://github.com/golang/crypto/commit/7292932d45d55c7199324ab0027cc86e8198aa22</a>
+          <a href="https://go-review.googlesource.com/c/crypto/+/652135">https://go-review.googlesource.com/c/crypto/+/652135</a>
+          <a href="https://go.dev/cl/652135">https://go.dev/cl/652135</a>
+          <a href="https://go.dev/issue/71931">https://go.dev/issue/71931</a>
+          <a href="https://linux.oracle.com/cve/CVE-2025-22869.html">https://linux.oracle.com/cve/CVE-2025-22869.html</a>
+          <a href="https://linux.oracle.com/errata/ELSA-2025-7484.html">https://linux.oracle.com/errata/ELSA-2025-7484.html</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-22869">https://nvd.nist.gov/vuln/detail/CVE-2025-22869</a>
+          <a href="https://pkg.go.dev/vuln/GO-2025-3487">https://pkg.go.dev/vuln/GO-2025-3487</a>
+          <a href="https://security.netapp.com/advisory/ntap-20250411-0010">https://security.netapp.com/advisory/ntap-20250411-0010</a>
+          <a href="https://security.netapp.com/advisory/ntap-20250411-0010/">https://security.netapp.com/advisory/ntap-20250411-0010/</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2025-22869">https://www.cve.org/CVERecord?id=CVE-2025-22869</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/net</td>
+        <td>CVE-2021-33194</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210226172049-e18ecbb05110</td>
+        <td>0.0.0-20210520170846-37e1c6afe023</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2021-33194">https://access.redhat.com/security/cve/CVE-2021-33194</a>
+          <a href="https://github.com/golang/net/commit/37e1c6afe02340126705deced573a85ab75209d7">https://github.com/golang/net/commit/37e1c6afe02340126705deced573a85ab75209d7</a>
+          <a href="https://go.dev/cl/311090">https://go.dev/cl/311090</a>
+          <a href="https://go.dev/issue/46288">https://go.dev/issue/46288</a>
+          <a href="https://go.googlesource.com/net/+/37e1c6afe02340126705deced573a85ab75209d7">https://go.googlesource.com/net/+/37e1c6afe02340126705deced573a85ab75209d7</a>
+          <a href="https://groups.google.com/g/golang-announce/c/wPunbCPkWUg">https://groups.google.com/g/golang-announce/c/wPunbCPkWUg</a>
+          <a href="https://groups.google.com/g/golang-dev/c/28x0nthP-c8/m/KqWVTjsnBAAJ">https://groups.google.com/g/golang-dev/c/28x0nthP-c8/m/KqWVTjsnBAAJ</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/4CHKSFMHZVOBCZSSVRE3UEYNKARTBMTM/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/4CHKSFMHZVOBCZSSVRE3UEYNKARTBMTM/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4CHKSFMHZVOBCZSSVRE3UEYNKARTBMTM">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4CHKSFMHZVOBCZSSVRE3UEYNKARTBMTM</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-33194">https://nvd.nist.gov/vuln/detail/CVE-2021-33194</a>
+          <a href="https://pkg.go.dev/vuln/GO-2021-0238">https://pkg.go.dev/vuln/GO-2021-0238</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2021-33194">https://www.cve.org/CVERecord?id=CVE-2021-33194</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/net</td>
+        <td>CVE-2022-27664</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210226172049-e18ecbb05110</td>
+        <td>0.0.0-20220906165146-f3363e06e74c</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/errata/RHSA-2024:0121">https://access.redhat.com/errata/RHSA-2024:0121</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2022-27664">https://access.redhat.com/security/cve/CVE-2022-27664</a>
+          <a href="https://bugzilla.redhat.com/2124669">https://bugzilla.redhat.com/2124669</a>
+          <a href="https://bugzilla.redhat.com/2132867">https://bugzilla.redhat.com/2132867</a>
+          <a href="https://bugzilla.redhat.com/2132868">https://bugzilla.redhat.com/2132868</a>
+          <a href="https://bugzilla.redhat.com/2132872">https://bugzilla.redhat.com/2132872</a>
+          <a href="https://bugzilla.redhat.com/2228743">https://bugzilla.redhat.com/2228743</a>
+          <a href="https://bugzilla.redhat.com/2237773">https://bugzilla.redhat.com/2237773</a>
+          <a href="https://bugzilla.redhat.com/2237776">https://bugzilla.redhat.com/2237776</a>
+          <a href="https://bugzilla.redhat.com/2237777">https://bugzilla.redhat.com/2237777</a>
+          <a href="https://bugzilla.redhat.com/2237778">https://bugzilla.redhat.com/2237778</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1913333">https://bugzilla.redhat.com/show_bug.cgi?id=1913333</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1913338">https://bugzilla.redhat.com/show_bug.cgi?id=1913338</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2107371">https://bugzilla.redhat.com/show_bug.cgi?id=2107371</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2107374">https://bugzilla.redhat.com/show_bug.cgi?id=2107374</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2107383">https://bugzilla.redhat.com/show_bug.cgi?id=2107383</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2107386">https://bugzilla.redhat.com/show_bug.cgi?id=2107386</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2107388">https://bugzilla.redhat.com/show_bug.cgi?id=2107388</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2113814">https://bugzilla.redhat.com/show_bug.cgi?id=2113814</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2124669">https://bugzilla.redhat.com/show_bug.cgi?id=2124669</a>
+          <a href="https://cs.opensource.google/go/x/net">https://cs.opensource.google/go/x/net</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28851">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28851</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28852">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28852</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-1705">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-1705</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-27664">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-27664</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30630">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30630</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30632">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30632</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30635">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30635</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32148">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32148</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32189">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32189</a>
+          <a href="https://errata.almalinux.org/8/ALSA-2024-0121.html">https://errata.almalinux.org/8/ALSA-2024-0121.html</a>
+          <a href="https://errata.rockylinux.org/RLSA-2022:7129">https://errata.rockylinux.org/RLSA-2022:7129</a>
+          <a href="https://github.com/golang/go/commit/5bc9106458fc07851ac324a4157132a91b1f3479 (go1.18.6)">https://github.com/golang/go/commit/5bc9106458fc07851ac324a4157132a91b1f3479 (go1.18.6)</a>
+          <a href="https://github.com/golang/go/commit/9cfe4e258b1c9d4a04a42539c21c7bdb2e227824 (go1.19.1)">https://github.com/golang/go/commit/9cfe4e258b1c9d4a04a42539c21c7bdb2e227824 (go1.19.1)</a>
+          <a href="https://github.com/golang/go/issues/54658">https://github.com/golang/go/issues/54658</a>
+          <a href="https://go.dev/cl/428735">https://go.dev/cl/428735</a>
+          <a href="https://go.dev/issue/54658">https://go.dev/issue/54658</a>
+          <a href="https://groups.google.com/g/golang-announce">https://groups.google.com/g/golang-announce</a>
+          <a href="https://groups.google.com/g/golang-announce/c/x49AQzIVX-s">https://groups.google.com/g/golang-announce/c/x49AQzIVX-s</a>
+          <a href="https://groups.google.com/g/golang-announce/c/x49AQzIVX-s/m/0tgO0pjiBQAJ">https://groups.google.com/g/golang-announce/c/x49AQzIVX-s/m/0tgO0pjiBQAJ</a>
+          <a href="https://linux.oracle.com/cve/CVE-2022-27664.html">https://linux.oracle.com/cve/CVE-2022-27664.html</a>
+          <a href="https://linux.oracle.com/errata/ELSA-2024-0121.html">https://linux.oracle.com/errata/ELSA-2024-0121.html</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JXKTHIGE5F576MAPFYCIJXNRGBSPISUF/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JXKTHIGE5F576MAPFYCIJXNRGBSPISUF/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/TXS2OQ57KZC5XZKK5UW4SYKPVQAHIOJX/">https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/TXS2OQ57KZC5XZKK5UW4SYKPVQAHIOJX/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/JXKTHIGE5F576MAPFYCIJXNRGBSPISUF">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/JXKTHIGE5F576MAPFYCIJXNRGBSPISUF</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/TXS2OQ57KZC5XZKK5UW4SYKPVQAHIOJX">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/TXS2OQ57KZC5XZKK5UW4SYKPVQAHIOJX</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-27664">https://nvd.nist.gov/vuln/detail/CVE-2022-27664</a>
+          <a href="https://pkg.go.dev/vuln/GO-2022-0969">https://pkg.go.dev/vuln/GO-2022-0969</a>
+          <a href="https://security.gentoo.org/glsa/202209-26">https://security.gentoo.org/glsa/202209-26</a>
+          <a href="https://security.netapp.com/advisory/ntap-20220923-0004">https://security.netapp.com/advisory/ntap-20220923-0004</a>
+          <a href="https://security.netapp.com/advisory/ntap-20220923-0004/">https://security.netapp.com/advisory/ntap-20220923-0004/</a>
+          <a href="https://ubuntu.com/security/notices/USN-6038-1">https://ubuntu.com/security/notices/USN-6038-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-6038-2">https://ubuntu.com/security/notices/USN-6038-2</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2022-27664">https://www.cve.org/CVERecord?id=CVE-2022-27664</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/net</td>
+        <td>CVE-2022-41723</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210226172049-e18ecbb05110</td>
+        <td>0.7.0</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/errata/RHSA-2023:6939">https://access.redhat.com/errata/RHSA-2023:6939</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2022-41723">https://access.redhat.com/security/cve/CVE-2022-41723</a>
+          <a href="https://bugzilla.redhat.com/2163037">https://bugzilla.redhat.com/2163037</a>
+          <a href="https://bugzilla.redhat.com/2174485">https://bugzilla.redhat.com/2174485</a>
+          <a href="https://bugzilla.redhat.com/2175721">https://bugzilla.redhat.com/2175721</a>
+          <a href="https://bugzilla.redhat.com/2178358">https://bugzilla.redhat.com/2178358</a>
+          <a href="https://bugzilla.redhat.com/2178488">https://bugzilla.redhat.com/2178488</a>
+          <a href="https://bugzilla.redhat.com/2178492">https://bugzilla.redhat.com/2178492</a>
+          <a href="https://bugzilla.redhat.com/2182883">https://bugzilla.redhat.com/2182883</a>
+          <a href="https://bugzilla.redhat.com/2182884">https://bugzilla.redhat.com/2182884</a>
+          <a href="https://bugzilla.redhat.com/2184481">https://bugzilla.redhat.com/2184481</a>
+          <a href="https://bugzilla.redhat.com/2184482">https://bugzilla.redhat.com/2184482</a>
+          <a href="https://bugzilla.redhat.com/2184483">https://bugzilla.redhat.com/2184483</a>
+          <a href="https://bugzilla.redhat.com/2184484">https://bugzilla.redhat.com/2184484</a>
+          <a href="https://bugzilla.redhat.com/2196026">https://bugzilla.redhat.com/2196026</a>
+          <a href="https://bugzilla.redhat.com/2196027">https://bugzilla.redhat.com/2196027</a>
+          <a href="https://bugzilla.redhat.com/2196029">https://bugzilla.redhat.com/2196029</a>
+          <a href="https://bugzilla.redhat.com/2222167">https://bugzilla.redhat.com/2222167</a>
+          <a href="https://bugzilla.redhat.com/2228689">https://bugzilla.redhat.com/2228689</a>
+          <a href="https://errata.almalinux.org/8/ALSA-2023-6939.html">https://errata.almalinux.org/8/ALSA-2023-6939.html</a>
+          <a href="https://github.com/advisories/GHSA-vvpx-j8f3-3w6h">https://github.com/advisories/GHSA-vvpx-j8f3-3w6h</a>
+          <a href="https://go.dev/cl/468135">https://go.dev/cl/468135</a>
+          <a href="https://go.dev/cl/468295">https://go.dev/cl/468295</a>
+          <a href="https://go.dev/issue/57855">https://go.dev/issue/57855</a>
+          <a href="https://groups.google.com/g/golang-announce/c/V0aBFqaFs_E">https://groups.google.com/g/golang-announce/c/V0aBFqaFs_E</a>
+          <a href="https://linux.oracle.com/cve/CVE-2022-41723.html">https://linux.oracle.com/cve/CVE-2022-41723.html</a>
+          <a href="https://linux.oracle.com/errata/ELSA-2023-6939.html">https://linux.oracle.com/errata/ELSA-2023-6939.html</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4MA5XS5DAOJ5PKKNG5TUXKPQOFHT5VBC">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4MA5XS5DAOJ5PKKNG5TUXKPQOFHT5VBC</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4MA5XS5DAOJ5PKKNG5TUXKPQOFHT5VBC/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4MA5XS5DAOJ5PKKNG5TUXKPQOFHT5VBC/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RGW7GE2Z32ZT47UFAQFDRQE33B7Q7LMT">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RGW7GE2Z32ZT47UFAQFDRQE33B7Q7LMT</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RGW7GE2Z32ZT47UFAQFDRQE33B7Q7LMT/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RGW7GE2Z32ZT47UFAQFDRQE33B7Q7LMT/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RLBQ3A7ROLEQXQLXFDLNJ7MYPKG5GULE">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RLBQ3A7ROLEQXQLXFDLNJ7MYPKG5GULE</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RLBQ3A7ROLEQXQLXFDLNJ7MYPKG5GULE/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RLBQ3A7ROLEQXQLXFDLNJ7MYPKG5GULE/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XX3IMUTZKRQ73PBZM4E2JP4BKYH4C6XE">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XX3IMUTZKRQ73PBZM4E2JP4BKYH4C6XE</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XX3IMUTZKRQ73PBZM4E2JP4BKYH4C6XE/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XX3IMUTZKRQ73PBZM4E2JP4BKYH4C6XE/</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-41723">https://nvd.nist.gov/vuln/detail/CVE-2022-41723</a>
+          <a href="https://pkg.go.dev/vuln/GO-2023-1571">https://pkg.go.dev/vuln/GO-2023-1571</a>
+          <a href="https://security.gentoo.org/glsa/202311-09">https://security.gentoo.org/glsa/202311-09</a>
+          <a href="https://security.netapp.com/advisory/ntap-20230331-0010/">https://security.netapp.com/advisory/ntap-20230331-0010/</a>
+          <a href="https://ubuntu.com/security/notices/USN-7109-1">https://ubuntu.com/security/notices/USN-7109-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-7111-1">https://ubuntu.com/security/notices/USN-7111-1</a>
+          <a href="https://vuln.go.dev/ID/GO-2023-1571.json">https://vuln.go.dev/ID/GO-2023-1571.json</a>
+          <a href="https://www.couchbase.com/alerts">https://www.couchbase.com/alerts</a>
+          <a href="https://www.couchbase.com/alerts/">https://www.couchbase.com/alerts/</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2022-41723">https://www.cve.org/CVERecord?id=CVE-2022-41723</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/net</td>
+        <td>CVE-2023-39325</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.0.0-20210226172049-e18ecbb05110</td>
+        <td>0.17.0</td>
+        <td class="links" data-more-links="off">
+          <a href="golang.org/x/net">golang.org/x/net</a>
+          <a href="https://access.redhat.com/errata/RHSA-2023:5863">https://access.redhat.com/errata/RHSA-2023:5863</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2023-39325">https://access.redhat.com/security/cve/CVE-2023-39325</a>
+          <a href="https://access.redhat.com/security/cve/CVE-2023-44487">https://access.redhat.com/security/cve/CVE-2023-44487</a>
+          <a href="https://bugzilla.redhat.com/2242803">https://bugzilla.redhat.com/2242803</a>
+          <a href="https://bugzilla.redhat.com/2243296">https://bugzilla.redhat.com/2243296</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2242803">https://bugzilla.redhat.com/show_bug.cgi?id=2242803</a>
+          <a href="https://bugzilla.redhat.com/show_bug.cgi?id=2243296">https://bugzilla.redhat.com/show_bug.cgi?id=2243296</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-39325">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-39325</a>
+          <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-44487">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2023-44487</a>
+          <a href="https://errata.almalinux.org/8/ALSA-2023-5863.html">https://errata.almalinux.org/8/ALSA-2023-5863.html</a>
+          <a href="https://errata.rockylinux.org/RLSA-2023:6077">https://errata.rockylinux.org/RLSA-2023:6077</a>
+          <a href="https://github.com/golang/go/commit/24ae2d927285c697440fdde3ad7f26028354bcf3 [golang- 1.21]">https://github.com/golang/go/commit/24ae2d927285c697440fdde3ad7f26028354bcf3 [golang- 1.21]</a>
+          <a href="https://github.com/golang/go/commit/e175f27f58aa7b9cd4d79607ae65d2cd5baaee68 [golang-1.20]">https://github.com/golang/go/commit/e175f27f58aa7b9cd4d79607ae65d2cd5baaee68 [golang-1.20]</a>
+          <a href="https://github.com/golang/go/issues/63417">https://github.com/golang/go/issues/63417</a>
+          <a href="https://go.dev/cl/534215">https://go.dev/cl/534215</a>
+          <a href="https://go.dev/cl/534235">https://go.dev/cl/534235</a>
+          <a href="https://go.dev/issue/63417">https://go.dev/issue/63417</a>
+          <a href="https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ">https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo/m/UDd7VKQuAAAJ</a>
+          <a href="https://linux.oracle.com/cve/CVE-2023-39325.html">https://linux.oracle.com/cve/CVE-2023-39325.html</a>
+          <a href="https://linux.oracle.com/errata/ELSA-2023-5867.html">https://linux.oracle.com/errata/ELSA-2023-5867.html</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3OVW5V2DM5K5IC3H7O42YDUGNJ74J35O">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3OVW5V2DM5K5IC3H7O42YDUGNJ74J35O</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3OVW5V2DM5K5IC3H7O42YDUGNJ74J35O/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3OVW5V2DM5K5IC3H7O42YDUGNJ74J35O/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3SZN67IL7HMGMNAVLOTIXLIHUDXZK4LH/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3WJ4QVX2AMUJ2F2S27POOAHRC4K3CHU4">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3WJ4QVX2AMUJ2F2S27POOAHRC4K3CHU4</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3WJ4QVX2AMUJ2F2S27POOAHRC4K3CHU4/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3WJ4QVX2AMUJ2F2S27POOAHRC4K3CHU4/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4BUK2ZIAGCULOOYDNH25JPU6JBES5NF2/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5RSKA2II6QTD4YUKUNDVJQSRYSFC4VFR">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5RSKA2II6QTD4YUKUNDVJQSRYSFC4VFR</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5RSKA2II6QTD4YUKUNDVJQSRYSFC4VFR/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5RSKA2II6QTD4YUKUNDVJQSRYSFC4VFR/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/AVZDNSMVDAQJ64LJC5I5U5LDM5753647/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CHHITS4PUOZAKFIUBQAQZC7JWXMOYE4B">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CHHITS4PUOZAKFIUBQAQZC7JWXMOYE4B</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CHHITS4PUOZAKFIUBQAQZC7JWXMOYE4B/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CHHITS4PUOZAKFIUBQAQZC7JWXMOYE4B/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CLB4TW7KALB3EEQWNWCN7OUIWWVWWCG2/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2BBIDR2ZMB3X5BC7SR4SLQMHRMVPY6L/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ECRC75BQJP6FJN2L7KCKYZW4DSBD7QSD/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FTMJ3NJIDAZFWJQQSP3L22MUFJ3UP2PT">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FTMJ3NJIDAZFWJQQSP3L22MUFJ3UP2PT</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FTMJ3NJIDAZFWJQQSP3L22MUFJ3UP2PT/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FTMJ3NJIDAZFWJQQSP3L22MUFJ3UP2PT/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GSY7SXFFTPZFWDM6XELSDSHZLVW3AHK7/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HZQIELEIRSZUYTFFH5KTH2YJ4IIQG2KE/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IPWCNYB5PQ5PCVZ4NJT6G56ZYFZ5QBU6">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IPWCNYB5PQ5PCVZ4NJT6G56ZYFZ5QBU6</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IPWCNYB5PQ5PCVZ4NJT6G56ZYFZ5QBU6/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/IPWCNYB5PQ5PCVZ4NJT6G56ZYFZ5QBU6/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KEOTKBUPZXHE3F352JBYNTSNRXYLWD6P">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KEOTKBUPZXHE3F352JBYNTSNRXYLWD6P</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KEOTKBUPZXHE3F352JBYNTSNRXYLWD6P/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KEOTKBUPZXHE3F352JBYNTSNRXYLWD6P/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KSEGD2IWKNUO3DWY4KQGUQM5BISRWHQE/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/L5E5JSJBZLYXOTZWXHJKRVCIXIHVWKJ6">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/L5E5JSJBZLYXOTZWXHJKRVCIXIHVWKJ6</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/L5E5JSJBZLYXOTZWXHJKRVCIXIHVWKJ6/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/L5E5JSJBZLYXOTZWXHJKRVCIXIHVWKJ6/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MZQYOOKHQDQ57LV2IAG6NRFOVXKHJJ3Z">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MZQYOOKHQDQ57LV2IAG6NRFOVXKHJJ3Z</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MZQYOOKHQDQ57LV2IAG6NRFOVXKHJJ3Z/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MZQYOOKHQDQ57LV2IAG6NRFOVXKHJJ3Z/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/NG7IMPL55MVWU3LCI4JQJT3K2U5CHDV7/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ODBY7RVMGZCBSTWF2OZGIZS57FNFUL67">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ODBY7RVMGZCBSTWF2OZGIZS57FNFUL67</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ODBY7RVMGZCBSTWF2OZGIZS57FNFUL67/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ODBY7RVMGZCBSTWF2OZGIZS57FNFUL67/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/OXGWPQOJ3JNDW2XIYKIVJ7N7QUIFNM2Q/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PJCUNGIQDUMZ4Z6HWVYIMR66A35F5S74">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PJCUNGIQDUMZ4Z6HWVYIMR66A35F5S74</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PJCUNGIQDUMZ4Z6HWVYIMR66A35F5S74/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PJCUNGIQDUMZ4Z6HWVYIMR66A35F5S74/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QF5QSYAOPDOWLY6DUHID56Q4HQFYB45I/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QXOU2JZUBEBP7GBKAYIJRPRBZSJCD7ST">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QXOU2JZUBEBP7GBKAYIJRPRBZSJCD7ST</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QXOU2JZUBEBP7GBKAYIJRPRBZSJCD7ST/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QXOU2JZUBEBP7GBKAYIJRPRBZSJCD7ST/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/R3UETKPUB3V5JS5TLZOF3SMTGT5K5APS/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/REMHVVIBDNKSRKNOTV7EQSB7CYQWOUOU/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/T7N5GV4CHH6WAGX3GFMDD3COEOVCZ4RI/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ULQQONMSCQSH5Z5OWFFQHCGEZ3NL4DRJ/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UTT7DG3QOF5ZNJLUGHDNLRUIN6OWZARP/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/W2LZSWTV4NV4SNQARNXG5T6LRHP26EW2">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/W2LZSWTV4NV4SNQARNXG5T6LRHP26EW2</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/W2LZSWTV4NV4SNQARNXG5T6LRHP26EW2/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/W2LZSWTV4NV4SNQARNXG5T6LRHP26EW2/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/WCNCBYKZXLDFGAJUB7ZP5VLC3YTHJNVH/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XFOIBB4YFICHDM7IBOP7PWXW3FX4HLL2/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XTNLSL44Y5FB6JWADSZH6DCV4JJAAEQY/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YJWHBLVZDM5KQSDFRBFRKU5KSSOLIRQ4">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YJWHBLVZDM5KQSDFRBFRKU5KSSOLIRQ4</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YJWHBLVZDM5KQSDFRBFRKU5KSSOLIRQ4/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YJWHBLVZDM5KQSDFRBFRKU5KSSOLIRQ4/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YRKEXKANQ7BKJW2YTAMP625LJUJZLJ4P/</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZSVEMQV5ROY5YW5QE3I57HT3ITWG5GCV">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZSVEMQV5ROY5YW5QE3I57HT3ITWG5GCV</a>
+          <a href="https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZSVEMQV5ROY5YW5QE3I57HT3ITWG5GCV/">https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZSVEMQV5ROY5YW5QE3I57HT3ITWG5GCV/</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-39325">https://nvd.nist.gov/vuln/detail/CVE-2023-39325</a>
+          <a href="https://pkg.go.dev/vuln/GO-2023-2102">https://pkg.go.dev/vuln/GO-2023-2102</a>
+          <a href="https://security.gentoo.org/glsa/202311-09">https://security.gentoo.org/glsa/202311-09</a>
+          <a href="https://security.netapp.com/advisory/ntap-20231110-0008">https://security.netapp.com/advisory/ntap-20231110-0008</a>
+          <a href="https://security.netapp.com/advisory/ntap-20231110-0008/">https://security.netapp.com/advisory/ntap-20231110-0008/</a>
+          <a href="https://ubuntu.com/security/notices/USN-6574-1">https://ubuntu.com/security/notices/USN-6574-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-7061-1">https://ubuntu.com/security/notices/USN-7061-1</a>
+          <a href="https://ubuntu.com/security/notices/USN-7109-1">https://ubuntu.com/security/notices/USN-7109-1</a>
+          <a href="https://www.cisa.gov/news-events/alerts/2023/10/10/http2-rapid-reset-vulnerability-cve-2023-44487">https://www.cisa.gov/news-events/alerts/2023/10/10/http2-rapid-reset-vulnerability-cve-2023-44487</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2023-39325">https://www.cve.org/CVERecord?id=CVE-2023-39325</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/text</td>
+        <td>CVE-2021-38561</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.3.6</td>
+        <td>0.3.7</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2021-38561">https://access.redhat.com/security/cve/CVE-2021-38561</a>
+          <a href="https://deps.dev/advisory/OSV/GO-2021-0113">https://deps.dev/advisory/OSV/GO-2021-0113</a>
+          <a href="https://go.dev/cl/340830">https://go.dev/cl/340830</a>
+          <a href="https://go.googlesource.com/text/+/383b2e75a7a4198c42f8f87833eefb772868a56f">https://go.googlesource.com/text/+/383b2e75a7a4198c42f8f87833eefb772868a56f</a>
+          <a href="https://groups.google.com/g/golang-announce">https://groups.google.com/g/golang-announce</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-38561">https://nvd.nist.gov/vuln/detail/CVE-2021-38561</a>
+          <a href="https://pkg.go.dev/golang.org/x/text/language">https://pkg.go.dev/golang.org/x/text/language</a>
+          <a href="https://pkg.go.dev/vuln/GO-2021-0113">https://pkg.go.dev/vuln/GO-2021-0113</a>
+          <a href="https://ubuntu.com/security/notices/USN-5873-1">https://ubuntu.com/security/notices/USN-5873-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2021-38561">https://www.cve.org/CVERecord?id=CVE-2021-38561</a>
+        </td>
+      </tr>
+      <tr class="severity-HIGH">
+        <td class="pkg-name">golang.org/x/text</td>
+        <td>CVE-2022-32149</td>
+        <td class="severity">HIGH</td>
+        <td class="pkg-version">v0.3.6</td>
+        <td>0.3.8</td>
+        <td class="links" data-more-links="off">
+          <a href="https://access.redhat.com/security/cve/CVE-2022-32149">https://access.redhat.com/security/cve/CVE-2022-32149</a>
+          <a href="https://github.com/golang/go/issues/56152">https://github.com/golang/go/issues/56152</a>
+          <a href="https://github.com/golang/text">https://github.com/golang/text</a>
+          <a href="https://github.com/golang/text/commit/434eadcdbc3b0256971992e8c70027278364c72c">https://github.com/golang/text/commit/434eadcdbc3b0256971992e8c70027278364c72c</a>
+          <a href="https://github.com/golang/text/commit/434eadcdbc3b0256971992e8c70027278364c72c (v0.3.8)">https://github.com/golang/text/commit/434eadcdbc3b0256971992e8c70027278364c72c (v0.3.8)</a>
+          <a href="https://go.dev/cl/442235">https://go.dev/cl/442235</a>
+          <a href="https://go.dev/issue/56152">https://go.dev/issue/56152</a>
+          <a href="https://groups.google.com/g/golang-announce/c/-hjNw559_tE/m/KlGTfid5CAAJ">https://groups.google.com/g/golang-announce/c/-hjNw559_tE/m/KlGTfid5CAAJ</a>
+          <a href="https://groups.google.com/g/golang-dev/c/qfPIly0X7aU">https://groups.google.com/g/golang-dev/c/qfPIly0X7aU</a>
+          <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-32149">https://nvd.nist.gov/vuln/detail/CVE-2022-32149</a>
+          <a href="https://pkg.go.dev/vuln/GO-2022-1059">https://pkg.go.dev/vuln/GO-2022-1059</a>
+          <a href="https://security.netapp.com/advisory/ntap-20230203-0006">https://security.netapp.com/advisory/ntap-20230203-0006</a>
+          <a href="https://security.netapp.com/advisory/ntap-20230203-0006/">https://security.netapp.com/advisory/ntap-20230203-0006/</a>
+          <a href="https://ubuntu.com/security/notices/USN-5873-1">https://ubuntu.com/security/notices/USN-5873-1</a>
+          <a href="https://www.cve.org/CVERecord?id=CVE-2022-32149">https://www.cve.org/CVERecord?id=CVE-2022-32149</a>
+        </td>
+      </tr>
+      <tr><th colspan="6">No Misconfigurations found</th></tr>
+    </table>
+  </body>
+</html>
