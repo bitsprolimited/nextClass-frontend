@@ -20,6 +20,9 @@ WORKDIR /app
 COPY --from=build  /go/src/tasky/tasky .
 COPY --from=build  /go/src/tasky/assets ./assets
 
+# This will copy my text file into the container
+COPY wizexercise.txt .
+
 # Gave  non root user access to workdir to be able to run the app
 RUN chown -R appuser:appgroup /app
 USER appuser
