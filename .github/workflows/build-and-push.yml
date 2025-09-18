@@ -4,7 +4,12 @@ on:
   push:
     paths:
       - 'Dockerfile'
-      - '**/*.py'
+      - '**/*.go'
+      - '**/*.txt'
+      - '**/*.css'
+      - '**/*.js'
+      - '**/*.html'
+      - '**/*.svg'
 
 env:
   AWS_REGION: us-east-1
