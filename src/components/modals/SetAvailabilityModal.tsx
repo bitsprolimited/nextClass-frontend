@@ -65,7 +65,7 @@ function SetAvailabilityModal({ isOpen, onClose }: SetAvailabilityModalProps) {
   };
 
   const handleComplete = () => {
-    toast?.success?.("Availability set successfully!"); // Optional toast notification
+    toast?.success?.("Availability set successfully!. redirecting to calender integration"); // Optional toast notification
     handleClose();
   };
 

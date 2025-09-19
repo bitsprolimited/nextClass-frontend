@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axios";
+import { Child } from "@/types";
 
 // API DTO type (matches your backend DTO)
 export interface AddLearnerDTO {
@@ -27,4 +28,9 @@ export const editLearner = async (
   const { id, ...rest } = data;
   const response = await axiosInstance.patch(`/user/learners/${id}`, rest);
   return response.data;
+};
+
+export const getLearners = async (): Promise<Child[]> => {
+  const response = await axiosInstance.get("/user/learners");
+  return response.data.learners;
 };

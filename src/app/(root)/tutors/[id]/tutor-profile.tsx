@@ -22,7 +22,7 @@ import Loader from "@/components/Loader";
 import ErrorComponent from "@/components/ErrorComponent";
 import { BookIntroductoryCallModal } from "@/components/modals/BookIntroductoryCallModal";
 import { Session } from "@/services/session";
-import { BookAClassModal } from "@/components/modals/BookAClassModal";
+import { BookAClassModal } from "@/components/modals/bookAClass/BookAClassModal";
 
 export default function TutorProfile({
   id,

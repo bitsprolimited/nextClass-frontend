@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   BookOpen,
@@ -7,14 +8,26 @@ import {
   Clock,
   Pencil,
 } from "lucide-react";
-import { MdOutlineCalendarMonth } from "react-icons/md";
+import Image from "next/image";
 import { FiWatch } from "react-icons/fi";
 import { IoBookOutline } from "react-icons/io5";
+import { MdOutlineCalendarMonth } from "react-icons/md";
 
 import AlertRotator from "@/components/alerts/AlertRotator";
+import ErrorComponent from "@/components/ErrorComponent";
+import Loader from "@/components/Loader";
 import DashboardTabs from "@/components/tutors/DashboardTabs";
+import { useUser } from "@/hooks/useUser";
+import { format } from "date-fns";
+import { useModalStore } from "@/store/useModal";
+import { Teacher } from "@/types";
 
 export default function Dashboard() {
+  const { data: user, isLoading, isError } = useUser();
+  const { openModal } = useModalStore();
+
+  if (isLoading) return <Loader />;
+  if (isError || !user) return <ErrorComponent />;
   return (
     <div className="min-h-screen">
       <div className="flex w-full bg-[#F8F7FC] py-10 px-6">
@@ -52,7 +65,7 @@ export default function Dashboard() {
 
                 <div className="flex-1 w-full">
                   <div className="flex justify-between items-start w-full">
-                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                    <h2 className="text-2xl font-bold flex items-center gap-2 capitalize">
                       <Image
                         src="/images/USA.png"
                         alt="US Flag"
@@ -60,7 +73,7 @@ export default function Dashboard() {
                         width={24}
                         height={24}
                       />
-                      Ryan Patterson
+                      {user.user.fullName}
                     </h2>
                     <button className="text-gray-400 hover:text-gray-600">
                       <Pencil size={18} />
@@ -103,8 +116,8 @@ export default function Dashboard() {
                       <BookOpen size={16} /> Mathematics. History. Physics.
                       Music.
                     </div>
-                    <div className="col-span-full text-sm text-right text-purple-300 font-semibold">
-                      JOINED 29, MAY 2025
+                    <div className="col-span-full text-xs uppercase text-right text-purple-300 font-semibold">
+                      JOINED {format(user.user.createdAt, "PPP")}
                     </div>
                   </div>
                 </div>
@@ -122,14 +135,17 @@ export default function Dashboard() {
               </p>
 
               <blockquote className="italic text-sm text-gray-600 mb-6">
-                “Let&apos;s focus on what we can do today, so that tomorrow, we will
-                reap the harvest of today”
+                “Let&apos;s focus on what we can do today, so that tomorrow, we
+                will reap the harvest of today”
               </blockquote>
 
               <Button className="bg-blue-800 text-white font-medium w-full py-4 rounded-full mb-4">
                 Create a New Course
               </Button>
-              <Button className="w-full border bg-slate-200 border-blue-800 text-blue-800 font-medium py-4 rounded-full">
+              <Button
+                onClick={() => openModal("setAvailability", {})}
+                className="w-full border bg-slate-200 border-blue-800 text-blue-800 hover:text-white font-medium py-4 rounded-full"
+              >
                 Set Availability
               </Button>
             </div>
@@ -199,7 +215,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <DashboardTabs />
+      <DashboardTabs tutor={user as unknown as Teacher} />
     </div>
   );
 }

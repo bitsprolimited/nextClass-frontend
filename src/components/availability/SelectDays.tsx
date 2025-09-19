@@ -85,7 +85,7 @@ function SelectDaysForm({ onNext }: SelectDaysFormProps) {
       slots: finalSelectedDays.includes(day.dayOfWeek)
         ? day.slots.length > 0
           ? day.slots
-          : [{ startTime: "", endTime: "" }]
+          : [{ startTime: "09:00", endTime: "17:00" }]
         : [],
     }));
 

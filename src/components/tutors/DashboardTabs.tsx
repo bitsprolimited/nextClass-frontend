@@ -1,17 +1,17 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // adjust path if different
-import { useState } from "react";
-import ReviewsPanel from "./ReviewsPanel";
 import { Teacher } from "@/types";
-import { Card, CardContent } from "../ui/card";
 import { format } from "date-fns";
+import { useState } from "react";
+import { Card, CardContent } from "../ui/card";
+import ReviewsPanel from "./ReviewsPanel";
 
 export default function DashboardTabs({ tutor }: { tutor: Teacher }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="mt-10 mb-20 max-w-6xl w-full">
+    <div className="mt-10 mb-20 max-w-6xl mx-auto w-full">
       <Tabs defaultValue="description" className="w-full">
         {/* Tabs Nav */}
         <TabsList className="flex justify-start gap-8  bg-transparent p-0">
@@ -82,7 +82,7 @@ export default function DashboardTabs({ tutor }: { tutor: Teacher }) {
         >
           <div className="inline-flex flex-col items-center gap-8 w-full">
             <div className="flex flex-wrap self-stretch items-start w-full relative">
-              {tutor.qualifications.map((qualification, index) => (
+              {tutor?.qualifications?.map((qualification, index) => (
                 <Card key={index} className="w-full max-w-[600px] px-8 py-6">
                   <CardContent className="inline-flex flex-col gap-4 relative p-0 w-full capitalize">
                     <div className="inline-flex gap-1.5 flex-col items-start">

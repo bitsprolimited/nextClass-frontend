@@ -1,69 +1,27 @@
-import axiosInstance from "@/lib/axios";
-import { createBooking } from "@/services/booking.service";
+import {
+  Booking,
+  BookingStatus,
+  createBooking,
+  EventType,
+  getBookings,
+  GetBookingsParams,
+  PaginatedBookingsResponse,
+} from "@/services/booking.service";
 import { useModalStore } from "@/store/useModal";
-import { AxioErrorResponse } from "@/types";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { toast } from "sonner";
 
-export interface BookingSlot {
-  date: string; // YYYY-MM-DD
-  time: string; // HH:mm
-  duration: number;
-}
-
-export interface RecurringSlot {
-  startTime: string; // ISO string
-  endTime: string; // ISO string
-}
-
-export interface RecurrenceConfig {
-  pattern: "daily" | "weekly" | "biweekly" | "monthly";
-  occurrences?: number;
-  endDate?: string; // ISO string
-  daysOfWeek?: number[];
-}
-
-export interface CreateSingleBookingRequest {
-  teacherId: string;
-  learnerIds?: string[];
-  eventType: "introduction_call" | "class";
-  startTime: string; // ISO string
-  duration: number;
-  subject?: string;
-  description?: string;
-  hourlyRate?: number;
-}
-
-export interface CreateRecurringBookingRequest {
-  teacherId: string;
-  learnerIds?: string[];
-  eventType: "introduction_call" | "class";
-  recurringSlots: RecurringSlot[];
-  duration: number;
-  subject?: string;
-  description?: string;
-  hourlyRate?: number;
-  recurrence: RecurrenceConfig;
-}
-
-export interface ValidateRecurringRequest {
-  teacherId: string;
-  slots: BookingSlot[];
-}
-
-export interface BookingSlotValidation {
-  date: Date;
-  time: string;
-  available: boolean;
-  conflictReason?: string;
-}
-
-export interface RecurringBookingValidation {
-  validSlots: BookingSlotValidation[];
-  conflictSlots: BookingSlotValidation[];
-  totalSlots: number;
-}
+export const bookingKeys = {
+  all: ["bookings"] as const,
+  lists: () => [...bookingKeys.all, "list"] as const,
+  list: (params?: GetBookingsParams) =>
+    [...bookingKeys.lists(), params] as const,
+  upcoming: (limit?: number) =>
+    [...bookingKeys.all, "upcoming", limit] as const,
+  stats: () => [...bookingKeys.all, "stats"] as const,
+  detail: (id: string) => [...bookingKeys.all, "detail", id] as const,
+};
 
 export const useCreateBooking = () => {
   const { openModal } = useModalStore();
@@ -86,19 +44,99 @@ export const useCreateBooking = () => {
   });
 };
 
-export function useValidateRecurringBooking() {
-  return useMutation({
-    mutationFn: async (
-      data: ValidateRecurringRequest
-    ): Promise<RecurringBookingValidation> => {
-      const response = await axiosInstance.post("/bookings/validate-recurring", data);
-      return response.data;
-    },
-    onError: (error: AxiosError<AxioErrorResponse>) => {
-      const message =
-        error.response?.data?.message || "Failed to validate booking slots";
-      toast.error(message);
-    },
+export function useBookings(
+  params?: GetBookingsParams,
+  options?: Omit<
+    UseQueryOptions<PaginatedBookingsResponse, Error>,
+    "queryKey" | "queryFn"
+  >
+) {
+  const queryKey = bookingKeys.list(params);
+
+  const query = useQuery({
+    queryKey,
+    queryFn: () => getBookings(params),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+    retryOnMount: false,
+    refetchOnWindowFocus: false,
+    ...options,
   });
+
+  // Memoized computed values
+  const computedValues = useMemo(() => {
+    const bookings = query.data?.data || [];
+    const pagination = query.data
+      ? {
+          total: query.data.total,
+          page: query.data.page,
+          limit: query.data.limit,
+          totalPages: query.data.totalPages,
+          hasNextPage: query.data.hasNextPage,
+          hasPrevPage: query.data.hasPrevPage,
+        }
+      : null;
+
+    return {
+      bookings,
+      pagination,
+      isEmpty: bookings.length === 0,
+      isFirstPage: pagination?.page === 1,
+      isLastPage: pagination ? pagination.page >= pagination.totalPages : true,
+    };
+  }, [query.data]);
+
+  return {
+    ...query,
+    ...computedValues,
+  };
 }
 
+export const bookingUtils = {
+  // Status helpers
+  isUpcoming: (booking: Booking) => new Date(booking.startTime) > new Date(),
+  isPast: (booking: Booking) => new Date(booking.endTime) < new Date(),
+  isToday: (booking: Booking) => {
+    const today = new Date().toDateString();
+    return new Date(booking.startTime).toDateString() === today;
+  },
+
+  // Status color mapping
+  getStatusColor: (status: BookingStatus) => {
+    const colors = {
+      [BookingStatus.PENDING]: "yellow",
+      [BookingStatus.CONFIRMED]: "green",
+      [BookingStatus.COMPLETED]: "blue",
+      [BookingStatus.CANCELED]: "red",
+      [BookingStatus.RESCHEDULED]: "orange",
+    };
+    return colors[status] || "gray";
+  },
+
+  // Format duration
+  formatDuration: (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+
+    if (hours === 0) return `${mins}min`;
+    if (mins === 0) return `${hours}h`;
+    return `${hours}h ${mins}min`;
+  },
+
+  // Get event type display name
+  getEventTypeDisplay: (eventType: EventType) => {
+    return eventType === "introduction_call" ? "Introductory Call" : "Class";
+  },
+
+  // Filter helper for common queries
+  createDateRangeFilter: (days: number) => {
+    const now = new Date();
+    const future = new Date();
+    future.setDate(now.getDate() + days);
+
+    return {
+      dateFrom: now.toISOString(),
+      dateTo: future.toISOString(),
+    };
+  },
+};

@@ -1,5 +1,3 @@
-"use client";
-
 import HeroSchedule from "./hero-schedule";
 import ClassTabs from "./schedule";
 
