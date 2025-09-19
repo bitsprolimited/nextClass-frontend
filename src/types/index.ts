@@ -107,6 +107,7 @@ export interface IdentityDocument {
 }
 
 export interface User {
+  _id: string;
   id: string;
   email: string;
   fullName: string;

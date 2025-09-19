@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { JSX } from "react";
+import { JSX, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaApple } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/services/auth.service";
 import { createSession } from "@/services/session";
@@ -24,8 +24,20 @@ const loginFormSchema = z.object({
 
 export type LoginFormSchema = z.infer<typeof loginFormSchema>;
 
+interface PostLoginRedirect {
+  returnTo?: string;
+  action?: string;
+  tutorId?: string;
+  tutorName?: string;
+}
+
 export function LoginForm(): JSX.Element {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [redirectInfo, setRedirectInfo] = useState<PostLoginRedirect | null>(
+    null
+  );
+
   const {
     register,
     handleSubmit,
@@ -34,6 +46,24 @@ export function LoginForm(): JSX.Element {
     resolver: zodResolver(loginFormSchema),
     mode: "all",
   });
+
+  useEffect(() => {
+    const storedRedirect = sessionStorage.getItem("postLoginRedirect");
+    if (storedRedirect) {
+      try {
+        const redirectData = JSON.parse(storedRedirect);
+        setRedirectInfo(redirectData);
+        sessionStorage.removeItem("postLoginRedirect");
+      } catch (error) {
+        console.error("Error parsing redirect data:", error);
+      }
+    } else {
+      const returnTo = searchParams.get("returnTo");
+      if (returnTo) {
+        setRedirectInfo({ returnTo: decodeURIComponent(returnTo) });
+      }
+    }
+  }, [searchParams]);
 
   const { mutate, isPending } = useMutation<
     LoginResponse,
@@ -48,6 +78,14 @@ export function LoginForm(): JSX.Element {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
       });
+
+      if (redirectInfo) {
+        const redirectTo =
+          redirectInfo.returnTo ||
+          getDefaultDashboard(data.user.role, data.user.isProfileComplete);
+        router.push(redirectTo);
+        return;
+      }
 
       if (data.user.role === "parent") {
         router.push("/dashboard/parent");
@@ -67,6 +105,19 @@ export function LoginForm(): JSX.Element {
     },
   });
 
+  const getDefaultDashboard = (
+    role: string,
+    isProfileComplete: boolean
+  ): string => {
+    if (role === "parent") {
+      return "/dashboard/parent";
+    }
+    if (!isProfileComplete) {
+      return "/dashboard/profile-setup";
+    }
+    return "/dashboard/tutor";
+  };
+
   const onSubmit = async (data: LoginFormSchema) => {
     mutate(data);
   };
@@ -74,10 +125,18 @@ export function LoginForm(): JSX.Element {
   return (
     <div className="bg-[#F5F4F8] px-8 py-10 rounded-md w-full sm:w-[80%] md:w-[50%] max-w-lg shadow-md my-3">
       <div>
-        <h2 className="text-2xl font-semibold mb-8">
+        <h2 className="text-2xl font-semibold mb-4">
           <span className="text-gray-900">Login </span>
           <span className="text-[#FFA300] font-bold">Form</span>
         </h2>
+
+        {redirectInfo?.returnTo && !redirectInfo.action && (
+          <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-sm text-amber-800">
+              Please login to continue.
+            </p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
@@ -117,6 +176,7 @@ export function LoginForm(): JSX.Element {
           <Button
             type="submit"
             className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white"
+            disabled={isSubmitting || isPending}
           >
             {isSubmitting || isPending ? "Logging in..." : "Login"}
           </Button>
@@ -126,12 +186,18 @@ export function LoginForm(): JSX.Element {
           You can also login with:
         </p>
 
-        <div className="flex gap-2 justify-between mt-4">
-          <Button className="flex-1 min-w-0 !px-6 w-full bg-primary hover:bg-secondary text-white rounded-full  py-3 flex items-center gap-2 shadow-sm border">
+        <div className="flex gap-4 justify-center mt-4">
+          <Button
+            className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm border"
+            disabled={isSubmitting || isPending}
+          >
             <FaGoogle className="w-5 h-5" />
             Sign Up With Google
           </Button>
-          <Button className="flex-1 min-w-0 !px-6 w-full bg-primary hover:bg-secondary text-white rounded-full  py-3 flex items-center gap-2 shadow-sm">
+          <Button
+            className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm"
+            disabled={isSubmitting || isPending}
+          >
             <FaApple className="w-5 h-5" />
             Sign Up With Apple
           </Button>
@@ -141,7 +207,16 @@ export function LoginForm(): JSX.Element {
 
         <p className="text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-primary font-medium">
+          <Link
+            href={
+              redirectInfo
+                ? `/signup?returnTo=${encodeURIComponent(
+                    redirectInfo.returnTo || ""
+                  )}`
+                : "/signup"
+            }
+            className="text-primary font-medium"
+          >
             Create an Account
           </Link>
         </p>
