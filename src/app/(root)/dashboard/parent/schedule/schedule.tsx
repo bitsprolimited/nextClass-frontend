@@ -1,65 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import {
-  CalendarIcon,
-  ClockIcon,
-  BookOpenIcon,
-  UserIcon,
-  UsersIcon,
-} from "lucide-react";
+
 import IntroductionTabs from "@/components/schedule/introductory-calls";
 import ClassesTabs from "@/components/schedule/classes";
-
-const upcomingData = [
-  {
-    id: 1,
-    title: "Mathematics Class with David Patterson",
-    student: "James Patterson",
-    tutor: "David Patterson",
-    date: "Mon, May 26",
-    time: "9:00am - 9:30",
-    grade: "Grade 11",
-    subject: "Mathematics",
-    image: "/images/tutor-3.png",
-    reschedulable: true,
-  },
-  {
-    id: 2,
-    title: "Mathematics Class with David Patterson",
-    student: "James Patterson",
-    tutor: "David Patterson",
-    date: "Mon, May 26",
-    time: "9:00am - 9:30",
-    grade: "Grade 11",
-    subject: "Mathematics",
-    image: "/images/tutor-3.png",
-    reschedulable: true,
-  },
-];
-
-const historyData = [
-  {
-    id: 1,
-    title: "Elements of UIUX",
-    date: "Mon, May 26",
-    time: "9:00am - 9:30",
-    duration: "30mins",
-    subject: "Mathematics",
-    image: "/images/tutor-3.png",
-  },
-  {
-    id: 2,
-    title: "Coding for Dummies",
-    date: "Mon, May 26",
-    time: "9:00am - 9:30",
-    duration: "30mins",
-    subject: "Mathematics",
-    image: "/images/tutor-3.png",
-  },
-];
 
 export default function ClassTabs() {
   return (
