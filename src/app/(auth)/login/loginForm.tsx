@@ -123,7 +123,7 @@ export function LoginForm(): JSX.Element {
   };
 
   return (
-    <div className="bg-[#F5F4F8] px-8 py-10 rounded-md w-[50%] max-w-lg shadow-md my-3">
+    <div className="bg-[#F5F4F8] px-8 py-10 rounded-md w-full sm:w-[80%] md:w-[50%] max-w-lg shadow-md my-3">
       <div>
         <h2 className="text-2xl font-semibold mb-4">
           <span className="text-gray-900">Login </span>
