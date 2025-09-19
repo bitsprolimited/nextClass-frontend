@@ -137,7 +137,7 @@ function MeetTheTeam() {
               Meet The Team
             </p>
             <h2 className="text-zeus text-5xl font-medium ">
-              Expert Instructors
+              The Brains behind NEXTCLASS
             </h2>
           </div>
         </div>
