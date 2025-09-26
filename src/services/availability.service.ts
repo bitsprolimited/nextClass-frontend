@@ -21,6 +21,11 @@ export interface AvailabilityResponse {
   status: string;
   message: string;
   data: {
+    nylasUrl: {
+      status: string;
+      message: string;
+      data: string;
+    };
     availability: Array<{
       dayOfWeek: number;
       startTime: string;
@@ -77,7 +82,9 @@ export const useSubmitAvailability = () => {
       // Invalidate and refetch availability data
       queryClient.invalidateQueries({ queryKey: ["availability"] });
 
-      console.log("Availability submitted successfully:", data);
+      if (data.data.nylasUrl) {
+        window.location.href = data.data.nylasUrl.data;
+      }
     },
     onError: (error) => {
       console.error("Error submitting availability:", error);

@@ -27,6 +27,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Rating } from "../ui/rating";
+import Link from "next/link";
 
 const FILTERS = [
   {
@@ -52,6 +53,7 @@ const FILTERS = [
 ];
 
 type Tutor = {
+  id: string;
   name: string;
   rating: number;
   image: string;
@@ -122,12 +124,14 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
 
         {/* Action Buttons in blue footer */}
         <div className="bg-[#002b9a] flex justify-center gap-2 px-4 py-4">
-          <Button className="w-1/2 h-auto bg-white text-secondary hover:bg-gray-100">
-            View Full Profile
-          </Button>
-          <Button className="w-1/2 h-auto border border-white text-white bg-transparent hover:bg-white hover:text-secondary">
-            Schedule a Meeting
-          </Button>
+          <Link href={`/tutors/${tutorData.id}`}>
+            <Button className="w-1/2 h-auto bg-white text-secondary hover:bg-gray-100">
+              View Full Profile
+            </Button>
+            <Button className="w-1/2 h-auto border border-white text-white bg-transparent hover:bg-white hover:text-secondary">
+              Schedule a Meeting
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -197,12 +201,14 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
 
             {/* Hover Buttons */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:flex justify-center gap-2">
-              <Button
-                className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2"
-                onClick={() => router.push("/dashboard/parent/tutor-profile")}
-              >
-                View Profile
-              </Button>
+              <Link href={`/tutors/${tutorData.id}`}>
+                <Button
+                  className="h-auto bg-secondary hover:text-secondary hover:bg-white border-secondary border-2"
+                  onClick={() => router.push("/dashboard/parent/tutor-profile")}
+                >
+                  View Profile
+                </Button>
+              </Link>
               <Button className="h-auto hover:bg-secondary text-secondary hover:text-white bg-white border-secondary border-2">
                 Schedule a Meeting
               </Button>
@@ -218,6 +224,7 @@ function TutorList(): React.JSX.Element {
   const { data, isLoading, error } = useTutors();
 
   const mapTeacherToTutor = (teacher: Teacher) => ({
+    id: teacher._id,
     name: teacher.fullName,
     rating: teacher.rating,
     reviewCount: teacher.ratingCount,

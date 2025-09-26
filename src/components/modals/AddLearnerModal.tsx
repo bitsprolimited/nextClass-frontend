@@ -73,6 +73,7 @@ export default function AddLearnerModal({
     mutationFn: addLearner,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["learners"] });
       reset();
       setSelectedSubjects([]);
       setSelectedGrade("");
