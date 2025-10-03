@@ -23,25 +23,6 @@ import { FaApple, FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
 import { z } from "zod";
 
-type ParentSignupFormWithAddress = ParentSignupFormSchema & {
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-  };
-};
-
-const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
-
-// Mock data - replace with actual data for your regions
-const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
-const cities = {
-  Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
-  Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
-  // Add more cities for other states
-};
-
 const parentSignupFormSchema = z
   .object({
     fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -64,6 +45,25 @@ const parentSignupFormSchema = z
   });
 
 export type ParentSignupFormSchema = z.infer<typeof parentSignupFormSchema>;
+
+type ParentSignupFormWithAddress = ParentSignupFormSchema & {
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+  };
+};
+
+const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
+
+// Mock data - replace with actual data for your regions
+const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
+const cities = {
+  Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
+  Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
+  // Add more cities for other states
+};
 
 export default function ParentSignupForm(): JSX.Element {
   const [open, setOpen] = useState(false);
