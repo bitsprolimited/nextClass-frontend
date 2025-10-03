@@ -50,7 +50,7 @@ function Header({
         <div className="flex items-center">
           <Link href="/">
             <Image
-              src="/images/logo.png"
+              src="/images/Logo.png"
               alt="Next class Logo"
               width={100}
               height={24}
