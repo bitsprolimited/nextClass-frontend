@@ -405,20 +405,29 @@ export default function ClassTabs() {
     { enabled: shouldFetchUpcomingClasses }
   );
 
-  const historyClassesQuery = useBookings({
-    ...historyParams,
-    eventType: EventType.CLASS,
-  }, { enabled: shouldFetchHistoryClasses });
+  const historyClassesQuery = useBookings(
+    {
+      ...historyParams,
+      eventType: EventType.CLASS,
+    },
+    { enabled: shouldFetchHistoryClasses }
+  );
 
-  const upcomingCallsQuery = useBookings({
-    ...upcomingParams,
-    eventType: EventType.INTRODUCTION_CALL,
-  }, { enabled: shouldFetchUpcomingCalls });
+  const upcomingCallsQuery = useBookings(
+    {
+      ...upcomingParams,
+      eventType: EventType.INTRODUCTION_CALL,
+    },
+    { enabled: shouldFetchUpcomingCalls }
+  );
 
-  const historyCallsQuery = useBookings({
-    ...historyParams,
-    eventType: EventType.INTRODUCTION_CALL,
-  }, { enabled: shouldFetchHistoryCalls });
+  const historyCallsQuery = useBookings(
+    {
+      ...historyParams,
+      eventType: EventType.INTRODUCTION_CALL,
+    },
+    { enabled: shouldFetchHistoryCalls }
+  );
 
   const tabs = [
     {

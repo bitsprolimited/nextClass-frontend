@@ -87,22 +87,23 @@ export default function TutorSignupForm(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col items-end w-[70%] mx-auto">
-      <Link href="/signup" className="my-4">
-        <Button className="bg-[#F5F4F8] hover:text-white text-[20px] text-[#031D95] px-4 py-3 rounded-full">
+    <div className="flex flex-col items-end w-full md:w-[70%] mx-auto">
+      <Link href="/signup" className="my-4 self-end">
+        <Button className="bg-[#F5F4F8] hover:text-white text-[16px] md:text-[20px] text-[#031D95] px-4 py-3 rounded-full">
           Sign up as a parent
         </Button>
       </Link>
 
-      <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-2 md:px-4 lg:px-6 flex justify-center items-center">
+      <section className="w-full mb-5 bg-[#F5F4F8] py-8 px-4 md:px-6 flex justify-center items-center">
         <div className="w-full max-w-2xl">
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-            <div className="w-[70%] mx-auto space-y-5 relative">
-              <h2 className="text-2xl font-semibold">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
+            <div className="w-full md:w-[70%] mx-auto space-y-5 relative">
+              <h2 className="text-xl md:text-2xl font-semibold text-center md:text-left">
                 Tutors&apos;{" "}
                 <span className="text-[#FFA300]">Registration</span>
               </h2>
 
+              {/* Full Name */}
               <div>
                 <Input
                   className="h-auto py-4 pl-5"
@@ -117,6 +118,7 @@ export default function TutorSignupForm(): JSX.Element {
                 )}
               </div>
 
+              {/* Email */}
               <div>
                 <Input
                   className="h-auto py-4 pl-5"
@@ -131,114 +133,111 @@ export default function TutorSignupForm(): JSX.Element {
                 )}
               </div>
 
-              <div className="space-y-5">
-                {/* Phone Input with Country Code */}
-                <div>
-                  <div className="flex gap-2">
-                    <div className="w-[80px]">
-                      <Input
-                        className="h-auto py-4 pl-5"
-                        type="text"
-                        value="+234"
-                        disabled
-                      />
-                    </div>
+              {/* Phone */}
+              <div>
+                <div className="flex gap-2">
+                  <div className="w-[70px]">
                     <Input
                       className="h-auto py-4 pl-5"
-                      type="tel"
-                      placeholder="0xxxxxxxxx00"
-                      {...register("phoneNumber")}
+                      type="text"
+                      value="+234"
+                      disabled
                     />
                   </div>
-                  {errors.phoneNumber && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.phoneNumber.message}
-                    </p>
-                  )}
-                </div>
-
-                <div>
                   <Input
-                    className="h-auto py-4 pl-5"
-                    type="password"
-                    placeholder="Password"
-                    {...register("password")}
+                    className="h-auto py-4 pl-5 flex-1"
+                    type="tel"
+                    placeholder="0xxxxxxxxx00"
+                    {...register("phoneNumber")}
                   />
-                  {errors.password && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.password.message}
-                    </p>
-                  )}
                 </div>
-
-                <div>
-                  <Input
-                    className="h-auto py-4 pl-5"
-                    type="password"
-                    placeholder="Confirm Password"
-                    {...register("confirmPassword")}
-                  />
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.phoneNumber.message}
+                  </p>
+                )}
               </div>
-              {/* Floating password meter to the right */}
-              <div className="absolute left-full ml-5 top-1/2 w-full">
+
+              {/* Passwords */}
+              <div className="space-y-5">
+                <Input
+                  className="h-auto py-4 pl-5"
+                  type="password"
+                  placeholder="Password"
+                  {...register("password")}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
+
+                <Input
+                  className="h-auto py-4 pl-5"
+                  type="password"
+                  placeholder="Confirm Password"
+                  {...register("confirmPassword")}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password Meter - stacked on mobile, floated on md+ */}
+              <div className="mt-2 block md:hidden">
+                <PasswordMeter password={password || ""} />
+              </div>
+              <div className="hidden md:block absolute left-full ml-5 top-1/2 w-full">
                 <PasswordMeter password={password || ""} />
               </div>
             </div>
 
             {/* Checkboxes */}
             <div className="space-y-3 text-sm">
-              <div>
-                <label className="flex items-start gap-2">
-                  <input
-                    type="checkbox"
-                    {...register("agreeTerms")}
-                    className="accent-orange-500 mt-1"
-                  />
-                  <span>
-                    By clicking Create Account or Sign Up with Google or Apple,
-                    you agree to our{" "}
-                    <a href="#" className="text-blue-500 underline">
-                      Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="#" className="text-blue-500 underline">
-                      Privacy Policy
-                    </a>
-                    .
-                  </span>
-                </label>
-                {errors.agreeTerms && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.agreeTerms.message}
-                  </p>
-                )}
-              </div>
+              <label className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  {...register("agreeTerms")}
+                  className="accent-orange-500 mt-1"
+                />
+                <span>
+                  By clicking Create Account or Sign Up with Google or Apple,
+                  you agree to our{" "}
+                  <a href="#" className="text-blue-500 underline">
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a href="#" className="text-blue-500 underline">
+                    Privacy Policy
+                  </a>
+                  .
+                </span>
+              </label>
+              {errors.agreeTerms && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.agreeTerms.message}
+                </p>
+              )}
 
-              <div>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    {...register("confirmAge")}
-                    className="accent-orange-500"
-                  />
-                  I confirm that I&apos;m 18 years of age or older
-                </label>
-                {errors.confirmAge && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.confirmAge.message}
-                  </p>
-                )}
-              </div>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  {...register("confirmAge")}
+                  className="accent-orange-500"
+                />
+                I confirm that I&apos;m 18 years of age or older
+              </label>
+              {errors.confirmAge && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmAge.message}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
-            <div className="w-[70%] mx-auto flex justify-center">
+            <div className="w-full md:w-[70%] mx-auto flex justify-center">
               <Button
                 type="submit"
                 disabled={isSubmitting || isPending}
@@ -255,17 +254,17 @@ export default function TutorSignupForm(): JSX.Element {
             </p>
 
             {/* Google/Apple Buttons */}
-            <div className="flex gap-4 justify-center mt-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
               <Button
                 type="button"
-                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm border"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm border w-full sm:w-auto"
               >
                 <FaGoogle className="w-5 h-5" />
                 Sign Up With Google
               </Button>
               <Button
                 type="button"
-                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm w-full sm:w-auto"
               >
                 <FaApple className="w-5 h-5" />
                 Sign Up With Apple
@@ -283,6 +282,7 @@ export default function TutorSignupForm(): JSX.Element {
           </p>
         </div>
       </section>
+
       <VerifyEmailAlert open={open} onOpenChange={setOpen} />
     </div>
   );
