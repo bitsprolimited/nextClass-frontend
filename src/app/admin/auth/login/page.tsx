@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 const adminLoginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -44,7 +45,13 @@ export default function AdminLogin() {
       <div className="w-full max-w-md bg-white shadow-md rounded-xl p-8">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img src="/logo.svg" alt="NextClass Logo" className="h-10" />
+          <Image
+            src="/logo.svg"
+            alt="NextClass Logo"
+            width={100}
+            height={100}
+            className="h-10"
+          />
         </div>
 
         <h2 className="text-2xl font-semibold text-center text-gray-800">
