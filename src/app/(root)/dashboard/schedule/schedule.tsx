@@ -12,6 +12,7 @@ import {
   SortBy,
   SortOrder,
 } from "@/services/booking.service";
+import { Session } from "@/services/session";
 import { format, isAfter, parseISO } from "date-fns";
 import {
   AlertCircle,
@@ -23,6 +24,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 function BookingItemSkeleton() {
@@ -110,12 +112,15 @@ function EmptyState({
 export function BookingItem({
   booking,
   isHistory = false,
+  session,
 }: {
   booking: Booking;
   isHistory?: boolean;
+  session: Session | null | undefined;
 }) {
   const startTime = parseISO(booking.startTime);
   const endTime = parseISO(booking.endTime);
+  const router = useRouter();
 
   // Format date and time
   const formattedDate = format(startTime, "E, MMM d");
@@ -136,6 +141,9 @@ export function BookingItem({
 
   // Get default tutor image or use provided one
   const tutorImage = booking.teacher?.profilePicture || "/images/tutor-1.png";
+  const parentImage = booking.parent?.profilePicture || "/images/tutor-1.png";
+
+  const isTutor = session?.user && session?.user.role === "teacher";
 
   // Create title
   const title = booking.subject
@@ -146,12 +154,16 @@ export function BookingItem({
         booking.teacher?.fullName || "Teacher"
       }`;
 
+  const handleJoinSession = () => {
+    router.push(`/dashboard/meeting/${booking.meetingLink}`);
+  };
+
   return (
     <div className="grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 w-full">
       {/* Left: Image */}
       <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 rounded-[10px] border border-[#ada1a1] overflow-hidden">
         <Image
-          src={tutorImage}
+          src={isTutor ? parentImage : tutorImage}
           alt="Tutor"
           fill
           className="object-cover"
@@ -285,6 +297,7 @@ export function BookingItem({
               <Button
                 className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm"
                 disabled={booking.status === BookingStatus.CANCELED}
+                onClick={handleJoinSession}
               >
                 {booking.status === BookingStatus.CANCELED
                   ? "Canceled"
@@ -306,12 +319,14 @@ function BookingTabContent({
   isHistory = false,
   type,
   refetch,
+  session,
 }: {
   bookings: Booking[];
   isLoading: boolean;
   error: Error | null;
   isHistory?: boolean;
   type: "classes" | "calls";
+  session?: Session | null;
   refetch: () => void;
 }) {
   if (isLoading) {
@@ -351,14 +366,18 @@ function BookingTabContent({
           key={booking._id}
           className={`${index > 0 ? "pt-10 border-t border-[#031d9547]" : ""}`}
         >
-          <BookingItem booking={booking} isHistory={isHistory} />
+          <BookingItem
+            session={session}
+            booking={booking}
+            isHistory={isHistory}
+          />
         </div>
       ))}
     </div>
   );
 }
 
-export default function ClassTabs() {
+export default function ClassTabs({ session }: { session: Session | null }) {
   const [activeMainTab, setActiveMainTab] = useState("classes");
   const [activeSubTab, setActiveSubTab] = useState("upcoming");
 
@@ -405,20 +424,29 @@ export default function ClassTabs() {
     { enabled: shouldFetchUpcomingClasses }
   );
 
-  const historyClassesQuery = useBookings({
-    ...historyParams,
-    eventType: EventType.CLASS,
-  }, { enabled: shouldFetchHistoryClasses });
+  const historyClassesQuery = useBookings(
+    {
+      ...historyParams,
+      eventType: EventType.CLASS,
+    },
+    { enabled: shouldFetchHistoryClasses }
+  );
 
-  const upcomingCallsQuery = useBookings({
-    ...upcomingParams,
-    eventType: EventType.INTRODUCTION_CALL,
-  }, { enabled: shouldFetchUpcomingCalls });
+  const upcomingCallsQuery = useBookings(
+    {
+      ...upcomingParams,
+      eventType: EventType.INTRODUCTION_CALL,
+    },
+    { enabled: shouldFetchUpcomingCalls }
+  );
 
-  const historyCallsQuery = useBookings({
-    ...historyParams,
-    eventType: EventType.INTRODUCTION_CALL,
-  }, { enabled: shouldFetchHistoryCalls });
+  const historyCallsQuery = useBookings(
+    {
+      ...historyParams,
+      eventType: EventType.INTRODUCTION_CALL,
+    },
+    { enabled: shouldFetchHistoryCalls }
+  );
 
   const tabs = [
     {
@@ -483,6 +511,7 @@ export default function ClassTabs() {
                   isHistory={false}
                   type="classes"
                   refetch={upcomingClassesQuery.refetch}
+                  session={session}
                 />
               </TabsContent>
 
@@ -532,6 +561,7 @@ export default function ClassTabs() {
                   error={upcomingCallsQuery.error}
                   isHistory={false}
                   type="calls"
+                  session={session}
                   refetch={upcomingCallsQuery.refetch}
                 />
               </TabsContent>

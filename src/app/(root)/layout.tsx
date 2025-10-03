@@ -8,12 +8,11 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
-
   return (
     <>
-      <Header session={session} />
-      {children}
-      <Footer />
+        <Header session={session} />
+        {children}
+        <Footer />
     </>
   );
 }
