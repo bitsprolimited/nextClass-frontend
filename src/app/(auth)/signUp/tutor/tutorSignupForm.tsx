@@ -4,6 +4,7 @@ import PasswordMeter from "@/components/auth/passwordMeter";
 import VerifyEmailAlert from "@/components/auth/verify-email-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { tutorSignupFormSchema, TutorSignupFormSchema } from "@/lib/schema";
 import { tutorSignup } from "@/services/auth.service";
 import { AuthResponse, AxioErrorResponse } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,26 +15,6 @@ import { JSX, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaApple, FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
-import { z } from "zod";
-
-const tutorSignupFormSchema = z
-  .object({
-    fullName: z.string().min(2, "Full name must be at least 2 characters"),
-    email: z.string().email("Enter a valid email"),
-    phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-    agreeTerms: z.boolean().refine((val) => val, "You must agree to the terms"),
-    confirmAge: z
-      .boolean()
-      .refine((val) => val, "You must confirm you are 18 or older"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-export type TutorSignupFormSchema = z.infer<typeof tutorSignupFormSchema>;
 
 export default function TutorSignupForm(): JSX.Element {
   const [open, setOpen] = useState(false);

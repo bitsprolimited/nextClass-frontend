@@ -1,7 +1,6 @@
 import { LoginFormSchema } from "@/app/(auth)/login/loginForm";
-import { TutorSignupFormSchema } from "@/app/(auth)/signup/tutor/tutorSignupForm";
 import axiosInstance from "@/lib/axios";
-import { ParentSignupFormSchema } from "@/lib/schema";
+import { ParentSignupFormSchema, TutorSignupFormSchema } from "@/lib/schema";
 import {
   AuthResponse,
   ForgotPasswordResponse,
