@@ -1,3 +1,26 @@
+export const parentSignupFormSchema = z
+  .object({
+    fullName: z.string().min(2, "Full name must be at least 2 characters"),
+    email: z.string().email("Enter a valid email"),
+    country: z.string().min(1, "Please select a country"),
+    state: z.string().min(1, "Please select a state"),
+    city: z.string().min(1, "Please select a city"),
+    street: z.string().min(5, "Street address must be at least 5 characters"),
+    phone: z.string().min(10, "Phone number must be at least 10 digits"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+    agreeTerms: z.boolean().refine((val) => val, "You must agree to the terms"),
+    confirmAge: z
+      .boolean()
+      .refine((val) => val, "You must confirm you are 18 or older"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export type ParentSignupFormSchema = z.infer<typeof parentSignupFormSchema>;
+
 export const profileSchema = z.object({
   address: z.object({
     street: z.string().min(5, "Enter a valid address"),
