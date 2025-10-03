@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { parentSignupFormSchema, ParentSignupFormSchema } from "@/lib/schema";
 import { parentSignup } from "@/services/auth.service";
 import { AuthResponse, AxioErrorResponse } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +22,6 @@ import { JSX, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaApple, FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
-import { z } from "zod";
 
 type ParentSignupFormWithAddress = ParentSignupFormSchema & {
   address: {
@@ -41,29 +41,6 @@ const cities = {
   Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
   // Add more cities for other states
 };
-
-const parentSignupFormSchema = z
-  .object({
-    fullName: z.string().min(2, "Full name must be at least 2 characters"),
-    email: z.string().email("Enter a valid email"),
-    country: z.string().min(1, "Please select a country"),
-    state: z.string().min(1, "Please select a state"),
-    city: z.string().min(1, "Please select a city"),
-    street: z.string().min(5, "Street address must be at least 5 characters"),
-    phone: z.string().min(10, "Phone number must be at least 10 digits"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-    agreeTerms: z.boolean().refine((val) => val, "You must agree to the terms"),
-    confirmAge: z
-      .boolean()
-      .refine((val) => val, "You must confirm you are 18 or older"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-export type ParentSignupFormSchema = z.infer<typeof parentSignupFormSchema>;
 
 export default function ParentSignupForm(): JSX.Element {
   const [open, setOpen] = useState(false);
