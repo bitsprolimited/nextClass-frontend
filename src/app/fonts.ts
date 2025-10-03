@@ -14,12 +14,12 @@ export const AeroTrial = localFont({
       style: "italic",
     },
     {
-      path: "./fonts/aero-trial-bold/AeroTrial-ExtraLight.otf",
+      path: "./fonts/aero-trial-bold/AeroTrial-Extralight.otf",
       weight: "200",
       style: "normal",
     },
     {
-      path: "./fonts/aero-trial-bold/AeroTrial-ExtraLightItalic.otf",
+      path: "./fonts/aero-trial-bold/AeroTrial-ExtralightItalic.otf",
       weight: "200",
       style: "italic",
     },
