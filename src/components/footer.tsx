@@ -146,9 +146,12 @@ export default function Footer() {
           >
             Privacy Policy
           </Link>
-          <a href="#" className="hover:text-orange-500 transition-colors">
-            Sitemap
-          </a>
+          <Link
+            href="/admin/auth/login"
+            className="hover:text-orange-500 transition-colors"
+          >
+            Site Map
+          </Link>
           <a href="#" className="hover:text-orange-500 transition-colors">
             Security
           </a>

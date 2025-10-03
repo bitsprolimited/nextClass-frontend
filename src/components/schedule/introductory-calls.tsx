@@ -3,13 +3,7 @@
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import {
-  CalendarIcon,
-  ClockIcon,
-  BookOpenIcon,
-  UserIcon,
-  UsersIcon,
-} from "lucide-react";
+import { CalendarIcon, ClockIcon, UserIcon, UsersIcon } from "lucide-react";
 
 const upcomingData = [
   {
@@ -37,28 +31,6 @@ const upcomingData = [
     reschedulable: true,
   },
 ];
-
-const historyData = [
-  {
-    id: 1,
-    title: "Elements of UIUX",
-    date: "Mon, May 26",
-    time: "9:00am - 9:30",
-    duration: "30mins",
-    subject: "Mathematics",
-    image: "/images/tutor-3.png",
-  },
-  {
-    id: 2,
-    title: "Coding for Dummies",
-    date: "Mon, May 26",
-    time: "9:00am - 9:30",
-    duration: "30mins",
-    subject: "Mathematics",
-    image: "/images/tutor-3.png",
-  },
-];
-
 export default function IntroductionTabs() {
   return (
     <Tabs defaultValue="request" className="w-full max-w-6xl mx-auto ">
