@@ -87,7 +87,7 @@ export default function Sidebar() {
               </div>
             )}
             <ul className="flex flex-col gap-1">
-              {section.links.map(({ name, href, icon: Icon }, i) => {
+              {section.links.map(({ name, href, icon: Icon }) => {
                 const isActive = pathname === href;
                 return (
                   <li key={name}>

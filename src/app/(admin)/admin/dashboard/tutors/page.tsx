@@ -100,7 +100,7 @@ const initialTutors = [
 ];
 
 export default function TutorsPage() {
-  const [tutors, setTutors] = useState(initialTutors);
+  const [tutors] = useState(initialTutors);
 
   const renderTable = (status: string) => (
     <Card className="mt-4">

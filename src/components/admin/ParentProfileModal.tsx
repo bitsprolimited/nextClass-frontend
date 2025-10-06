@@ -9,6 +9,31 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { X } from "lucide-react";
 
+interface Learner {
+  name: string;
+  age: number;
+  grade: number;
+  subjects: string[];
+}
+
+interface Country {
+  code: string;
+  flag: string;
+}
+
+interface Parent {
+  avatar: string;
+  name: string;
+  email: string;
+  phone?: string;
+  gender?: string;
+  address?: string;
+  cityState?: string;
+  country: Country;
+  status: string;
+  learnersFull?: Learner[];
+}
+
 export default function ParentProfileModal({
   open,
   onClose,
@@ -16,7 +41,7 @@ export default function ParentProfileModal({
 }: {
   open: boolean;
   onClose: () => void;
-  parent: any; // Replace with your Parent type/interface when available
+  parent: Parent | null;
 }) {
   if (!parent) return null;
 
@@ -101,7 +126,7 @@ export default function ParentProfileModal({
           <div>
             <div className="text-xs text-gray-400 mb-2">Learners</div>
             <div className="flex flex-wrap gap-8">
-              {(parent.learnersFull || []).map((learner: any, idx: number) => (
+              {(parent.learnersFull || []).map((learner, idx) => (
                 <div key={idx} className="min-w-[180px]">
                   <div className="font-bold">
                     {learner.name} -{" "}

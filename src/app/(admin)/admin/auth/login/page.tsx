@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const adminLoginSchema = z.object({
 type AdminLoginSchema = z.infer<typeof adminLoginSchema>;
 
 export default function AdminLogin() {
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -30,7 +30,7 @@ export default function AdminLogin() {
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: AdminLoginSchema) => {
+  const onSubmit = async () => {
     setLoading(true);
 
     // setTimeout(() => {

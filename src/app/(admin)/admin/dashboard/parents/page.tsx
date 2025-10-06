@@ -30,14 +30,50 @@ import {
 } from "lucide-react";
 import StatCard from "@/components/admin/StatCard";
 import ParentProfileModal from "@/components/admin/ParentProfileModal";
-import { a } from "vitest/dist/chunks/suite.d.FvehnV49.js";
 
+// =====================
+// Type Definitions
+// =====================
+
+interface Learner {
+  name: string;
+  avatar: string;
+}
+
+interface Country {
+  code: string;
+  flag: string;
+}
+
+interface Parent {
+  id: number;
+  name: string;
+  email: string;
+  country: Country;
+  learners: Learner[];
+  moreLearners: number;
+  joined: string;
+  status: "Active" | "Suspended";
+  avatar: string;
+  learnersFull?: FullLearner[]; // ✅ FIXED: Added this optional property
+}
+
+interface FullLearner {
+  avatar?: string;
+  name: string;
+  age: number;
+  grade: number;
+  subjects: string[];
+}
+
+// =====================
 // Fake Data
-const initialParents = [
+// =====================
+
+const initialParents: Parent[] = [
   {
     id: 1,
     name: "JOHN DOE SANDERS",
-
     email: "johndoe@xyz.com",
     country: { code: "ARG", flag: "/images/ARG.png" },
     learners: [
@@ -107,12 +143,16 @@ const initialParents = [
   },
 ];
 
+// =====================
+// Component
+// =====================
+
 export default function ParentsPage() {
-  const [parents, setParents] = useState(initialParents);
-  const [selectedParent, setSelectedParent] = useState<any>(null);
+  const [parents] = useState<Parent[]>(initialParents);
+  const [selectedParent, setSelectedParent] = useState<Parent | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const getLearnersFull = (parent: any) => [
+  const getLearnersFull = (): FullLearner[] => [
     {
       avatar: "/images/ryan.png",
       name: "Jamie Sanders",
@@ -232,7 +272,7 @@ export default function ParentsPage() {
                         onClick={() => {
                           setSelectedParent({
                             ...parent,
-                            learnersFull: getLearnersFull(parent),
+                            learnersFull: getLearnersFull(),
                           });
                           setModalOpen(true);
                         }}

@@ -73,6 +73,7 @@ export interface Booking {
   type: BookingType;
   eventType: EventType;
   totalAmount: number;
+  meetingLink: string;
   platformFeePercentage: number;
   createdAt: string;
   updatedAt: string;
@@ -81,7 +82,6 @@ export interface Booking {
   parent?: User;
   learners?: Child[];
 }
-
 
 export interface PaginatedBookingsResponse {
   data: Booking[];

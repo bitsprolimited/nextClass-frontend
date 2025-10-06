@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import PasswordMeter from "@/components/auth/passwordMeter";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const passwordResetSchema = z
   .object({
@@ -40,14 +39,13 @@ export default function PasswordReset({
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<PasswordResetSchema>({
     resolver: zodResolver(passwordResetSchema),
     mode: "all",
   });
 
-  const password = watch("password", "");
+  // const password = watch("password", "");
 
   // useEffect(() => {
   //   if (!token) {
@@ -55,7 +53,7 @@ export default function PasswordReset({
   //   }
   // }, [token, router]);
 
-  const onSubmit = async (data: PasswordResetSchema) => {
+  const onSubmit = async () => {
     if (!token) {
       alert("Invalid or expired reset token");
       return;

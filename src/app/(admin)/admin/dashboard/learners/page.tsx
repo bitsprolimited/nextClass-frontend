@@ -110,7 +110,7 @@ const initialLearners = [
 ];
 
 export default function LearnersPage() {
-  const [learners, setLearners] = useState(initialLearners);
+  const [learners] = useState(initialLearners);
 
   const renderTable = (status: string) => (
     <Card className="mt-4">

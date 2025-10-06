@@ -11,6 +11,36 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import QualificationCard from "../tutors/QualificationCard";
 
+// Define interfaces
+interface Qualification {
+  title: string;
+  fileName: string;
+  fileType: string;
+  fileSize: string;
+  institution?: string;
+  expDate?: string;
+}
+
+interface Tutor {
+  id: number;
+  name: string;
+  avatar: string;
+  email: string;
+  phone?: string;
+  gender?: string;
+  address?: string;
+  cityState?: string;
+  country: { code: string; flag: string };
+  status: string;
+  grades?: string;
+  subjects?: string;
+  experience?: string;
+  description?: string;
+  qualification?: Qualification[];
+  introVideo?: string;
+}
+
+// Use the interface in props
 export default function TutorVerificationModal({
   open,
   onClose,
@@ -18,7 +48,7 @@ export default function TutorVerificationModal({
 }: {
   open: boolean;
   onClose: () => void;
-  tutor: any; // Replace with your Tutor type
+  tutor: Tutor | null;
 }) {
   if (!tutor) return null;
 
@@ -135,10 +165,10 @@ export default function TutorVerificationModal({
                 institution: "",
                 expiry: "",
               }}
-              onRemove={function (id: string): void {
+              onRemove={function (): void {
                 throw new Error("Function not implemented.");
               }}
-              onEdit={function (id: string): void {
+              onEdit={function (): void {
                 throw new Error("Function not implemented.");
               }}
             />
@@ -147,8 +177,8 @@ export default function TutorVerificationModal({
           {/* Qualifications */}
           <div className="mb-8">
             <div className="text-xs text-gray-400 mb-2">Qualifications</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {tutor.qualifications?.map((q: any, idx: number) => (
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {tutor.qualification?.map((_q, _idx) => (
                 <QualificationCard
                   qualification={{
                     id: "",
@@ -160,15 +190,22 @@ export default function TutorVerificationModal({
                     institution: "",
                     expiry: "",
                   }}
-                  onRemove={function (id: string): void {
+                  onRemove={function (_id: string): void {
                     throw new Error("Function not implemented.");
                   }}
-                  onEdit={function (id: string): void {
+                  onEdit={function (_id: string): void {
                     throw new Error("Function not implemented.");
-                  }}
+                  }} // key={q.fileName + idx}
+                  // // type="diploma"
+                  // title={q.title}
+                  // fileName={q.fileName}
+                  // fileType={q.fileType}
+                  // fileSize={q.fileSize}
+                  // institution={q.institution}
+                  // expDate={q.expDate}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
           {/* Introduction Video */}
           <div className="mb-8">

@@ -58,10 +58,22 @@ const initialTutors = [
     avatar: "/images/tutor-3.png",
   },
 ];
+interface Tutor {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  country: { code: string; flag: string };
+  grade: string;
+  subjects: string;
+  joined: string;
+  status: string;
+  avatar: string;
+}
 
 export default function VerificationPage() {
   const [tutors, setTutors] = useState(initialTutors);
-  const [selectedTutor, setSelectedTutor] = useState<any>(null);
+  const [selectedTutor, setSelectedTutor] = useState<Tutor | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   // Update tutor status

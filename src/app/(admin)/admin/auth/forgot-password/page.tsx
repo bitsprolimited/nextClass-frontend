@@ -16,29 +16,29 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPassword() {
-  const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
-  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [loading] = useState(false);
+  const [emailSent] = useState(false);
+  const [submittedEmail] = useState("");
 
   const {
     register,
-    handleSubmit,
+    // handleSubmit,
     formState: { errors },
-    getValues,
+    // getValues,
   } = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
     mode: "onSubmit",
   });
 
-  const onSubmit = async (data: ForgotPasswordSchema) => {
-    setLoading(true);
-    // Mock API call
-    setTimeout(() => {
-      setSubmittedEmail(getValues("email"));
-      setEmailSent(true);
-      setLoading(false);
-    }, 1500);
-  };
+  // const onSubmit = async (data: ForgotPasswordSchema) => {
+  //   setLoading(true);
+  //   // Mock API call
+  //   setTimeout(() => {
+  //     setSubmittedEmail(getValues("email"));
+  //     setEmailSent(true);
+  //     setLoading(false);
+  //   }, 1500);
+  // };
 
   const maskEmail = (email: string): string => {
     if (!email.includes("@")) return email;
@@ -94,7 +94,7 @@ export default function ForgotPassword() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form className="space-y-6">
             <div>
               <label
                 htmlFor="email"

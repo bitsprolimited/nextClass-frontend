@@ -76,7 +76,7 @@ const initialSessions = [
 ];
 
 export default function SessionsPage() {
-  const [sessions, setSessions] = useState(initialSessions);
+  const [sessions] = useState(initialSessions);
 
   const renderTable = (tab: string) => (
     <Card className="mt-4">
