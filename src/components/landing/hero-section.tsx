@@ -103,8 +103,8 @@ function HeroSection() {
         </div>
       </div>
       {/* Image Section */}
-      <div className="w-full md:w-1/2 flex justify-center items-center pt-8 md:pt-0">
-        <div className="relative w-[220px] h-[180px] sm:w-[320px] sm:h-[240px] md:w-full md:h-full flex justify-center items-center mx-auto">
+      <div className="w-full md:w-1/2 flex justify-center items-center px-4 pt-8 md:pt-0">
+        <div className="relative w-full h-[421px] md:h-full flex justify-center items-center mx-auto">
           <HeroSectionCarousel />
           <HeroStudentAvatar />
         </div>
