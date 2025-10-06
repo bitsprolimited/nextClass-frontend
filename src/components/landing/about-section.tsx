@@ -51,7 +51,7 @@ function AboutSection(): React.JSX.Element {
             alt="Decorative right"
             width={100}
             height={200}
-            className="absolute -top-10 -right-9"
+            className="absolute top-0 right-0 md:-top-10 md:-right-9"
           />
         </div>
       </div>

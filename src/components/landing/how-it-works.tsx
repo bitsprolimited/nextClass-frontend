@@ -49,7 +49,7 @@ function Content({
 function HowItWorksSection(): React.JSX.Element {
   return (
     <section className="flex flex-col items-center justify-center py-[50px] bg-[#2509790a] w-full">
-      <div className="flex flex-col items-center justify-center gap-[50px] max-w-7xl mx-auto w-full">
+      <div className="flex flex-col items-center justify-center gap-[50px] max-w-7xl mx-auto w-full px-4">
         <div className="flex flex-col items-center w-full pt-4 text-center">
           <p className="text-primary text-sm font-semibold whitespace-nowrap">
             Discover what makes Nextclass work for you

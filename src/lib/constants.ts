@@ -187,11 +187,13 @@ export const HERO_IMAGES = [
 export const slideConfigurations = [
   {
     image1: {
-      classes: "absolute bottom-0 -left-6 max-w-[700px] object-cover z-10",
+      classes:
+        "absolute bottom-0 -left-6 w-full max-w-[700px] object-cover z-10",
       transitionDelay: 0.1,
     },
     image2: {
-      classes: "absolute -bottom-10 -right-10 max-w-[700px] object-cover z-[5]",
+      classes:
+        "absolute -bottom-10 -right-10 w-full max-w-[700px] object-cover z-[5]",
       transitionDelay: 0.3,
     },
     image3: {
@@ -201,11 +203,12 @@ export const slideConfigurations = [
   },
   {
     image1: {
-      classes: "absolute bottom-0 -left-20 max-w-[600px] object-cover z-10",
+      classes:
+        "absolute bottom-0 -left-20 w-full max-w-[600px] object-cover z-10",
       transitionDelay: 0.1,
     },
     image2: {
-      classes: "absolute bottom-0 right-[-210px] object-cover z-[5]",
+      classes: "absolute bottom-0 right-[-150px] md:right-[-210px] w-full object-cover z-[5]",
       transitionDelay: 0.3,
     },
     image3: {
@@ -215,11 +218,13 @@ export const slideConfigurations = [
   },
   {
     image1: {
-      classes: "absolute bottom-0 -left-[100px] object-cover transform z-10",
+      classes:
+        "absolute bottom-0 -left-[100px] w-full object-cover transform z-10",
       transitionDelay: 0.15,
     },
     image2: {
-      classes: "absolute bottom-0 right-[-150px] object-cover transform z-[5]",
+      classes:
+        "absolute bottom-0 right-[-150px] w-full object-cover transform z-[5]",
       transitionDelay: 0.35,
     },
     image3: {
@@ -229,15 +234,16 @@ export const slideConfigurations = [
   },
   {
     image1: {
-      classes: "absolute bottom-0 max-w-[600px] left-0 object-cover z-10",
+      classes:
+        "absolute bottom-0 max-w-[600px] w-full left-0 object-cover z-10",
       transitionDelay: 0.1,
     },
     image2: {
-      classes: "absolute top-20 max-w-[500px] right-0 object-cover z-10",
+      classes: "absolute top-20 max-w-[500px] w-full right-0 object-cover z-10",
       transitionDelay: 0.3,
     },
     image3: {
-      classes: "absolute bottom-0 w-full max-h-[790px] object-cover z-0",
+      classes: "absolute bottom-0 w-full h-full max-h-[790px] object-cover z-0",
       transitionDelay: 0,
     },
   },

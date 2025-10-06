@@ -34,7 +34,7 @@ export default function ComingSoon({ className }: { className?: string }) {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 max-w-3xl mx-auto text-center mt-4">
+      <div className="relative w-full z-10 max-w-3xl mx-auto text-center mt-4">
         {/* Subtitle */}
         <p className="text-sm uppercase tracking-widest mb-4 text-blue-800 font-semibold">
           Mobile App Coming Soon…
