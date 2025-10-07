@@ -123,7 +123,7 @@ function AboutPage() {
             </div>
             <div className="relative w-full max-w-[190px] lg:max-w-[295px] mx-auto">
               <Image
-                src="/images/saly-15.png"
+                src="/images/Saly-15.png"
                 alt="Student with backpack illustration"
                 width={600}
                 height={600}
