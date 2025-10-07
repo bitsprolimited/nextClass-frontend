@@ -28,49 +28,49 @@ function AboutPage() {
   return (
     <main>
       <HeroSection />
-      <section className="w-full h-full bg-[#2509790a] flex justify-center items-center py-36">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 max-w-7xl h-full w-full">
+      <section className="w-full h-full bg-[#2509790a] flex justify-center items-center py-10 lg:py-36">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 max-w-7xl h-full w-full">
           <div
             style={{ backgroundImage: "url('/images/about-section2.png')" }}
-            className="h-[570px] max-w-[460px] w-full bg-cover bg-center flex items-end justify-center"
+            className="h-[415px] lg:h-[570px] max-w-[300px] lg:max-w-[460px] w-full bg-cover bg-center flex items-end justify-center"
           >
             <Button className="mb-10 bg-secondary hover:bg-primary rounded-full h-auto py-2 px-10">
-              Meet Instructors
+              <Link href="/tutors">Meet Instructors</Link>
             </Button>
           </div>
-          <div className="flex-1 py-[81px] bg-white max-w-[666px] relative">
+          <div className="flex-1 py-10 lg:py-[81px] bg-white w-full max-w-[666px] relative">
             <Card className="shadow-none border-0 rounded-none justify-center items-center flex">
-              <CardContent className="p-0 gap-10 flex flex-col">
-                <div className="flex flex-col gap-5">
+              <CardContent className="p-4 lg:p-0 gap-5 lg:gap-10 flex flex-col">
+                <div className="flex flex-col gap-2 lg:gap-5">
                   <p className="text-sm text-primary">
                     WE PRIORITISE PASSION AND EXCELLENCE
                   </p>
-                  <h2 className="text-[#2c241b] max-w-[500px] font-medium text-[45px]/[50px] ">
+                  <h2 className="text-[#2c241b] font-aero-trial w-full max-w-[500px] font-medium text-2xl lg:text-[45px]/[50px] ">
                     A Platform Built by Parents, for Parents
                   </h2>
-                  <p className="max-w-[500px] text-lg text-abbey">
+                  <p className="max-w-[500px] w-full text-sm lg:text-lg text-abbey">
                     Nextclass is not just another tutoring app. NextClass
                     combines live video learning, AI-powered note-taking,
                     inappropriate content detection, and a collaborative digital
                     whiteboard—all in one platform so learning can be engaging,
                     interactive, and safe.
                   </p>
-                  <p className="max-w-[500px] text-lg text-abbey">
+                  <p className="max-w-[500px] w-full text-sm lg:text-lg text-abbey">
                     And as a parent myself, I&apos;ve built this with one key
                     value in mind: Your child&apos;s learning journey should
                     feel personal.
                   </p>
                 </div>
-                <div className="flex flex-col gap-5">
-                  <h3 className="text-3xl text-primary">
+                <div className="flex flex-col gap-2 lg:gap-5">
+                  <h3 className="font-aero-trial w-full text-xl lg:text-3xl text-primary">
                     The Heart Behind It All
                   </h3>
-                  <p className="max-w-[500px] text-lg text-abbey">
+                  <p className="max-w-[500px] w-full text-sm lg:text-lg text-abbey">
                     At the end of the day, NextClass is more than technology;
                     it&apos;s about helping parents like me (and you) give our
                     kids the support they need to succeed.
                   </p>
-                  <p className="max-w-[500px] text-lg text-abbey">
+                  <p className="max-w-[500px] w-full text-sm lg:text-lg text-abbey">
                     Thank you for being part of this journey.
                   </p>
                 </div>
@@ -81,24 +81,24 @@ function AboutPage() {
               alt="Decorative right"
               width={100}
               height={200}
-              className="absolute -top-10 -right-9"
+              className="absolute size-10 lg:size-auto top-10 right-5 lg:-top-10 lg:-right-9"
             />
           </div>
         </div>
       </section>
-      <section className="relative w-full bg-background3 pt-[140px] pb-8 px-2 sm:px-0">
-        <div className="container mx-auto flex flex-col items-start md:flex-row justify-center gap-10">
-          <div className="flex-1 flex sm:flex-row-reverse flex-col sm:w-1/2 w-full gap-4">
-            <div className="flex flex-col gap-5">
-              <h2 className="text-secondary text-[35px]/[40px]">
+      <section className="relative w-full bg-background3 pt-10 lg:pt-[140px] pb-8 px-4 sm:px-0">
+        <div className="container mx-auto flex flex-col items-start lg:flex-row justify-center gap-10">
+          <div className="flex-1 flex sm:flex-row-reverse flex-col lg:w-1/2 w-full gap-4">
+            <div className="flex flex-col gap-2.5 lg:gap-5 w-full">
+              <h2 className="text-secondary font-aero-trial text-sm lg:text-2xl">
                 Our Mission &amp; Vision
               </h2>
-              <div className="flex flex-col gap-5">
-                <h3 className="font-medium text-zeus text-[44px]/[50px]">
+              <div className="flex flex-col gap-3 lg:gap-5 w-full">
+                <h3 className="font-medium text-zeus text-xl lg:text-3xl font-aero-trial">
                   Making it easy, safe, and effective for parents to connect
                   with trusted, high-quality educators anytime, anywhere.
                 </h3>
-                <h3 className="text-3xl text-primary">
+                <h3 className="font-aero-trial w-full text-xl lg:text-3xl text-primary">
                   The Heart Behind It All
                 </h3>
                 <p className="text-[#52565b] text-[15px] w-full max-w-[556px]">
@@ -108,7 +108,7 @@ function AboutPage() {
                   process could be. I wanted someone qualified, engaging, and
                   trustworthy. Someone who could connect with her, teach her at
                   her pace, and help her grow not just academically, but
-                  personally. 
+                  personally.
                 </p>
                 <p className="text-[#52565b] text-[15px] w-full max-w-[556px]">
                   But what I found instead was a scattered mess of directories,
@@ -121,26 +121,26 @@ function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="relative max-w-[295px] mx-auto  ">
+            <div className="relative w-full max-w-[190px] lg:max-w-[295px] mx-auto">
               <Image
                 src="/images/saly-15.png"
                 alt="Student with backpack illustration"
                 width={600}
                 height={600}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
             </div>
           </div>
-          <div className="flex flex-col sm:w-1/2 w-full">
+          <div className="flex flex-col max-w-[500px] w-full">
             <div className="flex flex-col gap-5">
               {CORE_VALUES.map((coreValue, index) => (
                 <div key={index} className="flex gap-8">
                   <div className="w-[10px] h-[10px] rounded-full shrink-0 bg-secondary mt-4" />
                   <div className="flex flex-col gap-3">
-                    <h3 className="font-medium text-zeus text-[22px]/[38px]">
+                    <h3 className="font-medium text-zeus font-montserrat text-[22px]/[38px]">
                       {coreValue.title}
                     </h3>
-                    <p className="text-[#2c241bb2] w-full max-w-[654px]">
+                    <p className="text-[#2c241bb2] text-sm lg:text-base w-full max-w-[654px]">
                       {coreValue.description}
                     </p>
                   </div>

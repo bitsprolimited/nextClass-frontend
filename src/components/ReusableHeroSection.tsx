@@ -34,7 +34,7 @@ function ReusableHeroSection({
             width={500}
             height={500}
             className={cn(
-              "hidden sm:block absolute -top-10 left-0",
+              "absolute -top-10 left-0",
               img.secondary.className
             )}
           />
@@ -45,7 +45,7 @@ function ReusableHeroSection({
               <div className="flex flex-col items-start mx-auto">
                 <h1
                   className={cn(
-                    "text-[24px] sm:text-[58px] font-aero-trial font-medium",
+                    "text-[20px] lg:text-[58px] font-aero-trial font-medium",
                     bgColor === "bg-primary" ? "text-white" : "text-zeus"
                   )}
                 >
@@ -56,7 +56,7 @@ function ReusableHeroSection({
             </div>
             <div
               className={cn(
-                "w-[180px] h-[180px] sm:w-[450px] sm:h-[450px] relative -bottom-10 sm:-bottom-20",
+                "relative -bottom-10 lg:-bottom-20",
                 img.primary.className
               )}
             >

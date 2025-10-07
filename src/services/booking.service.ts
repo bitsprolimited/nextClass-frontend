@@ -112,3 +112,8 @@ export async function getBookings(
   const response = await axiosInstance.get("/bookings", { params });
   return response.data;
 }
+
+export async function acceptBooking(bookingId: string): Promise<Booking> {
+  const response = await axiosInstance.post(`/bookings/accept/${bookingId}`);
+  return response.data;
+}

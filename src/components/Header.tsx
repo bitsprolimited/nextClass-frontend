@@ -51,6 +51,7 @@ function Header({
           <Link href="/">
             <Image
               src="/images/Logo.png"
+
               alt="Next class Logo"
               width={100}
               height={24}

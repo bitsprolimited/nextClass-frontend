@@ -11,12 +11,12 @@ function HeroSection() {
   return (
     <ReusableHeroSection
       img={{
-        primary: { src: "/images/Saly-16.png" },
-        secondary: { src: "/images/Saly-17.png" },
+        primary: { src: "/images/Saly-16.png", className: "w-[155px] h-[155px] lg:w-[469px] lg:h-auto" },
+        secondary: { src: "/images/Saly-17.png", className: "w-24 h-[54px] lg:w-[350px] lg:h-auto -top-2 lg:-top-16 left-0" },
       }}
       heading="About Us"
       breadcrumb={
-        <Breadcrumb>
+        <Breadcrumb className="text-sm lg:text-base">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
