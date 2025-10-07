@@ -210,10 +210,10 @@ export function LoginForm(): JSX.Element {
           <Link
             href={
               redirectInfo
-                ? `/signup?returnTo=${encodeURIComponent(
+                ? `/sign-up?returnTo=${encodeURIComponent(
                     redirectInfo.returnTo || ""
                   )}`
-                : "/signup"
+                : "/sign-up"
             }
             className="text-primary font-medium"
           >

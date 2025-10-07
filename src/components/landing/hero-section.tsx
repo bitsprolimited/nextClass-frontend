@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import HeroSectionCarousel from "./hero-section-carousel";
 import HeroStudentAvatar from "./hero-student-avatar";
 import { SOCIAL_ICONS } from "@/lib/constants";
+import Link from "next/link";
 
 function HeroSection() {
   const items = ["Anywhere", "Anytime", "Any Place", "With Ease"];
@@ -80,10 +81,10 @@ function HeroSection() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full justify-center md:justify-start font-studio-sans">
             <Button className="bg-secondary hover:bg-primary text-white rounded-full px-8 py-2 sm:px-12 sm:py-3 h-auto text-base sm:text-xl">
-              Find a tutor
+              <Link href="/tutors">Find a tutor</Link>
             </Button>
             <Button className="bg-primary hover:bg-secondary text-white rounded-full px-8 py-2 sm:px-12 sm:py-3 h-auto text-base sm:text-xl">
-              Become a tutor
+              <Link href="/sign-up/tutor">Become a tutor</Link>
             </Button>
           </div>
         </div>

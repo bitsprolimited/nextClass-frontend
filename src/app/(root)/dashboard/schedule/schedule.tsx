@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { bookingUtils, useBookings } from "@/hooks/useBooking";
 import {
+  acceptBooking,
   Booking,
   BookingStatus,
   EventType,
@@ -13,12 +14,14 @@ import {
   SortOrder,
 } from "@/services/booking.service";
 import { Session } from "@/services/session";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, isAfter, parseISO } from "date-fns";
 import {
   AlertCircle,
   BookOpenIcon,
   CalendarIcon,
   ClockIcon,
+  Loader2,
   RefreshCw,
   UserIcon,
   UsersIcon,
@@ -26,6 +29,7 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 function BookingItemSkeleton() {
   return (
@@ -121,6 +125,7 @@ export function BookingItem({
   const startTime = parseISO(booking.startTime);
   const endTime = parseISO(booking.endTime);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   // Format date and time
   const formattedDate = format(startTime, "E, MMM d");
@@ -144,6 +149,19 @@ export function BookingItem({
   const parentImage = booking.parent?.profilePicture || "/images/tutor-1.png";
 
   const isTutor = session?.user && session?.user.role === "teacher";
+
+  const { mutate: acceptBookingMutation, isPending } = useMutation({
+    mutationKey: ["accept-booking", booking._id],
+    mutationFn: acceptBooking,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      toast.success("Booking accepted successfully");
+    }
+  });
+
+  const handleAcceptBooking = () => {
+    acceptBookingMutation(booking._id);
+  };
 
   // Create title
   const title = booking.subject
@@ -294,15 +312,24 @@ export function BookingItem({
                   Reschedule
                 </button>
               )}
-              <Button
-                className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm"
-                disabled={booking.status === BookingStatus.CANCELED}
-                onClick={handleJoinSession}
-              >
-                {booking.status === BookingStatus.CANCELED
-                  ? "Canceled"
-                  : "Join Session"}
-              </Button>
+              {booking.status === BookingStatus.PENDING ? (
+                <Button
+                  className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm"
+                  onClick={handleAcceptBooking}
+                >
+                  {isPending ? <Loader2 className="animate-spin" /> : "Accept"}
+                </Button>
+              ) : (
+                <Button
+                  className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm"
+                  disabled={booking.status === BookingStatus.CANCELED}
+                  onClick={handleJoinSession}
+                >
+                  {booking.status === BookingStatus.CANCELED
+                    ? "Canceled"
+                    : "Join Session"}
+                </Button>
+              )}
             </>
           )}
         </div>

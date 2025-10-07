@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import Link from "next/link";
 
 function AboutSection(): React.JSX.Element {
   return (
@@ -12,7 +13,7 @@ function AboutSection(): React.JSX.Element {
           className="h-[570px] max-w-[460px] w-full bg-cover bg-center flex items-end justify-center"
         >
           <Button className="mb-10 bg-secondary hover:bg-primary rounded-full h-auto py-2 px-10">
-            Meet Instructors
+            <Link href="/tutors">Meet Instructors</Link>
           </Button>
         </div>
         <div className="flex-1 py-[81px] bg-white max-w-[666px] relative">

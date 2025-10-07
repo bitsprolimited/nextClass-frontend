@@ -220,7 +220,7 @@ export default function EmailVerificationPage() {
               </p>
             </div>
             <div className="space-y-4">
-              <Link href="/signup">
+              <Link href="/sign-up">
                 <Button className="bg-gray-600 hover:bg-gray-700 text-white rounded-full px-8 py-3 font-medium transition-all duration-200 transform hover:scale-105 mr-4">
                   Sign Up Again
                 </Button>

@@ -13,15 +13,19 @@ function HeroSection(): React.JSX.Element {
   return (
     <ReusableHeroSection
       img={{
-        primary: { src: "/images/tutor-saly-16.png" },
+        primary: {
+          src: "/images/tutor-saly-16.png",
+          className: "w-[200px] lg:w-full bottom-0 max-w-[500px]",
+        },
         secondary: {
           src: "/images/tutor-saly-17.png",
-          className: "top-0 -left-20 w-full max-w-[400px]",
+          className:
+            "top-0 -left-5 lg:-left-20 w-24 lg:w-full md:max-w-[300px] md:max-w-[400px]",
         },
       }}
       heading="All Tutors"
       breadcrumb={
-        <Breadcrumb>
+        <Breadcrumb className="text-sm lg:text-base">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
