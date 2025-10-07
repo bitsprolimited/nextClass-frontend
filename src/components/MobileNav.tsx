@@ -112,7 +112,7 @@ export function MobileNav({ session, currentNavItems }: MobileNavProps) {
         )}
         {!session ? (
           <div className="flex flex-col gap-2.5 w-full">
-            <Link href="/signup">
+            <Link href="/sign-up">
               <Button className="cursor-pointer max-w-[340px] w-full bg-white text-primary font-medium h-auto px-10 py-3 rounded-full hover:bg-secondary font-montserrat mx-auto block">
                 Create Account
               </Button>

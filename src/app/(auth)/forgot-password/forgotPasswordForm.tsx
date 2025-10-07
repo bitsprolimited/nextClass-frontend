@@ -112,7 +112,7 @@ const ForgotPasswordForm = (): JSX.Element => {
 
         <p className="text-xs sm:text-sm text-gray-700">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-medium hover:underline">
+          <Link href="/sign-up" className="font-medium hover:underline">
             Create an Account
           </Link>
         </p>

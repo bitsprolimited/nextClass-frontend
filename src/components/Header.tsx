@@ -24,8 +24,8 @@ function Header({
 
   const hideNav =
     pathname === "/login" ||
-    pathname === "/signup" ||
-    pathname === "/signup/tutor" ||
+    pathname === "/sign-up" ||
+    pathname === "/sign-up/tutor" ||
     pathname === "/reset-password" ||
     pathname === "/forgot-password" ||
     pathname === "/verify-email";

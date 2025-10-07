@@ -5,8 +5,8 @@ const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
 // const protectedRoutes: string[] = [];
 const publicRoutes = [
   "/login",
-  "/signup",
-  "/signup/tutor",
+  "/sign-up",
+  "/sign-up/tutor",
   "/",
   "/forgot-password",
 ];
