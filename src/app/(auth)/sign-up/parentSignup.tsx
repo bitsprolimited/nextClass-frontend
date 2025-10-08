@@ -1,5 +1,15 @@
 "use client";
 
+import React, { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
+import { FaApple, FaGoogle } from "react-icons/fa";
+import { Country, State, City } from "country-state-city";
+
 import PasswordMeter from "@/components/auth/passwordMeter";
 import VerifyEmailAlert from "@/components/auth/verify-email-alert";
 import { Button } from "@/components/ui/button";
@@ -11,17 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { parentSignupFormSchema, ParentSignupFormSchema } from "@/lib/schema";
 import { parentSignup } from "@/services/auth.service";
 import { AuthResponse, AxioErrorResponse } from "@/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import Link from "next/link";
-import { JSX, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { FaApple, FaGoogle } from "react-icons/fa";
-import { toast } from "sonner";
 
 type ParentSignupFormWithAddress = ParentSignupFormSchema & {
   address: {
@@ -32,23 +35,15 @@ type ParentSignupFormWithAddress = ParentSignupFormSchema & {
   };
 };
 
-const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
-
-// Mock data - replace with actual data for your regions
-const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
-const cities = {
-  Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
-  Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
-  // Add more cities for other states
-};
-
-export default function ParentSignupForm(): JSX.Element {
+export default function ParentSignupForm() {
   const [open, setOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
     control,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ParentSignupFormSchema>({
     resolver: zodResolver(parentSignupFormSchema),
@@ -56,11 +51,11 @@ export default function ParentSignupForm(): JSX.Element {
     defaultValues: {
       fullName: "",
       email: "",
+      phone: "",
       country: "",
       state: "",
       city: "",
       street: "",
-      phone: "",
       password: "",
       confirmPassword: "",
       agreeTerms: false,
@@ -72,6 +67,43 @@ export default function ParentSignupForm(): JSX.Element {
   const selectedCountry = watch("country");
   const selectedState = watch("state");
 
+  // Dynamic dropdowns
+  const countryList = useMemo(() => Country.getAllCountries(), []);
+  const stateList = useMemo(() => {
+    if (!selectedCountry) return [];
+    const countryObj = countryList.find(
+      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
+    );
+    return countryObj ? State.getStatesOfCountry(countryObj.isoCode) : [];
+  }, [selectedCountry, countryList]);
+
+  const cityList = useMemo(() => {
+    if (!selectedCountry || !selectedState) return [];
+    const countryObj = countryList.find(
+      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
+    );
+    if (!countryObj) return [];
+    const stateObj = stateList.find(
+      (s) => s.name === selectedState || s.isoCode === selectedState
+    );
+    return countryObj && stateObj
+      ? City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode)
+      : [];
+  }, [selectedCountry, selectedState, countryList, stateList]);
+
+  // Reset dependent fields when country/state changes
+  useEffect(() => {
+    setValue("state", "");
+    setValue("city", "");
+  }, [selectedCountry, setValue]);
+
+  useEffect(() => {
+    setValue("city", "");
+  }, [selectedState, setValue]);
+
+  // ✅ Fix: define availableCities once only
+  const availableCities = cityList.map((c) => c.name);
+
   const { mutate, isPending } = useMutation<
     AuthResponse,
     AxiosError<AxioErrorResponse>,
@@ -79,7 +111,7 @@ export default function ParentSignupForm(): JSX.Element {
   >({
     mutationKey: ["parentSignup"],
     mutationFn: parentSignup,
-    onSuccess: async () => {
+    onSuccess: () => {
       toast("Signup successful", {
         className: "bg-[#F5F4F8] text-[#031D95]",
         duration: 5000,
@@ -87,7 +119,6 @@ export default function ParentSignupForm(): JSX.Element {
       setOpen(true);
     },
     onError: (error) => {
-      console.error("Signup failed:", error);
       toast("Signup failed", {
         className: "bg-[#F5F4F8] text-[#031D95]",
         description: error.response?.data.message,
@@ -96,8 +127,7 @@ export default function ParentSignupForm(): JSX.Element {
     },
   });
 
-  const onSubmit = async (data: ParentSignupFormSchema) => {
-    // Transform data to include structured address
+  const onSubmit = (data: ParentSignupFormSchema) => {
     const transformedData = {
       ...data,
       address: {
@@ -110,16 +140,10 @@ export default function ParentSignupForm(): JSX.Element {
     mutate(transformedData);
   };
 
-  // Get available cities based on selected state
-  const availableCities =
-    selectedState && cities[selectedState as keyof typeof cities]
-      ? cities[selectedState as keyof typeof cities]
-      : [];
-
   return (
     <div className="flex flex-col items-end w-full md:w-[70%] mx-auto">
       {/* Switch to Tutor Signup */}
-      <Link href="/sign-up/tutor" className="my-4">
+      <Link href="/signup/tutor" className="my-4">
         <Button className="bg-[#F5F4F8] text-[20px] text-[#031D95] hover:text-white px-4 py-3 rounded-full font-aero-trial">
           Sign Up as Tutor
         </Button>
@@ -129,8 +153,7 @@ export default function ParentSignupForm(): JSX.Element {
       <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-4 flex justify-center items-center">
         <div className="w-full max-w-2xl">
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-            <div className="w-full space-y-5 relative">
-              {/* Heading */}
+            <div className="space-y-5">
               <h2 className="text-2xl font-semibold">
                 Parents&apos;{" "}
                 <span className="text-[#FFA300]">Registration</span>
@@ -138,54 +161,48 @@ export default function ParentSignupForm(): JSX.Element {
 
               {/* Full Name */}
               <Input
-                className="py-4 pl-5 h-auto w-full"
-                type="text"
                 placeholder="Full Name"
                 {...register("fullName")}
+                className="py-4 pl-5 h-auto w-full"
               />
               {errors.fullName && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.fullName.message as string}
+                <p className="text-red-500 text-sm">
+                  {errors.fullName.message}
                 </p>
               )}
 
               {/* Email */}
               <Input
-                className="py-4 pl-5 h-auto w-full"
                 type="email"
                 placeholder="Email Address"
                 {...register("email")}
+                className="py-4 pl-5 h-auto w-full"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message as string}
-                </p>
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
 
               {/* Phone */}
-              <div className="flex gap-2 w-full">
+              <div className="flex gap-2">
                 <div className="w-[80px]">
                   <Input
-                    className="py-4 text-center h-auto"
-                    type="text"
                     value="+234"
                     disabled
+                    className="py-4 text-center h-auto"
                   />
                 </div>
                 <Input
-                  className="py-4 pl-5 h-auto flex-1"
                   type="tel"
                   placeholder="0xxxxxxxxx00"
                   {...register("phone")}
+                  className="py-4 pl-5 h-auto flex-1"
                 />
               </div>
               {errors.phone && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.phone.message as string}
-                </p>
+                <p className="text-red-500 text-sm">{errors.phone.message}</p>
               )}
 
-              {/* Country Select */}
+              {/* Country */}
               <Controller
                 name="country"
                 control={control}
@@ -195,24 +212,21 @@ export default function ParentSignupForm(): JSX.Element {
                       <SelectValue placeholder="Select Country" />
                     </SelectTrigger>
                     <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country} value={country}>
-                          {country}
+                      {countryList.map((country) => (
+                        <SelectItem key={country.isoCode} value={country.name}>
+                          {country.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 )}
               />
-
               {errors.country && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.country.message as string}
-                </p>
+                <p className="text-red-500 text-sm">{errors.country.message}</p>
               )}
 
-              {/* State + City */}
-              <div className="flex flex-col md:flex-row gap-2 w-full">
+              {/* State and City */}
+              <div className="flex flex-col md:flex-row gap-2">
                 <div className="flex-1">
                   <Controller
                     name="state"
@@ -223,13 +237,13 @@ export default function ParentSignupForm(): JSX.Element {
                         onValueChange={field.onChange}
                         disabled={!selectedCountry}
                       >
-                        <SelectTrigger className="w-full bg-white py-4 pl-5 h-auto">
+                        <SelectTrigger className="bg-white py-4 pl-5 h-auto">
                           <SelectValue placeholder="Select State" />
                         </SelectTrigger>
                         <SelectContent>
-                          {nigerianStates.map((state) => (
-                            <SelectItem key={state} value={state}>
-                              {state}
+                          {stateList.map((state) => (
+                            <SelectItem key={state.isoCode} value={state.name}>
+                              {state.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -237,8 +251,8 @@ export default function ParentSignupForm(): JSX.Element {
                     )}
                   />
                   {errors.state && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.state.message as string}
+                    <p className="text-red-500 text-sm">
+                      {errors.state.message}
                     </p>
                   )}
                 </div>
@@ -253,7 +267,7 @@ export default function ParentSignupForm(): JSX.Element {
                         onValueChange={field.onChange}
                         disabled={!selectedState}
                       >
-                        <SelectTrigger className="w-full bg-white py-4 pl-5 h-auto">
+                        <SelectTrigger className="bg-white py-4 pl-5 h-auto">
                           <SelectValue placeholder="Select City" />
                         </SelectTrigger>
                         <SelectContent>
@@ -267,41 +281,36 @@ export default function ParentSignupForm(): JSX.Element {
                     )}
                   />
                   {errors.city && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors.city.message as string}
+                    <p className="text-red-500 text-sm">
+                      {errors.city.message}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Street Address */}
+              {/* Street */}
               <Input
-                className="py-4 pl-5 h-auto w-full"
-                type="text"
                 placeholder="Street Address"
                 {...register("street")}
+                className="py-4 pl-5 h-auto w-full"
               />
               {errors.street && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.street.message as string}
-                </p>
+                <p className="text-red-500 text-sm">{errors.street.message}</p>
               )}
 
               {/* Password */}
-              <div className="relative w-full">
+              <div className="relative">
                 <Input
-                  className="py-4 pl-5 h-auto w-full"
                   type="password"
                   placeholder="Password"
                   {...register("password")}
+                  className="py-4 pl-5 h-auto w-full"
                 />
                 {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.password.message as string}
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
                   </p>
                 )}
-
-                {/* Password meter (below on mobile, right on desktop) */}
                 <div className="mt-2 block md:hidden">
                   <PasswordMeter password={password || ""} />
                 </div>
@@ -312,19 +321,19 @@ export default function ParentSignupForm(): JSX.Element {
 
               {/* Confirm Password */}
               <Input
-                className="py-4 pl-5 h-auto w-full"
                 type="password"
                 placeholder="Confirm Password"
                 {...register("confirmPassword")}
+                className="py-4 pl-5 h-auto w-full"
               />
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.confirmPassword.message as string}
+                <p className="text-red-500 text-sm">
+                  {errors.confirmPassword.message}
                 </p>
               )}
             </div>
 
-            {/* Checkboxes */}
+            {/* Terms and Age Confirmation */}
             <div className="space-y-3 text-sm">
               <label className="flex items-start gap-2">
                 <input
@@ -333,8 +342,7 @@ export default function ParentSignupForm(): JSX.Element {
                   className="accent-orange-500 mt-1"
                 />
                 <span>
-                  By clicking Create Account or Sign Up with Google or Apple,
-                  you agree to our{" "}
+                  By signing up, you agree to our{" "}
                   <a href="#" className="text-blue-500 underline">
                     Terms of Service
                   </a>{" "}
@@ -352,11 +360,11 @@ export default function ParentSignupForm(): JSX.Element {
                   {...register("confirmAge")}
                   className="accent-orange-500"
                 />
-                I confirm that I&apos;m 18 years of age or older
+                I confirm that I&apos;m 18 years or older
               </label>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <div className="w-full flex justify-center">
               <Button
                 type="submit"
@@ -373,7 +381,6 @@ export default function ParentSignupForm(): JSX.Element {
             <p className="text-sm text-center text-gray-500">
               You can also sign up with:
             </p>
-
             <div className="flex flex-col md:flex-row gap-4 justify-center mt-4">
               <Button
                 type="button"
@@ -392,7 +399,7 @@ export default function ParentSignupForm(): JSX.Element {
             </div>
           </form>
 
-          {/* Divider & Login Link */}
+          {/* Divider */}
           <div className="my-6 border-t border-gray-800 w-[60%] mx-auto" />
           <p className="mt-8 text-center text-sm">
             Already have an account?{" "}
