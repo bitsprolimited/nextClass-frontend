@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { motion, Variants } from "motion/react";
 import { Button } from "../ui/button";
 import HeroSectionCarousel from "./hero-section-carousel";
 import HeroStudentAvatar from "./hero-student-avatar";
@@ -21,7 +21,7 @@ function HeroSection() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: {
       y: 100,
     },
