@@ -9,7 +9,7 @@ import {
   useCall,
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "motion/react";
 import { LayoutList, MessageSquare, Users } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -98,7 +98,7 @@ const MeetingRoom = ({ callId }: { callId: string }) => {
   };
 
   // Animation variants for the participants panel
-  const participantsPanelVariants = {
+  const participantsPanelVariants: Variants = {
     hidden: {
       x: "100%",
       opacity: 0,
@@ -126,7 +126,7 @@ const MeetingRoom = ({ callId }: { callId: string }) => {
   };
 
   // Animation variants for the main content area
-  const mainContentVariants = {
+  const mainContentVariants: Variants = {
     full: {
       marginRight: 0,
       transition: {
