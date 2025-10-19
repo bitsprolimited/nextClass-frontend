@@ -17,21 +17,17 @@ import { updateParentProfile } from "@/services/profile.service";
 import { useEffect, useMemo } from "react";
 import { Country, State, City } from "country-state-city";
 import { toast } from "sonner";
+import PhoneInputComponent from "@/components/PhoneInput";
+import { useUser } from "@/hooks/useUser";
+import Loader from "@/components/Loader";
+import ErrorComponent from "@/components/ErrorComponent";
 
 // Dynamic country, state, city lists
 const countryList = Country.getAllCountries();
 
-// Define props interface
-interface EditProfileFormProps {
-  userId: string;
-  userDetails: ProfileFormSchema;
-}
-
-export default function EditProfileForm({
-  userId,
-  userDetails,
-}: EditProfileFormProps) {
+export default function EditProfileForm() {
   const queryClient = useQueryClient();
+  const { data, isLoading, isError } = useUser();
 
   // Update user mutation
   const mutation = useMutation({
@@ -49,7 +45,7 @@ export default function EditProfileForm({
     onSuccess: () => {
       // Invalidate and refetch
       toast.success("Profile updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["user", userId] });
+      queryClient.invalidateQueries({ queryKey: ["user", data?.user?._id] });
     },
     onError: (error) => {
       toast.error("Failed to update profile");
@@ -67,31 +63,31 @@ export default function EditProfileForm({
   } = useForm<ProfileFormSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      fullName: userDetails?.fullName || "",
-      phone: userDetails?.phone || "",
+      fullName: data?.user?.fullName || "",
+      phone: data?.user?.phoneNumber || "",
       address: {
-        street: userDetails?.address?.street || "",
-        city: userDetails?.address?.city || "",
-        state: userDetails?.address?.state || "",
-        country: userDetails?.address?.country || "",
+        street: data?.user?.address?.street || "",
+        city: data?.user?.address?.city || "",
+        state: data?.user?.address?.state || "",
+        country: data?.user?.address?.country || "",
       },
     },
   });
 
   useEffect(() => {
-    if (userDetails) {
+    if (data?.user) {
       reset({
-        fullName: userDetails.fullName || "",
-        phone: userDetails.phone || "",
+        fullName: data.user.fullName || "",
+        phone: data.user.phoneNumber || "",
         address: {
-          street: userDetails.address?.street || "",
-          city: userDetails.address?.city || "",
-          state: userDetails.address?.state || "",
-          country: userDetails.address?.country || "",
+          street: data.user.address?.street || "",
+          city: data.user.address?.city || "",
+          state: data.user.address?.state || "",
+          country: data.user.address?.country || "",
         },
       });
     }
-  }, [userDetails, reset]);
+  }, [data?.user, reset]);
 
   const selectedCountry = watch("address.country");
   const selectedState = watch("address.state");
@@ -119,11 +115,20 @@ export default function EditProfileForm({
       : [];
   }, [selectedCountry, selectedState, stateList]);
 
-  const onSubmit = (data: ProfileFormSchema) => {
-    mutation.mutate({ userId, data });
+  const onSubmit = (formData: ProfileFormSchema) => {
+    if (!data?.user?._id) return;
+    mutation.mutate({ userId: data?.user?._id, data: formData });
   };
 
   const availableCities = cityList;
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (isError || !data) {
+    return <ErrorComponent />;
+  }
 
   return (
     <section className="w-full flex justify-center items-center my-10">
@@ -154,19 +159,17 @@ export default function EditProfileForm({
 
         {/* Phone */}
         <div className="flex gap-2">
-          <div className="w-[80px]">
-            <Input
-              className="py-4 text-center h-auto"
-              type="text"
-              value="+234"
-              disabled
-            />
-          </div>
-          <Input
-            className="py-4 pl-5 h-auto"
-            type="tel"
-            placeholder="0xxxxxxxxx00"
-            {...register("phone")}
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneInputComponent
+                className="bg-white border border-gray-300 rounded-lg text-gray-700 text-sm"
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                placeholder="Enter phone number"
+              />
+            )}
           />
         </div>
         {errors.phone && (

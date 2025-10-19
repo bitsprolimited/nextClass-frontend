@@ -115,7 +115,7 @@ export interface User {
   phoneNumber: string;
   profilePicture?: string;
   isProfileComplete: boolean;
-  address?: Address;
+  address: Address;
   timezone: string;
   isEmailVerified?: boolean;
   qualifications: Qualification[];
