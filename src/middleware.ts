@@ -21,7 +21,7 @@ export default async function middleware(req: NextRequest) {
 
   try {
     const response = await axios.get<Session>(
-      `http://localhost:5500/api/auth/get-session`,
+      `${process.env.BETTER_AUTH_URL}/api/auth/get-session`,
       {
         headers: {
           Cookie: req.headers.get("cookie") || "", // Forward cookies from the req
@@ -75,7 +75,9 @@ export default async function middleware(req: NextRequest) {
       session?.user.role == "teacher" &&
       !session?.user.isProfileComplete
     ) {
-      return NextResponse.redirect(new URL("/dashboard/profile-setup", req.url));
+      return NextResponse.redirect(
+        new URL("/dashboard/profile-setup", req.url)
+      );
     }
 
     return NextResponse.next();
