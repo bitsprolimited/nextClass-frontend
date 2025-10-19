@@ -161,7 +161,14 @@ export const identityDocumentSchema = z.object({
 });
 
 export const introductionVideoSchema = z.object({
-  videoFile: z.instanceof(File, { message: "Please upload or record your introduction video" }),
+  videoFile: z.any().refine(
+    (file) => {
+      // Only check File type in the browser
+      if (typeof window === "undefined") return true;
+      return file instanceof File;
+    },
+    { message: "Please upload or record your introduction video" }
+  ),
   videoUrl: z.string().optional(),
 });
 
