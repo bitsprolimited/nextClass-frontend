@@ -1,4 +1,5 @@
-import { User } from "@/types";
+import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import {
   Bell,
   ChevronDown,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -21,8 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useRouter } from "next/navigation";
 
 export const links = {
   parent: [
@@ -86,10 +87,15 @@ export const links = {
   ],
 };
 
-function ProfileMenu({ user }: { user: User }) {
+function ProfileMenu({
+  user,
+}: {
+  user: typeof authClient.$Infer.Session.user;
+}) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const currentLinks = user.role === "parent" ? links.parent : links.tutor;
+  const router = useRouter();
 
   return (
     <div className="flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 gap-x-4">
@@ -112,13 +118,13 @@ function ProfileMenu({ user }: { user: User }) {
             <span className="absolute -inset-1.5" />
             <span className="sr-only">Open user menu</span>
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.profilePicture} />
+              <AvatarImage src={user?.image ?? ""} />
               <AvatarFallback className="uppercase border border-primary bg-white">
-                {user.fullName[0]}
+                {user.name[0]}
               </AvatarFallback>
             </Avatar>
             <p className=" text-primary font-medium ml-2 capitalize">
-              {user?.fullName}
+              {user?.name}
             </p>
             <ChevronDown
               className="h-4 w-4 ml-2 text-primary group-data-[state=open]:rotate-180 transition-all"
@@ -131,7 +137,7 @@ function ProfileMenu({ user }: { user: User }) {
             <DropdownMenuItem
               key={i}
               className={cn(
-                "focus:bg-[#D9D9D9] font-medium transition-all duration-300",
+                "focus:bg-[#D9D9D9] cursor-pointer font-medium transition-all duration-300 rounded-none",
                 {
                   "hover:focus:bg-primary hover:focus:text-secondary": i === 0,
                 }
@@ -158,19 +164,27 @@ function ProfileMenu({ user }: { user: User }) {
           ))}
           <DropdownMenuSeparator className="bg-[#9A98C1] m-0" />
           <DropdownMenuItem
-            className="focus:bg-[#D9D9D9]"
+            className="focus:bg-[#D9D9D9] cursor-pointer"
             asChild
             onSelect={(e) => {
               e.preventDefault();
               setIsProfileMenuOpen(false);
             }}
           >
-            <a
-              className="w-full px-4 py-2 flex items-center gap-2"
-              href={"/api/auth/signout"}
+            <Button
+              className="w-full px-4 py-2 flex text-gray-700 items-center justify-start gap-2 rounded-none bg-white"
+              onClick={async () => {
+                await authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push("/login");
+                    },
+                  },
+                });
+              }}
             >
               <LogOut className="mr-2 h-4 w-4 text-[#E63E3E]" /> Logout
-            </a>
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

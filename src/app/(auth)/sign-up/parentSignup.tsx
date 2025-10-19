@@ -1,49 +1,49 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { toast } from "sonner";
+import Link from "next/link";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { FaApple, FaGoogle } from "react-icons/fa";
-import { Country, State, City } from "country-state-city";
+import { toast } from "sonner";
 
 import PasswordMeter from "@/components/auth/passwordMeter";
 import VerifyEmailAlert from "@/components/auth/verify-email-alert";
+import PhoneInputComponent from "@/components/PhoneInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import { authClient } from "@/lib/auth-client";
 import { parentSignupFormSchema, ParentSignupFormSchema } from "@/lib/schema";
-import { parentSignup } from "@/services/auth.service";
-import { AuthResponse, AxioErrorResponse } from "@/types";
+import { JSX } from "react";
 
-type ParentSignupFormWithAddress = ParentSignupFormSchema & {
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-  };
-};
+// type ParentSignupFormWithAddress = ParentSignupFormSchema & {
+//   address: {
+//     street: string;
+//     city: string;
+//     state: string;
+//     country: string;
+//   };
+// };
 
-export default function ParentSignupForm() {
+// const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
+
+// // Mock data - replace with actual data for your regions
+// const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
+// const cities = {
+//   Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
+//   Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
+//   // Add more cities for other states
+// };
+
+export default function ParentSignupForm(): JSX.Element {
   const [open, setOpen] = useState(false);
-
+  const [isPending, setIsPending] = useState(false);
   const {
     register,
     handleSubmit,
     control,
     watch,
-    setValue,
+    // setValue,
     formState: { errors, isSubmitting },
   } = useForm<ParentSignupFormSchema>({
     resolver: zodResolver(parentSignupFormSchema),
@@ -51,11 +51,11 @@ export default function ParentSignupForm() {
     defaultValues: {
       fullName: "",
       email: "",
+      // country: "",
+      // state: "",
+      // city: "",
+      // street: "",
       phone: "",
-      country: "",
-      state: "",
-      city: "",
-      street: "",
       password: "",
       confirmPassword: "",
       agreeTerms: false,
@@ -64,81 +64,84 @@ export default function ParentSignupForm() {
   });
 
   const password = watch("password");
-  const selectedCountry = watch("country");
-  const selectedState = watch("state");
+  // const selectedCountry = watch("country");
+  // const selectedState = watch("state");
 
-  // Dynamic dropdowns
-  const countryList = useMemo(() => Country.getAllCountries(), []);
-  const stateList = useMemo(() => {
-    if (!selectedCountry) return [];
-    const countryObj = countryList.find(
-      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
-    );
-    return countryObj ? State.getStatesOfCountry(countryObj.isoCode) : [];
-  }, [selectedCountry, countryList]);
+  // const { mutate, isPending } = useMutation<
+  //   AuthResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   ParentSignupFormWithAddress
+  // >({
+  //   mutationKey: ["parentSignup"],
+  //   mutationFn: parentSignup,
+  //   onSuccess: async () => {
+  //     toast("Signup successful", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       duration: 5000,
+  //     });
+  //     setOpen(true);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Signup failed:", error);
+  //     toast("Signup failed", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       description: error.response?.data.message,
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
-  const cityList = useMemo(() => {
-    if (!selectedCountry || !selectedState) return [];
-    const countryObj = countryList.find(
-      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
-    );
-    if (!countryObj) return [];
-    const stateObj = stateList.find(
-      (s) => s.name === selectedState || s.isoCode === selectedState
-    );
-    return countryObj && stateObj
-      ? City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode)
-      : [];
-  }, [selectedCountry, selectedState, countryList, stateList]);
+  const onSubmit = async (data: ParentSignupFormSchema) => {
+    // Transform data to include structured address
+    // const transformedData = {
+    //   ...data,
+    //   address: {
+    //     street: data.street,
+    //     city: data.city,
+    //     state: data.state,
+    //     country: data.country,
+    //   },
+    // };
+    // mutate(transformedData);
 
-  // Reset dependent fields when country/state changes
-  useEffect(() => {
-    setValue("state", "");
-    setValue("city", "");
-  }, [selectedCountry, setValue]);
-
-  useEffect(() => {
-    setValue("city", "");
-  }, [selectedState, setValue]);
-
-  // ✅ Fix: define availableCities once only
-  const availableCities = cityList.map((c) => c.name);
-
-  const { mutate, isPending } = useMutation<
-    AuthResponse,
-    AxiosError<AxioErrorResponse>,
-    ParentSignupFormWithAddress
-  >({
-    mutationKey: ["parentSignup"],
-    mutationFn: parentSignup,
-    onSuccess: () => {
-      toast("Signup successful", {
-        className: "bg-[#F5F4F8] text-[#031D95]",
-        duration: 5000,
-      });
-      setOpen(true);
-    },
-    onError: (error) => {
-      toast("Signup failed", {
-        className: "bg-[#F5F4F8] text-[#031D95]",
-        description: error.response?.data.message,
-        duration: 5000,
-      });
-    },
-  });
-
-  const onSubmit = (data: ParentSignupFormSchema) => {
-    const transformedData = {
-      ...data,
-      address: {
-        street: data.street,
-        city: data.city,
-        state: data.state,
-        country: data.country,
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.fullName,
+        phoneNumber: data.phone,
       },
-    };
-    mutate(transformedData);
+      {
+        onRequest: () => {
+          //show loading
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast("Signup successful", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            duration: 5000,
+          });
+          setOpen(true);
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          console.error("Signup failed:", ctx.error);
+          toast("Signup failed", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            description: ctx.error.message,
+            duration: 5000,
+          });
+          setIsPending(false);
+        },
+      }
+    );
   };
+
+  // Get available cities based on selected state
+  // const availableCities =
+  //   selectedState && cities[selectedState as keyof typeof cities]
+  //     ? cities[selectedState as keyof typeof cities]
+  //     : [];
 
   return (
     <div className="flex flex-col items-end w-full md:w-[70%] mx-auto">
@@ -183,27 +186,26 @@ export default function ParentSignupForm() {
               )}
 
               {/* Phone */}
-              <div className="flex gap-2">
-                <div className="w-[80px]">
-                  <Input
-                    value="+234"
-                    disabled
-                    className="py-4 text-center h-auto"
-                  />
-                </div>
-                <Input
-                  type="tel"
-                  placeholder="0xxxxxxxxx00"
-                  {...register("phone")}
-                  className="py-4 pl-5 h-auto flex-1"
+              <div className="flex gap-2 w-full">
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInputComponent
+                      className="bg-white border border-gray-300 rounded-lg text-gray-700 text-sm"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Enter phone number"
+                    />
+                  )}
                 />
               </div>
               {errors.phone && (
                 <p className="text-red-500 text-sm">{errors.phone.message}</p>
               )}
 
-              {/* Country */}
-              <Controller
+              {/* Country Select */}
+              {/* <Controller
                 name="country"
                 control={control}
                 render={({ field }) => (
@@ -222,11 +224,13 @@ export default function ParentSignupForm() {
                 )}
               />
               {errors.country && (
-                <p className="text-red-500 text-sm">{errors.country.message}</p>
-              )}
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.country.message as string}
+                </p>
+              )} */}
 
-              {/* State and City */}
-              <div className="flex flex-col md:flex-row gap-2">
+              {/* State + City */}
+              {/* <div className="flex flex-col md:flex-row gap-2 w-full">
                 <div className="flex-1">
                   <Controller
                     name="state"
@@ -255,7 +259,6 @@ export default function ParentSignupForm() {
                       {errors.state.message}
                     </p>
                   )}
-                </div>
 
                 <div className="flex-1">
                   <Controller
@@ -268,35 +271,24 @@ export default function ParentSignupForm() {
                         disabled={!selectedState}
                       >
                         <SelectTrigger className="bg-white py-4 pl-5 h-auto">
-                          <SelectValue placeholder="Select City" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableCities.map((city) => (
-                            <SelectItem key={city} value={city}>
-                              {city}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors.city && (
-                    <p className="text-red-500 text-sm">
-                      {errors.city.message}
                     </p>
                   )}
                 </div>
-              </div>
+              </div> */}
 
-              {/* Street */}
-              <Input
+              {/* Street Address */}
+              {/* <Input
+                className="py-4 pl-5 h-auto w-full"
+                type="text"
                 placeholder="Street Address"
                 {...register("street")}
                 className="py-4 pl-5 h-auto w-full"
               />
               {errors.street && (
-                <p className="text-red-500 text-sm">{errors.street.message}</p>
-              )}
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.street.message as string}
+                </p>
+              )} */}
 
               {/* Password */}
               <div className="relative">

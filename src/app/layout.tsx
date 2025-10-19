@@ -10,6 +10,7 @@ import { ReactQueryClientProvider } from "@/providers/ReactQueryClientProvider";
 import { Toaster } from "sonner";
 import { AeroTrial, StudioSans } from "./fonts";
 import Modal from "@/components/modals/Modal";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,9 +48,11 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${AeroTrial.variable} ${StudioSans.variable} ${playfairDisplay.variable} ${MontserratFont.variable} antialiased font`}
         >
-          {children}
-          <Toaster richColors />
-          <Modal />
+          <AuthProvider>
+            {children}
+            <Toaster richColors />
+            <Modal />
+          </AuthProvider>
         </body>
       </html>
     </ReactQueryClientProvider>

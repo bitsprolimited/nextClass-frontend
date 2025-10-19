@@ -1,17 +1,4 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -19,9 +6,23 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { useFormStore } from "@/store/useProfileSetupForm";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useSubmitBioData } from "@/hooks/useProfileFormSubmission";
 import { BioDataFormData, bioDataSchema } from "@/lib/schema";
+import { useFormStore } from "@/store/useProfileSetupForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import PhoneInputComponent from "../PhoneInput";
+import { useEffect, useMemo } from "react";
+import { Country, State, City } from "country-state-city";
 
 interface StepOneProps {
   onNext: () => void;
@@ -44,6 +45,41 @@ export default function StepOne({ onNext }: StepOneProps) {
       bio: bioData.bio || "",
     },
   });
+
+  const selectedCountry = form.watch("country");
+  const selectedState = form.watch("state");
+
+  // Dynamic dropdowns
+  const countryList = useMemo(() => Country.getAllCountries(), []);
+  const stateList = useMemo(() => {
+    if (!selectedCountry) return [];
+    const countryObj = countryList.find(
+      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
+    );
+    return countryObj ? State.getStatesOfCountry(countryObj.isoCode) : [];
+  }, [selectedCountry, countryList]);
+
+  const cityList = useMemo(() => {
+    if (!selectedCountry || !selectedState) return [];
+    const countryObj = countryList.find(
+      (c) => c.name === selectedCountry || c.isoCode === selectedCountry
+    );
+    if (!countryObj) return [];
+    const stateObj = stateList.find(
+      (s) => s.name === selectedState || s.isoCode === selectedState
+    );
+    return countryObj && stateObj
+      ? City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode)
+      : [];
+  }, [selectedCountry, selectedState, countryList, stateList]);
+
+  const availableCities = cityList.map((c) => c.name);
+
+  // Reset dependent fields when country/state changes
+  useEffect(() => {
+    form.setValue("state", "");
+    form.setValue("city", "");
+  }, [selectedCountry, form]);
 
   const onSubmit = async (data: BioDataFormData) => {
     updateBioData(data);
@@ -103,29 +139,17 @@ export default function StepOne({ onNext }: StepOneProps) {
           />
 
           <div className="flex gap-2 w-full">
-            <div className="flex-[0.4] relative">
-              <input
-                type="text"
-                value="+234"
-                disabled
-                className="h-12 w-full bg-white border border-gray-300 rounded-lg px-4 text-gray-700 text-sm outline-none"
-              />
-              <div className="absolute top-1/2 right-2 transform -translate-y-1/2 text-orange-500 text-xs pointer-events-none">
-                <ChevronDown size={20} className="text-secondary" />
-              </div>
-            </div>
-
             <FormField
               control={form.control}
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="0xxxxxxxxx00"
-                      className="h-12 bg-white border border-gray-300 rounded-lg px-4 text-gray-700 text-sm"
-                      {...field}
+                    <PhoneInputComponent
+                      className="bg-white border border-gray-300 rounded-lg text-gray-700 text-sm"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Enter phone number"
                     />
                   </FormControl>
                   <FormMessage />
@@ -149,9 +173,11 @@ export default function StepOne({ onNext }: StepOneProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Nigeria">Nigeria</SelectItem>
-                    <SelectItem value="Ghana">Ghana</SelectItem>
-                    <SelectItem value="Kenya">Kenya</SelectItem>
+                    {countryList.map((country) => (
+                      <SelectItem key={country.isoCode} value={country.name}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -168,6 +194,7 @@ export default function StepOne({ onNext }: StepOneProps) {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={!selectedCountry}
                   >
                     <FormControl>
                       <SelectTrigger className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white">
@@ -175,9 +202,11 @@ export default function StepOne({ onNext }: StepOneProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Lagos">Lagos</SelectItem>
-                      <SelectItem value="Abuja">Abuja</SelectItem>
-                      <SelectItem value="Rivers">Rivers</SelectItem>
+                      {stateList.map((state) => (
+                        <SelectItem key={state.isoCode} value={state.name}>
+                          {state.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -193,6 +222,7 @@ export default function StepOne({ onNext }: StepOneProps) {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={!selectedState}
                   >
                     <FormControl>
                       <SelectTrigger className="h-12 border border-gray-300 rounded-lg px-4 text-gray-700 bg-white">
@@ -200,11 +230,11 @@ export default function StepOne({ onNext }: StepOneProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Ikeja">Ikeja</SelectItem>
-                      <SelectItem value="Victoria Island">
-                        Victoria Island
-                      </SelectItem>
-                      <SelectItem value="Lekki">Lekki</SelectItem>
+                      {availableCities.map((city) => (
+                        <SelectItem key={city} value={city}>
+                          {city}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />

@@ -10,11 +10,12 @@ export default function Loader({ className }: { className?: string }) {
         className
       )}
     >
-      <div>
+      <div className="animate-pulse">
         <Image
           src="/images/Logo.png"
           alt="loader"
-          className="animate-pulse"
+          className="object-contain"
+          priority
           width={100}
           height={100}
         />

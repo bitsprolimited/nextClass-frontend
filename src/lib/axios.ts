@@ -1,4 +1,3 @@
-import { getSession } from "@/services/session";
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -6,16 +5,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-});
-
-axiosInstance.interceptors.request.use(async (config) => {
-  const session = await getSession();
-  const accessToken = session?.accessToken;
-
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
-  }
-  return config;
+  withCredentials: true,
 });
 
 export default axiosInstance;

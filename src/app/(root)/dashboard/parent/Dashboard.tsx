@@ -1,3 +1,5 @@
+"use client";
+
 import TutorList from "@/components/tutors/tutor-list";
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +21,7 @@ export default function Dashboard() {
   if (isError || !user) return <ErrorComponent />;
 
   return (
-    <div className="min-h-screen">
+    <>
       {/* Header Section */}
       <div className="flex w-full bg-[#F8F7FC] px-6">
         <div className="w-full max-w-7xl mx-auto py-[60px] space-y-10">
@@ -57,6 +59,6 @@ export default function Dashboard() {
         <TutorList />
         <HowItWorksSection />
       </div>
-    </div>
+    </>
   );
 }

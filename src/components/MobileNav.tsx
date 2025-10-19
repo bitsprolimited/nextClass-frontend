@@ -7,7 +7,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Session } from "@/services/session";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,9 +18,10 @@ import {
 import { Separator } from "./ui/separator";
 import { links } from "./ProfileMenu";
 import Image from "next/image";
+import { BetterAuthSession } from "@/lib/auth-client";
 
 interface MobileNavProps {
-  session: Session | null | undefined;
+  session: BetterAuthSession | null | undefined;
   currentNavItems: { label: string; href: string }[];
 }
 

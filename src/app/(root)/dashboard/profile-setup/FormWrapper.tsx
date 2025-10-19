@@ -16,6 +16,10 @@ function FormContent() {
     currentStep,
     setCurrentStep,
     setProgress,
+    updateBioData,
+    updateCareerExperience,
+    updateIdentityDocument,
+    updateIntroductionVideo,
     syncStepWithProgress,
     resetForm,
   } = useFormStore();
@@ -34,9 +38,21 @@ function FormContent() {
   useEffect(() => {
     if (progress) {
       setProgress(progress);
+      updateBioData(progress.bioData);
+      updateCareerExperience(progress.careerExperience);
+      updateIdentityDocument(progress.identityDocument);
+      updateIntroductionVideo(progress.introductionVideo);
       syncStepWithProgress();
     }
-  }, [progress, setProgress, syncStepWithProgress]);
+  }, [
+    progress,
+    setProgress,
+    syncStepWithProgress,
+    updateBioData,
+    updateCareerExperience,
+    updateIdentityDocument,
+    updateIntroductionVideo,
+  ]);
 
   const handleNext = async () => {
     // Refetch progress after moving to next step
@@ -90,7 +106,7 @@ function FormContent() {
     if (progress?.isComplete) {
       resetForm();
       console.log("Form submitted successfully!");
-      router.push('/dashboard/tutor')
+      router.push("/dashboard/tutor");
     }
   };
 

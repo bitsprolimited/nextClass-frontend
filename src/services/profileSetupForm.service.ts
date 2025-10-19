@@ -1,11 +1,21 @@
+import { FileMetadata } from "@/hooks/use-file-upload";
 import axiosInstance from "@/lib/axios";
-import { BioDataFormData, CareerExperienceFormData, IdentityDocumentFormData } from "@/lib/schema";
+import {
+  BioDataFormData,
+  CareerExperienceFormData,
+  IdentityDocumentFormData,
+} from "@/lib/schema";
+import { UserProgress } from "@/store/useProfileSetupForm";
 
 export const uploadCertificate = async (
-  file: File
+  file: FileMetadata | File
 ): Promise<{ fileUrl: string }> => {
   const formData = new FormData();
-  formData.append("file", file);
+  if (file instanceof File) {
+    formData.append("file", file);
+  } else {
+    throw new Error("Invalid file");
+  }
 
   const response = await axiosInstance.post("/upload/certificate", formData, {
     headers: { "Content-Type": "multipart/form-data" },
@@ -15,14 +25,22 @@ export const uploadCertificate = async (
 };
 
 export const uploadIdentityDocument = async (
-  file: File
+  file: FileMetadata | File
 ): Promise<{ fileUrl: string }> => {
   const formData = new FormData();
-  formData.append("file", file);
+  if (file instanceof File) {
+    formData.append("file", file);
+  } else {
+    throw new Error("Invalid file");
+  }
 
-  const response = await axiosInstance.post("/upload/identity-document", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const response = await axiosInstance.post(
+    "/upload/identity-document",
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
 
   return response.data;
 };
@@ -46,21 +64,30 @@ export const uploadIntroductionVideo = async (
 
 // Form submission functions
 export const submitBioData = async (data: BioDataFormData) => {
-  const response = await axiosInstance.patch("/teachers/profile/bio-data", data);
+  const response = await axiosInstance.patch(
+    "/teachers/profile/bio-data",
+    data
+  );
   return response.data;
 };
 
 export const submitCareerExperience = async (
   data: CareerExperienceFormData
 ) => {
-  const response = await axiosInstance.patch("/teachers/profile/career-experience", data);
+  const response = await axiosInstance.patch(
+    "/teachers/profile/career-experience",
+    data
+  );
   return response.data;
 };
 
 export const submitIdentityDocument = async (
   data: IdentityDocumentFormData
 ) => {
-  const response = await axiosInstance.patch("/teachers/profile/identity-document", data);
+  const response = await axiosInstance.patch(
+    "/teachers/profile/identity-document",
+    data
+  );
   return response.data;
 };
 
@@ -73,15 +100,6 @@ export const submitIntroductionVideo = async (data: {
   );
   return response.data;
 };
-
-export interface UserProgress {
-  bioDataComplete: boolean;
-  careerExperienceComplete: boolean;
-  identityDocumentComplete: boolean;
-  introductionVideoComplete: boolean;
-  completionPercentage: number;
-  isComplete: boolean;
-}
 
 export const getUserProgress = async (): Promise<UserProgress> => {
   const response = await axiosInstance.get("/teachers/profile/progress");
