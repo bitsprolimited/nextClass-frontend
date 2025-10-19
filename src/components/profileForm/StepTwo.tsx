@@ -21,10 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFileUpload } from "@/hooks/use-file-upload";
 import {
   useSubmitCareerExperience,
   useUploadCertificate,
 } from "@/hooks/useProfileFormSubmission";
+import { subjects } from "@/lib/constants";
 import { CareerExperienceFormData, careerExperienceSchema } from "@/lib/schema";
 import { cn } from "@/lib/utils";
 import { QualificationData, useFormStore } from "@/store/useProfileSetupForm";
@@ -35,13 +37,12 @@ import {
   ChevronLeft,
   PlusCircle,
   Trash2,
-  Upload,
   X,
 } from "lucide-react";
-import React, { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import FileUploader from "../FileUploader";
 import MultipleSelector, { Option } from "../ui/multiselect";
-import { subjects } from "@/lib/constants";
 
 interface StepTwoProps {
   onNext: () => void;
@@ -66,8 +67,6 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
     Partial<QualificationData>
   >({});
   const [expiryDate, setExpiryDate] = useState<Date>();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const grades = [
     "KG/Nursery",
@@ -77,12 +76,50 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
     "Grade 10-12",
   ];
 
+  const maxSize = 8 * 1024 * 1024; // 8MB
+
+  // Create initial files array from certificateUrl if it exists
+  const getInitialFiles = () => {
+    if (currentQualification.certificateUrl) {
+      return [
+        {
+          name:
+            currentQualification.certificateUrl.split("/").pop() ||
+            "certificate",
+          size: 0, // We don't know the size from URL
+          type: "application/pdf",
+          url: currentQualification.certificateUrl,
+          id: `cert-${Date.now()}`,
+        },
+      ];
+    }
+    return [];
+  };
+
+  const [
+    { files, isDragging, errors },
+    {
+      handleDragEnter,
+      handleDragLeave,
+      handleDragOver,
+      handleDrop,
+      openFileDialog,
+      removeFile,
+      getInputProps,
+      clearFiles,
+    },
+  ] = useFileUpload({
+    maxSize,
+    initialFiles: getInitialFiles(),
+    accept: "image/png,image/jpeg,image/jpg,application/pdf",
+  });
+
   const form = useForm<CareerExperienceFormData>({
     resolver: zodResolver(careerExperienceSchema),
     defaultValues: {
       subjects: careerExperience.subjects || [],
       grades: careerExperience.grades || [],
-      experience: careerExperience.yearsOfExperience || "",
+      experience: careerExperience.experience || "",
       qualifications: careerExperience.qualifications || [],
     },
   });
@@ -103,16 +140,6 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
     form.setValue("grades", newGrades);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
   const handleRemoveQualification = (index: number) => {
     removeQualification(index);
     form.setValue(
@@ -131,9 +158,9 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
     }
 
     let certificateUrl = "";
-    if (selectedFile) {
+    if (files.length > 0 && files[0].file) {
       try {
-        const result = await uploadCertificate.mutateAsync(selectedFile);
+        const result = await uploadCertificate.mutateAsync(files[0].file);
         certificateUrl = result.fileUrl;
       } catch (error) {
         console.error("Failed to upload certificate:", error);
@@ -157,7 +184,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
 
     setCurrentQualification({});
     setExpiryDate(undefined);
-    setSelectedFile(null);
+    clearFiles();
     setShowForm(false);
   };
 
@@ -172,6 +199,12 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
       console.error("Failed to submit career experience:", error);
     }
   };
+
+  useEffect(() => {
+    if (showForm) {
+      clearFiles();
+    }
+  }, [showForm, clearFiles]);
 
   return (
     <div className="space-y-6 max-w-[418px] mx-auto">
@@ -211,7 +244,6 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                       emptyIndicator={
                         <p className="text-center text-sm">No results found</p>
                       }
-                      
                       onChange={(selected: Option[]) => {
                         field.onChange(selected.map((opt) => opt.value)); // store only string values
                       }}
@@ -387,7 +419,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                     <Button
                       variant="outline"
                       className={cn(
-                        "h-12 w-full flex items-center border border-gray-300 px-4 text-gray-700 bg-white justify-between",
+                        "h-12 w-full hover:bg-transparent flex items-center border border-gray-300 px-4 text-gray-700 bg-white justify-between",
                         !expiryDate && "text-muted-foreground"
                       )}
                     >
@@ -428,34 +460,19 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                   </span>
                 </div>
 
-                <div className="border border-dashed border-gray-300 p-4 rounded-xl text-center bg-[#4255AF0f]">
-                  <Upload
-                    className="mx-auto text-[#7C3AED] mb-2 cursor-pointer"
-                    size={32}
-                    onClick={handleUploadClick}
-                  />
-                  <Label
-                    className="block text-base text-gray-600 mb-1 font-medium cursor-pointer"
-                    onClick={handleUploadClick}
-                  >
-                    Select files here
-                  </Label>
-                  <span className="block text-xs text-gray-400 mb-2">
-                    (Max file size: 8mb)
-                  </span>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    accept=".jpg,.jpeg,.png,.pdf"
-                    onChange={handleFileChange}
-                  />
-                  {selectedFile && (
-                    <div className="mt-2 text-sm text-gray-700">
-                      Selected: {selectedFile.name}
-                    </div>
-                  )}
-                </div>
+                <FileUploader
+                  files={files}
+                  isDragging={isDragging}
+                  errors={errors}
+                  handleDragEnter={handleDragEnter}
+                  handleDragLeave={handleDragLeave}
+                  handleDragOver={handleDragOver}
+                  handleDrop={handleDrop}
+                  openFileDialog={openFileDialog}
+                  removeFile={removeFile}
+                  getInputProps={getInputProps}
+                  maxSize={maxSize}
+                />
 
                 <div className="flex justify-end mt-2">
                   <Button

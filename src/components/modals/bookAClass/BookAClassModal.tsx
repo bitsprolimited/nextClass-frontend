@@ -19,8 +19,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useCreateBooking } from "@/hooks/useBooking";
+import { BetterAuthSession } from "@/lib/auth-client";
 import { getLearners } from "@/services/learner.service";
-import { Session } from "@/services/session";
 import { getAvailableSlots } from "@/services/tutors.service";
 import { Teacher } from "@/types";
 import { useQuery } from "@tanstack/react-query";
@@ -115,7 +115,7 @@ export function BookAClassModal({
   duration,
   session,
 }: {
-  session: Session | null;
+  session: BetterAuthSession | null;
   tutor: Teacher;
   duration: number;
 }) {

@@ -53,7 +53,7 @@ const FILTERS = [
 ];
 
 type Tutor = {
-  id: string;
+  id: string | undefined;
   name: string;
   rating: number;
   image: string;
@@ -224,7 +224,7 @@ function TutorList(): React.JSX.Element {
   const { data, isLoading, error } = useTutors();
 
   const mapTeacherToTutor = (teacher: Teacher) => ({
-    id: teacher._id,
+    id: teacher?._id,
     name: teacher.fullName,
     rating: teacher.rating,
     reviewCount: teacher.ratingCount,
@@ -272,7 +272,7 @@ function TutorList(): React.JSX.Element {
     return <Loader className="py-14" />;
   }
 
-  if (error) {
+  if (error || !data) {
     return <ErrorComponent />;
   }
 
@@ -321,7 +321,7 @@ function TutorList(): React.JSX.Element {
 
         {/* Tutors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {data?.teachers.map((teacher, i) => (
+          {data.teachers.map((teacher, i) => (
             <TutorCard key={i} tutorData={mapTeacherToTutor(teacher)} />
           ))}
         </div>

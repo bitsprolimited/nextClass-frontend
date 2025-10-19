@@ -115,9 +115,9 @@ export interface User {
   phoneNumber: string;
   profilePicture?: string;
   isProfileComplete: boolean;
-  address: Address;
+  address?: Address;
   timezone: string;
-  isEmailVerified: boolean;
+  isEmailVerified?: boolean;
   qualifications: Qualification[];
   grades: string[];
   rating: number;
@@ -127,8 +127,8 @@ export interface User {
   role: Role;
   children: Child[];
   ratingCount: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface Teacher extends User {

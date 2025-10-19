@@ -2,26 +2,26 @@
 
 import PasswordMeter from "@/components/auth/passwordMeter";
 import VerifyEmailAlert from "@/components/auth/verify-email-alert";
+import PhoneInputComponent from "@/components/PhoneInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 import { tutorSignupFormSchema, TutorSignupFormSchema } from "@/lib/schema";
-import { tutorSignup } from "@/services/auth.service";
-import { AuthResponse, AxioErrorResponse } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import Link from "next/link";
 import { JSX, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FaApple, FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
 
 export default function TutorSignupForm(): JSX.Element {
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<TutorSignupFormSchema>({
     resolver: zodResolver(tutorSignupFormSchema),
@@ -39,32 +39,63 @@ export default function TutorSignupForm(): JSX.Element {
 
   const password = watch("password");
 
-  const { mutate, isPending } = useMutation<
-    AuthResponse,
-    AxiosError<AxioErrorResponse>,
-    TutorSignupFormSchema
-  >({
-    mutationKey: ["tutorSignup"],
-    mutationFn: tutorSignup,
-    onSuccess: async () => {
-      toast("Signup successful", {
-        className: "bg-[#F5F4F8] text-[#031D95]",
-        duration: 5000,
-      });
-      setOpen(true);
-    },
-    onError: (error) => {
-      console.error("Signup failed:", error);
-      toast("Signup failed", {
-        className: "bg-[#F5F4F8] text-[#031D95]",
-        description: error.response?.data.message,
-        duration: 5000,
-      });
-    },
-  });
+  // const { mutate, isPending } = useMutation<
+  //   AuthResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   TutorSignupFormSchema
+  // >({
+  //   mutationKey: ["tutorSignup"],
+  //   mutationFn: tutorSignup,
+  //   onSuccess: async () => {
+  //     toast("Signup successful", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       duration: 5000,
+  //     });
+  //     setOpen(true);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Signup failed:", error);
+  //     toast("Signup failed", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       description: error.response?.data.message,
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
   const onSubmit = async (data: TutorSignupFormSchema) => {
-    mutate(data);
+    // mutate(data);
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.fullName,
+        phoneNumber: data.phoneNumber,
+        role: "teacher"
+      },
+      {
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast("Signup successful", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            duration: 5000,
+          });
+          setOpen(true);
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          console.error("Signup failed:", ctx.error);
+          toast("Signup failed", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            description: ctx.error.message,
+            duration: 5000,
+          });
+          setIsPending(false);
+        },
+      }
+    );
   };
 
   return (
@@ -117,19 +148,17 @@ export default function TutorSignupForm(): JSX.Element {
               {/* Phone */}
               <div>
                 <div className="flex gap-2">
-                  <div className="w-[70px]">
-                    <Input
-                      className="h-auto py-4 pl-5"
-                      type="text"
-                      value="+234"
-                      disabled
-                    />
-                  </div>
-                  <Input
-                    className="h-auto py-4 pl-5 flex-1"
-                    type="tel"
-                    placeholder="0xxxxxxxxx00"
-                    {...register("phoneNumber")}
+                  <Controller
+                    name="phoneNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <PhoneInputComponent
+                        className="bg-white border border-gray-300 rounded-lg text-gray-700 text-sm"
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Enter phone number"
+                      />
+                    )}
                   />
                 </div>
                 {errors.phoneNumber && (

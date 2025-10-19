@@ -6,7 +6,6 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 
-import { User } from "@/types";
 import { Camera, CameraOff, LogIn, Mic, MicOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,6 +13,7 @@ import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+import { User } from "better-auth";
 
 interface PermissionCardProps {
   title: string;
@@ -45,11 +45,11 @@ export const Alert = ({ title, iconUrl }: PermissionCardProps) => {
   );
 };
 
-const NoCameraPreview = ({ user }: { user: User | undefined }) => (
+const NoCameraPreview = ({ user }: { user: User }) => (
   <div>
     <Avatar>
-      <AvatarImage src={user?.profilePicture} alt="avatar" />
-      <AvatarFallback>{user?.fullName[0]}</AvatarFallback>
+      <AvatarImage src={user?.image ?? ""} alt="avatar" />
+      <AvatarFallback>{user?.name[0]}</AvatarFallback>
     </Avatar>
   </div>
 );
@@ -59,7 +59,7 @@ const MeetingSetup = ({
   user,
 }: {
   setIsSetupComplete: (value: boolean) => void;
-  user: User | undefined;
+  user: User;
 }) => {
   // https://getstream.io/video/docs/react/guides/call-and-participant-state/#call-state
   const {

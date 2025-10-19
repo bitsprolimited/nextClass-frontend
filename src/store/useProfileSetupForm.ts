@@ -1,4 +1,3 @@
-// stores/form-store.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -16,7 +15,7 @@ export interface BioDataFormData {
 export interface CareerExperienceFormData {
   subjects: string[];
   grades: string[];
-  yearsOfExperience: string;
+  experience: string;
   qualifications: QualificationData[];
 }
 
@@ -43,6 +42,10 @@ export interface IntroductionVideoFormData {
 }
 
 export interface UserProgress {
+  bioData: BioDataFormData;
+  careerExperience: CareerExperienceFormData;
+  identityDocument: IdentityDocumentFormData;
+  introductionVideo: IntroductionVideoFormData;
   bioDataComplete: boolean;
   careerExperienceComplete: boolean;
   identityDocumentComplete: boolean;

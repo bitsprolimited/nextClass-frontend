@@ -1,20 +1,4 @@
-import React, { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import {
   Form,
   FormControl,
@@ -22,15 +6,33 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Upload, ChevronLeft, CalendarIcon } from "lucide-react";
-import { format, parseISO } from "date-fns";
-import { cn } from "@/lib/utils";
-import { useFormStore } from "@/store/useProfileSetupForm";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useFileUpload } from "@/hooks/use-file-upload";
 import {
   useSubmitIdentityDocument,
   useUploadIdentityDocument,
 } from "@/hooks/useProfileFormSubmission";
 import { IdentityDocumentFormData, identityDocumentSchema } from "@/lib/schema";
+import { cn } from "@/lib/utils";
+import { useFormStore } from "@/store/useProfileSetupForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format, parseISO } from "date-fns";
+import { CalendarIcon, ChevronLeft } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import FileUploader from "../FileUploader";
 import { Calendar } from "../ui/calendar";
 
 const idType = [
@@ -56,9 +58,44 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
   const [expiryDate, setExpiryDate] = useState<Date | undefined>(
     identityDocument.expiryDate
   );
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
+  const maxSize = 8 * 1024 * 1024; // 8MB
+
+  // Create initial files array from documentUrl if it exists
+  const getInitialFiles = () => {
+    if (identityDocument.documentUrl) {
+      return [
+        {
+          name:
+            identityDocument.documentUrl.split("/").pop() ||
+            "identity-document",
+          size: 0, // We don't know the size from URL
+          type: "application/pdf",
+          url: identityDocument.documentUrl,
+          id: `id-doc-${Date.now()}`,
+        },
+      ];
+    }
+    return [];
+  };
+
+  const [
+    { files, isDragging, errors },
+    {
+      handleDragEnter,
+      handleDragLeave,
+      handleDragOver,
+      handleDrop,
+      openFileDialog,
+      removeFile,
+      getInputProps,
+    },
+  ] = useFileUpload({
+    maxSize,
+    initialFiles: getInitialFiles(),
+    accept: "image/png,image/jpeg,image/jpg",
+  });
+
   const form = useForm<IdentityDocumentFormData>({
     resolver: zodResolver(identityDocumentSchema),
     defaultValues: {
@@ -68,19 +105,7 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
       expiryDate: identityDocument.expiryDate,
     },
   });
-  
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-    }
-  };
-  
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-  
-  console.log(form.formState.errors)
+
   const onSubmit = async (data: IdentityDocumentFormData) => {
     const formData = {
       ...data,
@@ -90,9 +115,9 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
 
     try {
       // Upload file first if selected
-      let documentUrl = "";
-      if (selectedFile) {
-        const result = await uploadIdentityDoc.mutateAsync(selectedFile);
+      let documentUrl = identityDocument.documentUrl || "";
+      if (files.length > 0 && files[0].file && files[0].file.size > 0) {
+        const result = await uploadIdentityDoc.mutateAsync(files[0].file);
         documentUrl = result.fileUrl;
       }
 
@@ -109,7 +134,6 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
       console.error("Failed to submit identity document:", error);
     }
   };
-
 
   return (
     <div className="space-y-6 max-w-[418px] mx-auto">
@@ -189,7 +213,7 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
               <Button
                 variant="outline"
                 className={cn(
-                  "h-12 w-full flex items-center border border-gray-300 rounded-lg px-4 text-gray-700 bg-white justify-between focus:ring-0 focus:outline-none",
+                  "h-12 w-full flex items-center border border-gray-300 rounded-lg px-4 text-gray-700 bg-white justify-between focus:ring-0 focus:outline-none hover:bg-transparent",
                   !issueDate && "text-muted-foreground"
                 )}
                 style={{ boxShadow: "none" }}
@@ -225,7 +249,7 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
               <Button
                 variant="outline"
                 className={cn(
-                  "h-12 w-full flex items-center border border-gray-300 rounded-lg px-4 text-gray-700 bg-white justify-between focus:ring-0 focus:outline-none",
+                  "h-12 w-full flex items-center border border-gray-300 rounded-lg px-4 text-gray-700 bg-white justify-between focus:ring-0 focus:outline-none hover:bg-transparent",
                   !expiryDate && "text-muted-foreground"
                 )}
                 style={{ boxShadow: "none" }}
@@ -280,44 +304,19 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
               </span>
             </div>
 
-            <div className="border border-dashed border-gray-300 p-4 rounded-xl text-center bg-[#F9F7F5]">
-              <Upload
-                className="mx-auto text-[#7C3AED] mb-2 cursor-pointer"
-                size={32}
-                onClick={handleUploadClick}
-              />
-              <Label
-                className="block text-base text-gray-600 mb-1 font-medium cursor-pointer"
-                onClick={handleUploadClick}
-              >
-                Select files here
-              </Label>
-              <span className="block text-xs text-gray-400 mb-2">
-                (Max file size: 8mb)
-              </span>
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                accept=".jpg,.jpeg,.png,.pdf"
-                onChange={handleFileChange}
-              />
-              {selectedFile && (
-                <div className="mt-2 text-sm text-gray-700">
-                  Selected: {selectedFile.name}
-                </div>
-              )}
-            </div>
-
-            {/* <FormField
-              control={form.control}
-              name="documentFile"
-              render={() => (
-                <FormItem>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
+            <FileUploader
+              files={files}
+              isDragging={isDragging}
+              errors={errors}
+              handleDragEnter={handleDragEnter}
+              handleDragLeave={handleDragLeave}
+              handleDragOver={handleDragOver}
+              handleDrop={handleDrop}
+              openFileDialog={openFileDialog}
+              removeFile={removeFile}
+              getInputProps={getInputProps}
+              maxSize={maxSize}
+            />
           </div>
 
           <div className="flex justify-center mt-6">

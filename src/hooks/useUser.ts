@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useUser() {
   return useQuery({
-    queryKey: ["user"],
+    queryKey: ["profile"],
     queryFn: getUser,
     refetchOnWindowFocus: false,
     retry: false,

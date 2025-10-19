@@ -2,48 +2,40 @@
 
 import PasswordMeter from "@/components/auth/passwordMeter";
 import VerifyEmailAlert from "@/components/auth/verify-email-alert";
+import PhoneInputComponent from "@/components/PhoneInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { authClient } from "@/lib/auth-client";
 import { parentSignupFormSchema, ParentSignupFormSchema } from "@/lib/schema";
-import { parentSignup } from "@/services/auth.service";
-import { AuthResponse, AxioErrorResponse } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import Link from "next/link";
 import { JSX, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaApple, FaGoogle } from "react-icons/fa";
 import { toast } from "sonner";
 
-type ParentSignupFormWithAddress = ParentSignupFormSchema & {
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-  };
-};
+// type ParentSignupFormWithAddress = ParentSignupFormSchema & {
+//   address: {
+//     street: string;
+//     city: string;
+//     state: string;
+//     country: string;
+//   };
+// };
 
-const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
+// const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
 
-// Mock data - replace with actual data for your regions
-const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
-const cities = {
-  Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
-  Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
-  // Add more cities for other states
-};
+// // Mock data - replace with actual data for your regions
+// const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
+// const cities = {
+//   Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
+//   Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
+//   // Add more cities for other states
+// };
 
 export default function ParentSignupForm(): JSX.Element {
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const {
     register,
     handleSubmit,
@@ -56,10 +48,10 @@ export default function ParentSignupForm(): JSX.Element {
     defaultValues: {
       fullName: "",
       email: "",
-      country: "",
-      state: "",
-      city: "",
-      street: "",
+      // country: "",
+      // state: "",
+      // city: "",
+      // street: "",
       phone: "",
       password: "",
       confirmPassword: "",
@@ -69,52 +61,84 @@ export default function ParentSignupForm(): JSX.Element {
   });
 
   const password = watch("password");
-  const selectedCountry = watch("country");
-  const selectedState = watch("state");
+  // const selectedCountry = watch("country");
+  // const selectedState = watch("state");
 
-  const { mutate, isPending } = useMutation<
-    AuthResponse,
-    AxiosError<AxioErrorResponse>,
-    ParentSignupFormWithAddress
-  >({
-    mutationKey: ["parentSignup"],
-    mutationFn: parentSignup,
-    onSuccess: async () => {
-      toast("Signup successful", {
-        className: "bg-[#F5F4F8] text-[#031D95]",
-        duration: 5000,
-      });
-      setOpen(true);
-    },
-    onError: (error) => {
-      console.error("Signup failed:", error);
-      toast("Signup failed", {
-        className: "bg-[#F5F4F8] text-[#031D95]",
-        description: error.response?.data.message,
-        duration: 5000,
-      });
-    },
-  });
+  // const { mutate, isPending } = useMutation<
+  //   AuthResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   ParentSignupFormWithAddress
+  // >({
+  //   mutationKey: ["parentSignup"],
+  //   mutationFn: parentSignup,
+  //   onSuccess: async () => {
+  //     toast("Signup successful", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       duration: 5000,
+  //     });
+  //     setOpen(true);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Signup failed:", error);
+  //     toast("Signup failed", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       description: error.response?.data.message,
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
   const onSubmit = async (data: ParentSignupFormSchema) => {
     // Transform data to include structured address
-    const transformedData = {
-      ...data,
-      address: {
-        street: data.street,
-        city: data.city,
-        state: data.state,
-        country: data.country,
+    // const transformedData = {
+    //   ...data,
+    //   address: {
+    //     street: data.street,
+    //     city: data.city,
+    //     state: data.state,
+    //     country: data.country,
+    //   },
+    // };
+    // mutate(transformedData);
+
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.fullName,
+        phoneNumber: data.phone,
       },
-    };
-    mutate(transformedData);
+      {
+        onRequest: () => {
+          //show loading
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast("Signup successful", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            duration: 5000,
+          });
+          setOpen(true);
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          console.error("Signup failed:", ctx.error);
+          toast("Signup failed", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            description: ctx.error.message,
+            duration: 5000,
+          });
+          setIsPending(false);
+        },
+      }
+    );
   };
 
   // Get available cities based on selected state
-  const availableCities =
-    selectedState && cities[selectedState as keyof typeof cities]
-      ? cities[selectedState as keyof typeof cities]
-      : [];
+  // const availableCities =
+  //   selectedState && cities[selectedState as keyof typeof cities]
+  //     ? cities[selectedState as keyof typeof cities]
+  //     : [];
 
   return (
     <div className="flex flex-col items-end w-full md:w-[70%] mx-auto">
@@ -164,19 +188,17 @@ export default function ParentSignupForm(): JSX.Element {
 
               {/* Phone */}
               <div className="flex gap-2 w-full">
-                <div className="w-[80px]">
-                  <Input
-                    className="py-4 text-center h-auto"
-                    type="text"
-                    value="+234"
-                    disabled
-                  />
-                </div>
-                <Input
-                  className="py-4 pl-5 h-auto flex-1"
-                  type="tel"
-                  placeholder="0xxxxxxxxx00"
-                  {...register("phone")}
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInputComponent
+                      className="bg-white border border-gray-300 rounded-lg text-gray-700 text-sm"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Enter phone number"
+                    />
+                  )}
                 />
               </div>
               {errors.phone && (
@@ -186,7 +208,7 @@ export default function ParentSignupForm(): JSX.Element {
               )}
 
               {/* Country Select */}
-              <Controller
+              {/* <Controller
                 name="country"
                 control={control}
                 render={({ field }) => (
@@ -209,10 +231,10 @@ export default function ParentSignupForm(): JSX.Element {
                 <p className="text-red-500 text-sm mt-1">
                   {errors.country.message as string}
                 </p>
-              )}
+              )} */}
 
               {/* State + City */}
-              <div className="flex flex-col md:flex-row gap-2 w-full">
+              {/* <div className="flex flex-col md:flex-row gap-2 w-full">
                 <div className="flex-1">
                   <Controller
                     name="state"
@@ -272,10 +294,10 @@ export default function ParentSignupForm(): JSX.Element {
                     </p>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               {/* Street Address */}
-              <Input
+              {/* <Input
                 className="py-4 pl-5 h-auto w-full"
                 type="text"
                 placeholder="Street Address"
@@ -285,7 +307,7 @@ export default function ParentSignupForm(): JSX.Element {
                 <p className="text-red-500 text-sm mt-1">
                   {errors.street.message as string}
                 </p>
-              )}
+              )} */}
 
               {/* Password */}
               <div className="relative w-full">

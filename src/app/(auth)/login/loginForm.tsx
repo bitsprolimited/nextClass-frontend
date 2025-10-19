@@ -2,20 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { JSX, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaApple } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
-import { z } from "zod";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "@/services/auth.service";
-import { createSession } from "@/services/session";
-import { AxioErrorResponse, LoginResponse } from "@/types";
-import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { z } from "zod";
 
 const loginFormSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -37,6 +33,7 @@ export function LoginForm(): JSX.Element {
   const [redirectInfo, setRedirectInfo] = useState<PostLoginRedirect | null>(
     null
   );
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
@@ -65,45 +62,45 @@ export function LoginForm(): JSX.Element {
     }
   }, [searchParams]);
 
-  const { mutate, isPending } = useMutation<
-    LoginResponse,
-    AxiosError<AxioErrorResponse>,
-    LoginFormSchema
-  >({
-    mutationKey: ["login"],
-    mutationFn: login,
-    onSuccess: async (data) => {
-      await createSession({
-        user: { ...data.user },
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-      });
+  // const { mutate, isPending } = useMutation<
+  //   LoginResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   LoginFormSchema
+  // >({
+  //   mutationKey: ["login"],
+  //   mutationFn: login,
+  //   onSuccess: async (data) => {
+  //     await createSession({
+  //       user: { ...data.user },
+  //       accessToken: data.accessToken,
+  //       refreshToken: data.refreshToken,
+  //     });
 
-      if (redirectInfo) {
-        const redirectTo =
-          redirectInfo.returnTo ||
-          getDefaultDashboard(data.user.role, data.user.isProfileComplete);
-        router.push(redirectTo);
-        return;
-      }
+  //     if (redirectInfo) {
+  //       const redirectTo =
+  //         redirectInfo.returnTo ||
+  //         getDefaultDashboard(data.user.role, data.user.isProfileComplete);
+  //       router.push(redirectTo);
+  //       return;
+  //     }
 
-      if (data.user.role === "parent") {
-        router.push("/dashboard/parent");
-        return;
-      }
-      if (!data.user.isProfileComplete) {
-        router.push("/dashboard/profile-setup");
-        return;
-      }
-      router.push("/dashboard/tutor");
-    },
-    onError: (error) => {
-      toast.error("Login failed", {
-        description: error.response?.data.message || "Please try again later",
-        duration: 5000,
-      });
-    },
-  });
+  //     if (data.user.role === "parent") {
+  //       router.push("/dashboard/parent");
+  //       return;
+  //     }
+  //     if (!data.user.isProfileComplete) {
+  //       router.push("/dashboard/profile-setup");
+  //       return;
+  //     }
+  //     router.push("/dashboard/tutor");
+  //   },
+  //   onError: (error) => {
+  //     toast.error("Login failed", {
+  //       description: error.response?.data.message || "Please try again later",
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
   const getDefaultDashboard = (
     role: string,
@@ -119,7 +116,48 @@ export function LoginForm(): JSX.Element {
   };
 
   const onSubmit = async (data: LoginFormSchema) => {
-    mutate(data);
+    // mutate(data);
+    await authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onRequest: () => {
+          //show loading
+          setIsPending(true);
+        },
+        onSuccess: (ctx) => {
+          toast.success("Login successful");
+          if (redirectInfo) {
+            const redirectTo =
+              redirectInfo.returnTo ||
+              getDefaultDashboard(
+                ctx.data.user.role,
+                ctx.data.user.isProfileComplete
+              );
+            router.push(redirectTo);
+            return;
+          }
+
+          if (ctx.data.user.role === "parent") {
+            router.push("/dashboard/parent");
+            return;
+          }
+          if (!ctx.data.user.isProfileComplete) {
+            router.push("/dashboard/profile-setup");
+            return;
+          }
+          router.push("/dashboard/tutor");
+        },
+        onError: (ctx) => {
+          toast.error("Login failed", {
+            description: ctx.error.message || "Please try again later",
+            duration: 5000,
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -132,9 +170,7 @@ export function LoginForm(): JSX.Element {
 
         {redirectInfo?.returnTo && !redirectInfo.action && (
           <div className="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-sm text-amber-800">
-              Please login to continue.
-            </p>
+            <p className="text-sm text-amber-800">Please login to continue.</p>
           </div>
         )}
 
@@ -190,6 +226,11 @@ export function LoginForm(): JSX.Element {
           <Button
             className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm border"
             disabled={isSubmitting || isPending}
+            onClick={async () => {
+              await authClient.signIn.social({
+                provider: "google",
+              });
+            }}
           >
             <FaGoogle className="w-5 h-5" />
             Sign Up With Google

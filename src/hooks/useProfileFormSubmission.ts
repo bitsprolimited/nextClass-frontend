@@ -136,6 +136,7 @@ export const useUserProgress = () => {
     staleTime: 30 * 1000, // 30 seconds
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    retry: false,
   });
 };
 

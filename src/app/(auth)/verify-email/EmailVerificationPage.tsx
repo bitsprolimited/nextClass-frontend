@@ -249,6 +249,7 @@ export default function EmailVerificationPage() {
             <div className="mx-auto flex items-center justify-center mb-4">
               <Image
                 src="/images/Logo.png"
+                priority
                 alt="Logo"
                 width={200}
                 height={200}

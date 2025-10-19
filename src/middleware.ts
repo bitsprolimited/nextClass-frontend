@@ -1,5 +1,8 @@
-import { getSession } from "@/services/session";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
+import { authClient } from "./lib/auth-client";
+
+type Session = typeof authClient.$Infer.Session;
 
 const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
 // const protectedRoutes: string[] = [];
@@ -16,48 +19,71 @@ export default async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  const session = await getSession();
-  if (isProtectedRoute && (!session || !session.user))
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
-
-  if (
-    isPublicRoute &&
-    session?.user &&
-    !req.nextUrl.pathname.startsWith("/dashboard")
-  ) {
-    return NextResponse.redirect(
-      new URL(
-        `${
-          session.user.role === "parent"
-            ? "/dashboard/parent"
-            : "/dashboard/tutor"
-        }`,
-        req.nextUrl
-      )
+  try {
+    const response = await axios.get<Session>(
+      `http://localhost:5500/api/auth/get-session`,
+      {
+        headers: {
+          Cookie: req.headers.get("cookie") || "", // Forward cookies from the req
+        },
+        withCredentials: true,
+      }
     );
+
+    const session = response.data;
+
+    if (isProtectedRoute && (!session || !session.user))
+      return NextResponse.redirect(new URL("/login", req.nextUrl));
+
+    if (
+      isPublicRoute &&
+      session?.user &&
+      !req.nextUrl.pathname.startsWith("/dashboard")
+    ) {
+      return NextResponse.redirect(
+        new URL(
+          `${
+            session.user.role === "parent"
+              ? "/dashboard/parent"
+              : "/dashboard/tutor"
+          }`,
+          req.nextUrl
+        )
+      );
+    }
+
+    if (path.includes("/admin") && session?.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
+
+    if (
+      path.startsWith("/dashboard/tutor") &&
+      session?.user.role !== "teacher"
+    ) {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
+
+    if (
+      path.startsWith("/dashboard/parent") &&
+      session?.user.role !== "parent"
+    ) {
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    }
+
+    if (
+      path.includes("dashboard/tutor") &&
+      session?.user.role == "teacher" &&
+      !session?.user.isProfileComplete
+    ) {
+      return NextResponse.redirect(new URL("/dashboard/profile-setup", req.url));
+    }
+
+    return NextResponse.next();
+  } catch (error) {
+    // Handle network or auth errors gracefully
+    console.error("Session check failed:", error);
+    return NextResponse.redirect(new URL("/login", req.url));
   }
-
-  if (path.includes("/admin") && session?.user.role !== "admin") {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
-  }
-
-  if (path.startsWith("/dashboard/tutor") && session?.user.role !== "teacher") {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
-  }
-
-  if (path.startsWith("/dashboard/parent") && session?.user.role !== "parent") {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
-  }
-
-  // if (
-  //   path.includes("dashboard/tutor") &&
-  //   session?.user.role == "teacher" &&
-  //   !session?.user.isProfileComplete
-  // ) {
-  //   return NextResponse.redirect(new URL("/dashboard/profile-setup", req.url));
-  // }
-
-  NextResponse.next();
 }
 
 export const config = {

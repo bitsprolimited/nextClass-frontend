@@ -6,8 +6,8 @@ import { cookies } from "next/headers";
 
 export type Session = {
   user: User;
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
 };
 
 const secretKey = process.env.SESSION_SECRET_KEY!;

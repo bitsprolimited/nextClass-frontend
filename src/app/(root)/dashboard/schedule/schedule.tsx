@@ -1,35 +1,24 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { BookingItem } from "@/components/schedule/BookinItem";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { bookingUtils, useBookings } from "@/hooks/useBooking";
+import { useBookings } from "@/hooks/useBooking";
+import { useAuth } from "@/providers/AuthProvider";
 import {
-  acceptBooking,
   Booking,
   BookingStatus,
   EventType,
   SortBy,
-  SortOrder,
+  SortOrder
 } from "@/services/booking.service";
-import { Session } from "@/services/session";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { format, isAfter, parseISO } from "date-fns";
 import {
   AlertCircle,
   BookOpenIcon,
-  CalendarIcon,
-  ClockIcon,
-  Loader2,
   RefreshCw,
-  UserIcon,
-  UsersIcon,
 } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 
 function BookingItemSkeleton() {
   return (
@@ -112,231 +101,6 @@ function EmptyState({
   );
 }
 
-// Booking item component
-export function BookingItem({
-  booking,
-  isHistory = false,
-  session,
-}: {
-  booking: Booking;
-  isHistory?: boolean;
-  session: Session | null | undefined;
-}) {
-  const startTime = parseISO(booking.startTime);
-  const endTime = parseISO(booking.endTime);
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  // Format date and time
-  const formattedDate = format(startTime, "E, MMM d");
-  const formattedTime = `${format(startTime, "h:mmaaa")} - ${format(
-    endTime,
-    "h:mmaaa"
-  )}`;
-  const duration = bookingUtils.formatDuration(booking.duration);
-
-  // Get status color
-  const statusColor = bookingUtils.getStatusColor(booking.status);
-
-  // Check if booking is reschedulable (upcoming and not completed/canceled)
-  const canReschedule =
-    !isHistory &&
-    isAfter(startTime, new Date()) &&
-    ![BookingStatus.COMPLETED, BookingStatus.CANCELED].includes(booking.status);
-
-  // Get default tutor image or use provided one
-  const tutorImage = booking.teacher?.profilePicture || "/images/tutor-1.png";
-  const parentImage = booking.parent?.profilePicture || "/images/tutor-1.png";
-
-  const isTutor = session?.user && session?.user.role === "teacher";
-
-  const { mutate: acceptBookingMutation, isPending } = useMutation({
-    mutationKey: ["accept-booking", booking._id],
-    mutationFn: acceptBooking,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["bookings"] });
-      toast.success("Booking accepted successfully");
-    }
-  });
-
-  const handleAcceptBooking = () => {
-    acceptBookingMutation(booking._id);
-  };
-
-  // Create title
-  const title = booking.subject
-    ? `${booking.subject} ${bookingUtils.getEventTypeDisplay(
-        booking.eventType
-      )} with ${booking.teacher?.fullName || "Teacher"}`
-    : `${bookingUtils.getEventTypeDisplay(booking.eventType)} with ${
-        booking.teacher?.fullName || "Teacher"
-      }`;
-
-  const handleJoinSession = () => {
-    router.push(`/dashboard/meeting/${booking.meetingLink}`);
-  };
-
-  return (
-    <div className="grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 w-full">
-      {/* Left: Image */}
-      <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 rounded-[10px] border border-[#ada1a1] overflow-hidden">
-        <Image
-          src={isTutor ? parentImage : tutorImage}
-          alt="Tutor"
-          fill
-          className="object-cover"
-          onError={(e) => {
-            // Fallback to default image on error
-            e.currentTarget.src = "/images/tutor-default.png";
-          }}
-        />
-        {/* Status indicator */}
-        {!isHistory && (
-          <div
-            className={`absolute top-2 right-2 w-3 h-3 rounded-full bg-${statusColor}-500`}
-          />
-        )}
-      </div>
-
-      {/* Middle: Content */}
-      <div className="flex flex-col justify-between gap-2 sm:gap-3">
-        <h2 className="text-base sm:text-lg md:text-3xl text-[#2c241b] leading-snug font-aero-trial">
-          {title}
-        </h2>
-
-        <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-2xl font-medium">
-          {booking.learners && booking.learners.length > 0 && (
-            <span className="flex items-center gap-2">
-              <UsersIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-              {booking.learners.map((l) => l.name).join(", ")}
-            </span>
-          )}
-          <span className="flex items-center gap-2">
-            <UserIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-            {booking.teacher?.fullName || "Teacher"}
-          </span>
-        </div>
-
-        {isHistory ? (
-          // History view - different layout
-          <div className="flex flex-wrap items-start justify-between gap-4 sm:gap-6 w-full max-w-[656px] text-xs sm:text-sm md:text-base">
-            {/* Date */}
-            <div className="flex flex-col gap-2 items-start">
-              <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#2c241b]" />
-              <div className="font-medium text-[#2c241b] leading-tight font-montserrat">
-                {formattedDate}
-                <br />
-                <span className="text-[#2c241b99] text-[11px] sm:text-sm md:text-lg">
-                  {formattedTime}
-                </span>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="hidden sm:block text-[24px] sm:text-[40px] md:text-[64px] leading-none opacity-20 text-[#2c241b]">
-              |
-            </div>
-
-            {/* Duration */}
-            <div className="flex flex-col gap-2 items-start">
-              <ClockIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#2c241b]" />
-              <div className="font-medium text-[#2c241b] leading-tight font-montserrat whitespace-nowrap text-xs sm:text-sm md:text-lg">
-                {duration}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="hidden sm:block text-[24px] sm:text-[40px] md:text-[64px] leading-none opacity-20 text-[#2c241b]">
-              |
-            </div>
-
-            {/* Subject */}
-            <div className="flex flex-col gap-2 items-start">
-              <BookOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#2c241b]" />
-              <div className="font-medium text-[#2c241b] leading-tight font-montserrat whitespace-nowrap text-xs sm:text-sm md:text-lg">
-                {booking.subject || "General Session"}
-              </div>
-            </div>
-          </div>
-        ) : (
-          // Upcoming view - original layout
-          <>
-            <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-2xl font-medium">
-              <span className="flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                {formattedDate}
-              </span>
-              <span className="hidden sm:inline text-[24px] sm:text-[32px] leading-none opacity-20">
-                |
-              </span>
-              <span className="flex items-center gap-2">
-                <ClockIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                {formattedTime}
-              </span>
-            </div>
-
-            <div className="text-[#9e9e9e] text-xs sm:text-sm md:text-lg flex gap-2 sm:gap-4 font-medium">
-              <span>Duration: {duration}</span>
-              {booking.subject && (
-                <>
-                  <span className="opacity-40">.</span>
-                  <span>{booking.subject}</span>
-                </>
-              )}
-            </div>
-          </>
-        )}
-
-        {/* Action buttons */}
-        <div
-          className={`flex ${
-            isHistory ? "justify-end" : "justify-end"
-          } gap-3 sm:gap-6 mt-3 sm:mt-0 sm:self-end`}
-        >
-          {isHistory ? (
-            booking.eventType === EventType.CLASS ? (
-              <Button className="px-5 sm:px-8 md:px-10 py-0 h-[36px] sm:h-[45px] bg-secondary rounded-full">
-                <span className="text-white text-xs sm:text-sm md:text-base font-medium leading-[36px] sm:leading-[45px] whitespace-nowrap">
-                  View Lesson Notes
-                </span>
-              </Button>
-            ) : (
-              <Badge className="bg-[#007B0C33] text-[#007B0C] rounded-full px-5 py-3 font-montserrat">
-                Completed
-              </Badge>
-            )
-          ) : (
-            <>
-              {canReschedule && (
-                <button className="text-[#e94e4e] text-xs sm:text-sm font-medium px-4 sm:px-8 h-[36px] sm:h-[45px]">
-                  Reschedule
-                </button>
-              )}
-              {booking.status === BookingStatus.PENDING ? (
-                <Button
-                  className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm"
-                  onClick={handleAcceptBooking}
-                >
-                  {isPending ? <Loader2 className="animate-spin" /> : "Accept"}
-                </Button>
-              ) : (
-                <Button
-                  className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-secondary text-white font-semibold text-xs sm:text-sm"
-                  disabled={booking.status === BookingStatus.CANCELED}
-                  onClick={handleJoinSession}
-                >
-                  {booking.status === BookingStatus.CANCELED
-                    ? "Canceled"
-                    : "Join Session"}
-                </Button>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // Tab content component for bookings
 function BookingTabContent({
@@ -346,17 +110,16 @@ function BookingTabContent({
   isHistory = false,
   type,
   refetch,
-  session,
 }: {
   bookings: Booking[];
   isLoading: boolean;
   error: Error | null;
   isHistory?: boolean;
   type: "classes" | "calls";
-  session?: Session | null;
   refetch: () => void;
 }) {
-  if (isLoading) {
+  const { session, isLoading: isAuthLoading, error: authError } = useAuth();
+  if (isLoading || isAuthLoading) {
     return (
       <div className="space-y-10">
         {Array.from({ length: 3 }).map((_, index) => (
@@ -371,10 +134,11 @@ function BookingTabContent({
     );
   }
 
-  if (error) {
+  if (error || authError) {
+    const message = error?.message || authError?.message;
     return (
       <ErrorMessage
-        message={error.message || "Failed to load bookings"}
+        message={message || "Failed to load bookings"}
         onRetry={refetch}
       />
     );
@@ -393,18 +157,14 @@ function BookingTabContent({
           key={booking._id}
           className={`${index > 0 ? "pt-10 border-t border-[#031d9547]" : ""}`}
         >
-          <BookingItem
-            session={session}
-            booking={booking}
-            isHistory={isHistory}
-          />
+          <BookingItem session={session} booking={booking} isHistory={isHistory} />
         </div>
       ))}
     </div>
   );
 }
 
-export default function ClassTabs({ session }: { session: Session | null }) {
+export default function ClassTabs() {
   const [activeMainTab, setActiveMainTab] = useState("classes");
   const [activeSubTab, setActiveSubTab] = useState("upcoming");
 
@@ -538,7 +298,6 @@ export default function ClassTabs({ session }: { session: Session | null }) {
                   isHistory={false}
                   type="classes"
                   refetch={upcomingClassesQuery.refetch}
-                  session={session}
                 />
               </TabsContent>
 
@@ -588,7 +347,6 @@ export default function ClassTabs({ session }: { session: Session | null }) {
                   error={upcomingCallsQuery.error}
                   isHistory={false}
                   type="calls"
-                  session={session}
                   refetch={upcomingCallsQuery.refetch}
                 />
               </TabsContent>
