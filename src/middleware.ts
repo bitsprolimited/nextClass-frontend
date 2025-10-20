@@ -30,7 +30,9 @@ export default async function middleware(req: NextRequest) {
       }
     );
 
-    const session = response.data;    
+    const session = response.data;
+    console.log("session", response);
+    
 
     if (isProtectedRoute && (!session || !session.user))
       return NextResponse.redirect(new URL("/login", req.nextUrl));
