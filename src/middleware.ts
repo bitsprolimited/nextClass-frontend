@@ -26,14 +26,12 @@ export default async function middleware(req: NextRequest) {
         headers: {
           Cookie: req.headers.get("cookie") || "", // Forward cookies from the req
         },
-        withCredentials: true,
       }
     );
 
     const session = response.data;
     // console.log("session", response);
     console.log("cookie", req.headers.get("cookie"));
-    
 
     if (isProtectedRoute && (!session || !session.user))
       return NextResponse.redirect(new URL("/login", req.nextUrl));
@@ -93,4 +91,5 @@ export default async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  runtime: "nodejs",
 };
