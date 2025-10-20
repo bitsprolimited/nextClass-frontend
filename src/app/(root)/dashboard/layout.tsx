@@ -1,25 +1,20 @@
 import ComingSoon from "@/components/comingSoon";
 import { StreamVideoClientProvider } from "@/providers/StreamVideoClientProvider";
-import { getSession } from "@/services/session";
-import { redirect } from "next/navigation";
 
-export default async function Layout({
+export const runtime = "nodejs"; // ensure cookie access
+export const dynamic = "force-dynamic"; // prevent cache
+
+export default async function DashboardLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
-
+}) {
   return (
-    <>
-      <StreamVideoClientProvider session={session}>
+    <StreamVideoClientProvider>
+      <main className="min-h-screen">
         {children}
         <ComingSoon />
-      </StreamVideoClientProvider>
-    </>
+      </main>
+    </StreamVideoClientProvider>
   );
 }

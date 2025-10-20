@@ -129,7 +129,6 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
       getFormattedSubmissionData: () => {
         const { formData } = get();
 
-        // Format availabilities to match the new backend structure
         const availabilities = formData.availabilities.map((day) => {
           // For available days, pass the slots array directly.
           // Also, filter out any incomplete slots as a safety measure.
@@ -144,7 +143,7 @@ export const useAvailabilityStore = create<AvailabilityStore>()(
           return {
             dayOfWeek: day.dayOfWeek,
             isAvailable: false,
-            slots: [],
+            slots: [{ startTime: "09:00", endTime: "17:00" }],
           };
         });
 

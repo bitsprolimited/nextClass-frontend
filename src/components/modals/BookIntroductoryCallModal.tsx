@@ -20,7 +20,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useCreateBooking } from "@/hooks/useBooking";
-import { Session } from "@/services/session";
 import { getAvailableSlots } from "@/services/tutors.service";
 import { Teacher } from "@/types";
 import { useQuery } from "@tanstack/react-query";
@@ -30,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import CalendarWithSlots from "../CalenderWithSlots";
 import { Alert, AlertTitle } from "../ui/alert";
+import { BetterAuthSession } from "@/lib/auth-client";
 
 export default function AlertComponent({
   time,
@@ -78,7 +78,7 @@ export function BookIntroductoryCallModal({
   duration,
   session,
 }: {
-  session: Session | null;
+  session: BetterAuthSession | null | undefined;
   tutor: Teacher;
   duration: number;
 }) {

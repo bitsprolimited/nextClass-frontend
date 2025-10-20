@@ -2,74 +2,103 @@
 
 import Loader from "@/components/Loader";
 import axiosInstance from "@/lib/axios";
-import { Session } from "@/services/session";
 import { StreamVideo, StreamVideoClient } from "@stream-io/video-react-sdk";
-import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { User } from "better-auth";
+import { useEffect, useState } from "react";
 import { Chat, useCreateChatClient } from "stream-chat-react";
+import { useAuth } from "./AuthProvider";
 
 const API_KEY = process.env.NEXT_PUBLIC_STREAM_API_KEY;
 
-export const StreamVideoClientProvider = ({
+const fetchStreamToken = async (): Promise<string> => {
+  const response = await axiosInstance.get("/stream/token");
+  return response.data.token;
+};
+
+const StreamClientSetup = ({
+  user,
+  token,
   children,
-  session,
 }: {
+  user: User;
+  token: string;
   children: React.ReactNode;
-  session: Session | null | undefined;
 }) => {
   const [videoClient, setVideoClient] = useState<StreamVideoClient>();
-  const user = session?.user;
 
   if (!API_KEY) throw new Error("Stream API key is missing");
-  if (!user) throw new Error("User is not logged in");
-
- const tokenProvider = useMemo(
-   () => async () => {
-     const response = await axiosInstance.get("/stream/token");
-     return response.data.token;
-   },
-   []
- );
 
   const chatClient = useCreateChatClient({
     apiKey: API_KEY,
-    tokenOrProvider: tokenProvider,
+    tokenOrProvider: token,
     userData: {
-      id: user?.id,
-      name: user?.fullName || user?.id,
-      image: user?.profilePicture,
+      id: user.id,
+      name: user.name || user.id,
+      image: user.image ?? "",
     },
   });
 
   useEffect(() => {
-    if (!user) return;
-    if (!API_KEY) throw new Error("Stream API key is missing");
-
+    if (!token) return;
     const client = new StreamVideoClient({
       apiKey: API_KEY,
       user: {
-        id: user?.id,
-        name: user?.fullName || user?.id,
-        image: user?.profilePicture,
+        id: user.id,
+        name: user.name || user.id,
+        image: user.image ?? "",
       },
-      tokenProvider,
+      token: token,
     });
 
     setVideoClient(client);
 
     return () => {
-      // dispose the client once you don't need it anymore
-      client.disconnectUser().catch((err) => console.error(err));
+      client
+        .disconnectUser()
+        .catch((err) => console.error("Failed to disconnect user:", err));
       setVideoClient(undefined);
     };
-  }, [user, tokenProvider]);
+  }, [user, token]);
 
-  if (!user) return <>{children}</>;
-
-  if (!chatClient || !videoClient) return <Loader />;
+  if (!chatClient || !videoClient) {
+    return <Loader />;
+  }
 
   return (
     <Chat client={chatClient}>
-      <StreamVideo client={videoClient}>{children}</StreamVideo>;
+      <StreamVideo client={videoClient}>{children}</StreamVideo>
     </Chat>
   );
+};
+
+export const StreamVideoClientProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { session, isLoading: isPending } = useAuth();
+  const { data: token, isPending: isTokenPending } = useQuery({
+    queryKey: ["stream-token", session?.user?.id],
+    queryFn: fetchStreamToken,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    retry: 2,
+  });
+  const user = session?.user;
+
+  if (isPending || isTokenPending) {
+    return <Loader />;
+  }
+
+  if (user && token) {
+    return (
+      <StreamClientSetup key={user.id} user={user} token={token}>
+        {children}
+      </StreamClientSetup>
+    );
+  }
+
+  return <>{children}</>;
 };

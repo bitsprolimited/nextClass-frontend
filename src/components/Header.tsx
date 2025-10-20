@@ -6,19 +6,18 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { BetterAuthSession } from "@/lib/auth-client";
 import { navItems } from "@/lib/constants";
-import { Session } from "@/services/session";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import ProfileMenu from "./ProfileMenu";
 import { MobileNav } from "./MobileNav";
-
+import ProfileMenu from "./ProfileMenu";
 function Header({
   session,
 }: {
-  session?: Session | null | undefined;
+  session?: BetterAuthSession | null | undefined;
 }): React.JSX.Element {
   const pathname = usePathname();
 
@@ -51,11 +50,11 @@ function Header({
           <Link href="/">
             <Image
               src="/images/Logo.png"
-
+              priority
               alt="Next class Logo"
               width={100}
               height={24}
-              className="h-full w-full object-cover"
+              className="object-cover"
             />
           </Link>
         </div>

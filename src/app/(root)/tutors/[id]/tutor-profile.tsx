@@ -14,27 +14,22 @@ import {
 import Image from "next/image";
 import ReactPlayer from "react-player";
 
+import ErrorComponent from "@/components/ErrorComponent";
+import Loader from "@/components/Loader";
+import { BookAClassModal } from "@/components/modals/bookAClass/BookAClassModal";
+import { BookIntroductoryCallModal } from "@/components/modals/BookIntroductoryCallModal";
 import DashboardTabs from "@/components/tutors/DashboardTabs";
 import { useTutor } from "@/hooks/useTutors";
 import { getScheduleString } from "@/lib/utils";
+import { useAuth } from "@/providers/AuthProvider";
 import { format } from "date-fns";
-import Loader from "@/components/Loader";
-import ErrorComponent from "@/components/ErrorComponent";
-import { BookIntroductoryCallModal } from "@/components/modals/BookIntroductoryCallModal";
-import { Session } from "@/services/session";
-import { BookAClassModal } from "@/components/modals/bookAClass/BookAClassModal";
 
-export default function TutorProfile({
-  id,
-  session,
-}: {
-  id: string;
-  session: Session | null;
-}) {
+export default function TutorProfile({ id }: { id: string }) {
   const { data: tutor, isLoading, error } = useTutor(id);
+  const { session, isLoading: isSessionLoading, error: authError } = useAuth();
 
-  if (isLoading) return <Loader />;
-  if (error) return <ErrorComponent />;
+  if (isLoading || isSessionLoading) return <Loader />;
+  if (error || authError) return <ErrorComponent />;
 
   const badges = [
     { text: tutor?.grades[0], color: "bg-[#7c4cff26] text-[#7c4cff]" },

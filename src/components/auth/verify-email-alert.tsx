@@ -33,7 +33,7 @@ function VerifyEmailAlert({
         </AlertDialogHeader>
         <div>
           <Image
-            src="/images/mail-box.png"
+            src="/images/mailbox.png"
             alt="Decorative"
             width={500}
             height={500}
