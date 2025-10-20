@@ -1,8 +1,5 @@
-import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { authClient } from "./lib/auth-client";
-
-type Session = typeof authClient.$Infer.Session;
 
 const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
 // const protectedRoutes: string[] = [];
@@ -20,17 +17,16 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path);
 
   try {
-    const response = await axios.get<Session>(
-      `${process.env.BETTER_AUTH_URL}/api/auth/get-session`,
-      {
+    const response = await authClient.getSession({
+      fetchOptions: {
         headers: {
-          Cookie: req.headers.get("cookie") || "", // Forward cookies from the req
+          cookie: req.headers.get("cookie") || "",
         },
-      }
-    );
+      },
+    });
 
     const session = response.data;
-    // console.log("session", response);
+    console.log("session", response);
     console.log("cookie", req.headers.get("cookie"));
 
     if (isProtectedRoute && (!session || !session.user))
