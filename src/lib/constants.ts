@@ -208,7 +208,8 @@ export const slideConfigurations = [
       transitionDelay: 0.1,
     },
     image2: {
-      classes: "absolute bottom-0 right-[-150px] md:right-[-210px] w-full object-cover z-[5]",
+      classes:
+        "absolute bottom-0 right-[-150px] md:right-[-210px] w-full object-cover z-[5]",
       transitionDelay: 0.3,
     },
     image3: {
@@ -685,3 +686,89 @@ export const bioDataSchema = z.object({
   address: z.string(),
   about: z.string(),
 });
+import { Badge } from "@/components/ui/badge";
+
+export interface ProfileData {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  cityState: string;
+  country: string;
+  status: string;
+  profileImg: string;
+  city: string;
+  state: string;
+}
+
+// --- MOCK DATA to be used as initial state ---
+export const INITIAL_PROFILE_DATA: ProfileData = {
+  name: "JOHN DOE SANDERS",
+  email: "johndoe@xyz.com",
+  phone: "+234 1234567890",
+  address: "1234, Street Name, Area.",
+  city: "Houston",
+  state: "Texas",
+  cityState: "Houston/Texas",
+  country: "USA",
+  status: "Pending",
+  profileImg: "/path/to/profile-image.png",
+};
+
+// --- MOCK UPCOMING CLASSES ---
+export const MOCK_UPCOMING_CLASSES = [
+  {
+    id: "0000001",
+    tutor: "Abel Nick",
+    learner: "Fabrio Sanders",
+    details: "Grade 1 • Mathematics • 1 Session",
+    dateTime: "20/09/2025, 8:14am",
+    price: 6000,
+    status: "Pending",
+    rescheduleCount: 0,
+    grade: 1,
+    subject: "Mathematics",
+    sessionsCount: 1,
+  },
+  {
+    id: "0000002",
+    tutor: "Sarah James",
+    learner: "Liam Cole",
+    details: "Grade 3 • English • 2 Sessions",
+    dateTime: "22/09/2025, 9:30am",
+    price: 12000,
+    status: "Pending",
+    rescheduleCount: 1,
+    grade: 3,
+    subject: "English",
+    sessionsCount: 2,
+  },
+];
+
+// --- MOCK TRANSACTIONS ---
+export const MOCK_TRANSACTIONS = [
+  {
+    id: "0000001",
+    reference: "123gty566839fhvs",
+    dateTime: "20/09/2025, 8:14am",
+    tutor: "Abel Sanders",
+    learner: "Abel Sanders",
+    grade: "Grade 1",
+    subject: "Mathematics",
+    sessions: "1 Session",
+    price: 6000,
+    status: "Paid",
+  },
+  {
+    id: "0000002",
+    reference: "987abc566839hjks",
+    dateTime: "22/09/2025, 9:30am",
+    tutor: "Sarah James",
+    learner: "Liam Cole",
+    grade: "Grade 3",
+    subject: "English",
+    sessions: "2 Sessions",
+    price: 12000,
+    status: "Paid",
+  },
+];

@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import StatCard from "@/components/admin/StatCard";
 import ParentProfileModal from "@/components/admin/ParentProfileModal";
+import { useRouter } from "next/navigation";
 
 // =====================
 // Type Definitions
@@ -148,6 +149,7 @@ const initialParents: Parent[] = [
 // =====================
 
 export default function ParentsPage() {
+  const router = useRouter();
   const [parents] = useState<Parent[]>(initialParents);
   const [selectedParent, setSelectedParent] = useState<Parent | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -201,9 +203,12 @@ export default function ParentsPage() {
             .map((parent) => (
               <TableRow
                 key={parent.id}
-                className="odd:bg-[#F5F4F8] even:bg-white"
+                className="odd:bg-[#F5F4F8] even:bg-white hover:bg-gray-100 cursor-pointer transition"
+                onClick={() =>
+                  router.push(`/admin/dashboard/parents/${parent.id}`)
+                }
               >
-                <TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <input type="checkbox" />
                 </TableCell>
                 <TableCell className="flex items-center gap-3">
