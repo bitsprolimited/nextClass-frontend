@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${process.env.BETTER_AUTH_URL}/api/:path*`,
+      },
+    ];
+  },
   env: {
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   },
