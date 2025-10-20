@@ -31,7 +31,8 @@ export default async function middleware(req: NextRequest) {
     );
 
     const session = response.data;
-    console.log("session", response);
+    // console.log("session", response);
+    console.log("cookie", req.headers.get("cookie"));
     
 
     if (isProtectedRoute && (!session || !session.user))
