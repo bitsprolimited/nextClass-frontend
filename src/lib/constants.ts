@@ -686,7 +686,6 @@ export const bioDataSchema = z.object({
   address: z.string(),
   about: z.string(),
 });
-import { Badge } from "@/components/ui/badge";
 
 export interface ProfileData {
   name: string;

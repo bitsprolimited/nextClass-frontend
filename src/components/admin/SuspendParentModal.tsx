@@ -1,12 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -65,7 +60,7 @@ export function SuspendParentModal({
             Suspend Tutor Account?
           </h2>
           <p className="text-lg text-gray-700">
-            Why are you suspending this tutor's account?
+            Why are you suspending this tutor&apos;s account?
           </p>
 
           {/* Select Reason Dropdown */}
