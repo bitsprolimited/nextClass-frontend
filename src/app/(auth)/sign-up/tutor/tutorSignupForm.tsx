@@ -5,6 +5,7 @@ import VerifyEmailAlert from "@/components/auth/verify-email-alert";
 import PhoneInputComponent from "@/components/PhoneInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { tutorSignupFormSchema, TutorSignupFormSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -71,7 +72,7 @@ export default function TutorSignupForm(): JSX.Element {
         password: data.password,
         name: data.fullName,
         phoneNumber: data.phoneNumber,
-        role: "teacher"
+        role: "teacher",
       },
       {
         onRequest: () => {
@@ -99,18 +100,18 @@ export default function TutorSignupForm(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col items-end w-full md:w-[70%] mx-auto">
-      <Link href="/sign-up" className="my-4 self-end">
-        <Button className="bg-[#F5F4F8] hover:text-white text-[16px] md:text-[20px] text-[#031D95] px-4 py-3 rounded-full">
+    <div className="flex flex-col items-end w-full max-w-[1176px] mx-auto">
+      <Link href="/sign-up" className="my-4 mr-4 self-end">
+        <Button className="bg-[#F5F4F8] md:text-xl text-[#031D95] hover:text-white px-4 py-3 rounded-full font-playfair-display">
           Sign up as a parent
         </Button>
       </Link>
 
-      <section className="w-full mb-5 bg-[#F5F4F8] py-8 px-4 md:px-6 flex justify-center items-center">
-        <div className="w-full max-w-2xl">
+      <section className="w-full mb-5 bg-[#F5F4F8] py-8 px-4 md:px-6 flex justify-center items-center font-montserrat">
+        <div className="w-full max-w-[418px]">
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
-            <div className="w-full md:w-[70%] mx-auto space-y-5 relative">
-              <h2 className="text-xl md:text-2xl font-semibold text-center md:text-left">
+            <div className="w-full mx-auto space-y-5 relative">
+              <h2 className="text-xl md:text-2xl font-semibold text-center md:text-left font-playfair-display">
                 Tutors&apos;{" "}
                 <span className="text-[#FFA300]">Registration</span>
               </h2>
@@ -196,10 +197,10 @@ export default function TutorSignupForm(): JSX.Element {
               </div>
 
               {/* Password Meter - stacked on mobile, floated on md+ */}
-              <div className="mt-2 block md:hidden">
+              <div className="mt-2 block lg:hidden">
                 <PasswordMeter password={password || ""} />
               </div>
-              <div className="hidden md:block absolute left-full ml-5 top-1/2 w-full">
+              <div className="hidden lg:block absolute left-full ml-5 top-1/2 w-full">
                 <PasswordMeter password={password || ""} />
               </div>
             </div>
@@ -215,13 +216,19 @@ export default function TutorSignupForm(): JSX.Element {
                 <span>
                   By clicking Create Account or Sign Up with Google or Apple,
                   you agree to our{" "}
-                  <a href="#" className="text-blue-500 underline">
+                  <Link
+                    href="/terms-conditions"
+                    className="text-blue-500 underline"
+                  >
                     Terms of Service
-                  </a>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <a href="#" className="text-blue-500 underline">
+                  <Link
+                    href="/privacy-policy"
+                    className="text-blue-500 underline"
+                  >
                     Privacy Policy
-                  </a>
+                  </Link>
                   .
                 </span>
               </label>
@@ -247,15 +254,13 @@ export default function TutorSignupForm(): JSX.Element {
             </div>
 
             {/* Submit Button */}
-            <div className="w-full md:w-[70%] mx-auto flex justify-center">
+            <div className="w-full flex justify-center">
               <Button
                 type="submit"
                 disabled={isSubmitting || isPending}
                 className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white text-base disabled:opacity-50"
               >
-                {isSubmitting || isPending
-                  ? "Creating Account..."
-                  : "Create An Account"}
+                {isSubmitting || isPending ? <Spinner /> : "Create An Account"}
               </Button>
             </div>
 
@@ -264,7 +269,7 @@ export default function TutorSignupForm(): JSX.Element {
             </p>
 
             {/* Google/Apple Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+            <div className="flex flex-col md:flex-row gap-2.5 justify-center mt-4">
               <Button
                 type="button"
                 className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm border w-full sm:w-auto"

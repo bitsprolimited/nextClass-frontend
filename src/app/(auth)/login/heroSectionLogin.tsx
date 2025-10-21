@@ -14,11 +14,11 @@ function HeroLogin() {
       img={{
         secondary: {
           src: "/images/Saly-17-login.png",
-          className: "top-0 left-0 w-[240px]",
+          className: "top-0 left-0 w-24 lg:w-[240px] h-[54px] lg:h-auto",
         },
         primary: {
           src: "/images/Saly-16-login.png",
-          className: "bottom-0",
+          className: "bottom-0 size-[97px] lg:size-auto",
         },
       }}
       heading="Login"

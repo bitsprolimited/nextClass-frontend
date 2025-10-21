@@ -1,6 +1,8 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -9,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -18,7 +20,7 @@ import {
 import { Separator } from "./ui/separator";
 import { links } from "./ProfileMenu";
 import Image from "next/image";
-import { BetterAuthSession } from "@/lib/auth-client";
+import { authClient, BetterAuthSession } from "@/lib/auth-client";
 
 interface MobileNavProps {
   session: BetterAuthSession | null | undefined;
@@ -27,6 +29,7 @@ interface MobileNavProps {
 
 export function MobileNav({ session, currentNavItems }: MobileNavProps) {
   const user = session?.user;
+  const router = useRouter();
   const pathname = usePathname();
   const currentLinks =
     user && user.role === "parent" ? links.parent : links.tutor;
@@ -57,31 +60,35 @@ export function MobileNav({ session, currentNavItems }: MobileNavProps) {
           </SheetDescription>
         </SheetHeader>
         {user && (
-          <Link href={currentLinks[0].href} passHref className="w-full">
-            <span
-              className={`text-primary bg-secondary w-full group inline-flex h-9 items-center text-sm font-semibold focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all px-4 ${
-                pathname === currentLinks[0].href
-                  ? "text-secondary font-bold"
-                  : ""
-              }`}
-            >
-              {currentLinks[0].name}
-            </span>
-          </Link>
+          <SheetClose asChild>
+            <Link href={currentLinks[0].href} passHref className="w-full">
+              <span
+                className={`text-primary bg-secondary w-full group inline-flex h-9 items-center text-sm font-semibold focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all px-4 ${
+                  pathname === currentLinks[0].href
+                    ? "text-secondary font-bold"
+                    : ""
+                }`}
+              >
+                {currentLinks[0].name}
+              </span>
+            </Link>
+          </SheetClose>
         )}
         <NavigationMenu>
           <NavigationMenuList className="gap-5 flex flex-col items-start w-full">
             {currentNavItems.map((item) => (
               <NavigationMenuItem key={item.href}>
-                <Link href={item.href} passHref>
-                  <span
-                    className={`text-white hover:text-secondary group inline-flex h-9 items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all  px-4 ${
-                      pathname === item.href ? "text-secondary font-bold" : ""
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </Link>
+                <SheetClose asChild>
+                  <Link href={item.href} passHref>
+                    <span
+                      className={`text-white hover:text-secondary group inline-flex h-9 items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all  px-4 ${
+                        pathname === item.href ? "text-secondary font-bold" : ""
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                </SheetClose>
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>
@@ -93,6 +100,7 @@ export function MobileNav({ session, currentNavItems }: MobileNavProps) {
               <NavigationMenuList className="gap-5 flex flex-col items-start w-full">
                 {currentLinks.slice(1).map((item) => (
                   <NavigationMenuItem key={item.href}>
+                    <SheetClose asChild>
                     <Link href={item.href} passHref>
                       <span
                         className={`text-white hover:text-secondary group inline-flex h-9 items-center justify-center text-sm font-medium focus:text-secondary disabled:pointer-events-none disabled:opacity-50 transition-all px-4 ${
@@ -104,6 +112,7 @@ export function MobileNav({ session, currentNavItems }: MobileNavProps) {
                         {item.name}
                       </span>
                     </Link>
+                    </SheetClose>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
@@ -124,12 +133,20 @@ export function MobileNav({ session, currentNavItems }: MobileNavProps) {
             </Link>
           </div>
         ) : (
-          <a
+          <Button
+            onClick={async () => {
+              await authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    router.push("/login");
+                  },
+                },
+              });
+            }}
             className="w-full px-4 py-2 flex items-center justify-center bg-white text-center max-w-[300px] text-primary rounded-full hover:bg-secondary hover:text-white cursor-pointer font-medium h-auto mx-auto text-sm"
-            href={"/api/auth/signout"}
           >
             Logout
-          </a>
+          </Button>
         )}
       </SheetContent>
     </Sheet>

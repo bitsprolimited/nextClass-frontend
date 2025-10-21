@@ -13,12 +13,12 @@ import ReusableHeroSection from "@/components/ReusableHeroSection";
 
 function SignUp() {
   return (
-    <main className="min-h-screen flex flex-col items-center ">
+    <main className="min-h-screen flex flex-col items-center w-full">
       <ReusableHeroSection
         img={{
           primary: {
             src: "/images/signup-Saly-16.png",
-            className: "bottom-0",
+            className: "bottom-0 w-[200px] lg:w-auto",
           },
         }}
         heading="Create your Account"
