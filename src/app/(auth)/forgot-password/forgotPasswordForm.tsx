@@ -14,6 +14,7 @@ import { AxioErrorResponse, ForgotPasswordResponse } from "@/types";
 import { forgotPassword } from "@/services/auth.service";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 const forgotPasswordFormSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -74,9 +75,9 @@ const ForgotPasswordForm = (): JSX.Element => {
   };
 
   return (
-    <div className="bg-white flex items-center justify-center px-4 py-12 sm:py-[60px]">
-      <div className="bg-[#F5F4F8] w-full max-w-5xl py-10 sm:py-[60px] px-6 sm:px-12 lg:px-40 text-center mx-auto rounded-md">
-        <h2 className="text-xl sm:text-[28px] font-semibold text-[#2C1E1E] mb-2">
+    <div className="bg-white flex items-center justify-center py-12 sm:py-[60px]">
+      <div className="bg-[#F5F4F8] w-full max-w-5xl py-10 sm:py-[60px] px-4 sm:px-12 lg:px-40 md:text-center mx-auto rounded-md font-montserrat">
+        <h2 className="text-xl sm:text-[28px] font-semibold text-[#2C1E1E] mb-2 font-playfair-display">
           Input Your Registered <span className="text-secondary">Email</span>
         </h2>
         <p className="text-[#3A3A3A] text-sm sm:text-base lg:text-lg mb-8">
@@ -104,13 +105,13 @@ const ForgotPasswordForm = (): JSX.Element => {
             className="bg-secondary hover:bg-[#e69900] text-white font-medium w-full sm:w-[60%] md:w-[50%] py-4 sm:py-6 rounded-full text-sm sm:text-base mb-4 sm:mb-6"
             disabled={isSubmitting || isPending}
           >
-            {isSubmitting || isPending ? "Sending..." : "Continue"}
+            {isSubmitting || isPending ? <Spinner /> : "Continue"}
           </Button>
         </form>
 
         <hr className="border-t border-gray-700 w-[80%] sm:w-[60%] mx-auto my-4" />
 
-        <p className="text-xs sm:text-sm text-gray-700">
+        <p className="text-xs sm:text-sm text-gray-700 text-center">
           Don&apos;t have an account?{" "}
           <Link href="/sign-up" className="font-medium hover:underline">
             Create an Account
