@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -124,7 +125,6 @@ export function LoginForm(): JSX.Element {
       },
       {
         onRequest: () => {
-          //show loading
           setIsPending(true);
         },
         onSuccess: (ctx) => {
@@ -137,33 +137,38 @@ export function LoginForm(): JSX.Element {
                 ctx.data.user.isProfileComplete
               );
             router.push(redirectTo);
+            setIsPending(false);
             return;
           }
 
           if (ctx.data.user.role === "parent") {
             router.push("/dashboard/parent");
+            setIsPending(false);
             return;
           }
           if (!ctx.data.user.isProfileComplete) {
             router.push("/dashboard/profile-setup");
+            setIsPending(false);
             return;
           }
           router.push("/dashboard/tutor");
+          setIsPending(false);
         },
         onError: (ctx) => {
           toast.error("Login failed", {
             description: ctx.error.message || "Please try again later",
             duration: 5000,
           });
+          setIsPending(false);
         },
       }
     );
   };
 
   return (
-    <div className="bg-[#F5F4F8] px-8 py-10 rounded-md w-full sm:w-[80%] md:w-[50%] max-w-lg shadow-md my-3">
+    <div className="bg-[#F5F4F8] px-4 py-10 rounded-md w-full sm:w-[80%] md:w-[50%] max-w-lg shadow-md my-3">
       <div>
-        <h2 className="text-2xl font-semibold mb-4">
+        <h2 className="text-2xl font-semibold mb-4 font-playfair-display">
           <span className="text-gray-900">Login </span>
           <span className="text-[#FFA300] font-bold">Form</span>
         </h2>
@@ -174,7 +179,10 @@ export function LoginForm(): JSX.Element {
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-6 font-montserrat"
+        >
           <div>
             <Input
               type="email"
@@ -214,15 +222,15 @@ export function LoginForm(): JSX.Element {
             className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white"
             disabled={isSubmitting || isPending}
           >
-            {isSubmitting || isPending ? "Logging in..." : "Login"}
+            {isSubmitting || isPending ? <Spinner /> : "Login"}
           </Button>
         </form>
 
-        <p className="text-center text-gray-500 mt-6">
+        <p className="text-center text-gray-500 mt-6 font-montserrat">
           You can also login with:
         </p>
 
-        <div className="flex gap-4 justify-center mt-4">
+        <div className="flex flex-col md:flex-row gap-2.5 md:gap-4 justify-center mt-4 w-full font-montserrat">
           <Button
             className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm border"
             disabled={isSubmitting || isPending}
@@ -233,20 +241,20 @@ export function LoginForm(): JSX.Element {
             }}
           >
             <FaGoogle className="w-5 h-5" />
-            Sign Up With Google
+            Sign In With Google
           </Button>
           <Button
             className="bg-primary hover:bg-secondary text-white rounded-full px-6 py-3 flex items-center gap-2 shadow-sm"
             disabled={isSubmitting || isPending}
           >
             <FaApple className="w-5 h-5" />
-            Sign Up With Apple
+            Sign In With Apple
           </Button>
         </div>
 
-        <div className="my-6 border-t border-black w-[60%] mx-auto" />
+        <div className="my-6 border-t border-black w-full mx-auto" />
 
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-gray-600 font-montserrat">
           Don&apos;t have an account?{" "}
           <Link
             href={

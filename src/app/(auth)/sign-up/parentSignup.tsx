@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { parentSignupFormSchema, ParentSignupFormSchema } from "@/lib/schema";
 import { JSX } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 // type ParentSignupFormWithAddress = ParentSignupFormSchema & {
 //   address: {
@@ -144,20 +145,20 @@ export default function ParentSignupForm(): JSX.Element {
   //     : [];
 
   return (
-    <div className="flex flex-col items-end w-full md:w-[70%] mx-auto">
+    <div className="flex flex-col items-end w-full max-w-[1176px] mx-auto">
       {/* Switch to Tutor Signup */}
-      <Link href="/signup/tutor" className="my-4">
-        <Button className="bg-[#F5F4F8] text-[20px] text-[#031D95] hover:text-white px-4 py-3 rounded-full font-aero-trial">
+      <Link href="/sign-up/tutor" className="my-4 mr-4">
+        <Button className="bg-[#F5F4F8] md:text-xl text-[#031D95] hover:text-white px-4 py-3 rounded-full font-playfair-display">
           Sign Up as Tutor
         </Button>
       </Link>
 
       {/* Form Section */}
-      <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-4 flex justify-center items-center">
-        <div className="w-full max-w-2xl">
+      <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-4 flex justify-center items-center font-montserrat">
+        <div className="w-full max-w-[418px]">
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             <div className="space-y-5">
-              <h2 className="text-2xl font-semibold">
+              <h2 className="text-2xl font-semibold font-playfair-display">
                 Parents&apos;{" "}
                 <span className="text-[#FFA300]">Registration</span>
               </h2>
@@ -303,10 +304,10 @@ export default function ParentSignupForm(): JSX.Element {
                     {errors.password.message}
                   </p>
                 )}
-                <div className="mt-2 block md:hidden">
+                <div className="mt-2 block lg:hidden">
                   <PasswordMeter password={password || ""} />
                 </div>
-                <div className="hidden md:block absolute left-full ml-5 top-1/2 w-full">
+                <div className="hidden lg:block absolute left-full ml-5 top-1/2 w-full">
                   <PasswordMeter password={password || ""} />
                 </div>
               </div>
@@ -335,13 +336,19 @@ export default function ParentSignupForm(): JSX.Element {
                 />
                 <span>
                   By signing up, you agree to our{" "}
-                  <a href="#" className="text-blue-500 underline">
+                  <Link
+                    href="/terms-conditions"
+                    className="text-blue-500 underline"
+                  >
                     Terms of Service
-                  </a>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <a href="#" className="text-blue-500 underline">
+                  <Link
+                    href="/privacy-policy"
+                    className="text-blue-500 underline"
+                  >
                     Privacy Policy
-                  </a>
+                  </Link>
                   .
                 </span>
               </label>
@@ -363,9 +370,7 @@ export default function ParentSignupForm(): JSX.Element {
                 disabled={isSubmitting || isPending}
                 className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white text-base disabled:opacity-50"
               >
-                {isSubmitting || isPending
-                  ? "Creating Account..."
-                  : "Create An Account"}
+                {isSubmitting || isPending ? <Spinner /> : "Create An Account"}
               </Button>
             </div>
 
@@ -373,7 +378,7 @@ export default function ParentSignupForm(): JSX.Element {
             <p className="text-sm text-center text-gray-500">
               You can also sign up with:
             </p>
-            <div className="flex flex-col md:flex-row gap-4 justify-center mt-4">
+            <div className="flex flex-col md:flex-row gap-2.5 justify-center mt-4">
               <Button
                 type="button"
                 className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm border w-full md:w-auto"

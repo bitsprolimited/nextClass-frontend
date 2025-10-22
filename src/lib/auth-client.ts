@@ -1,14 +1,16 @@
 import { inferAdditionalFields } from "better-auth/client/plugins";
+import { nextCookies } from "better-auth/next-js";
 import { createAuthClient } from "better-auth/react";
 
 export type BetterAuthSession = typeof authClient.$Infer.Session;
 
 export const authClient = createAuthClient({
-  baseURL: process.env.BETTER_AUTH_URL,
+  basePath: "/api/auth",
   fetchOptions: {
     credentials: "include",
   },
   plugins: [
+    nextCookies(),
     inferAdditionalFields({
       user: {
         role: {

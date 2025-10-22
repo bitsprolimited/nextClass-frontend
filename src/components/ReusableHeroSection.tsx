@@ -25,23 +25,20 @@ function ReusableHeroSection({
   breadcrumb,
 }: ReusableHeroSectionProps): React.JSX.Element {
   return (
-    <section className={cn("w-full bg-primary ", bgColor)}>
-      <div className="container mx-auto h-full relative">
+    <section className={cn("w-full bg-primary", bgColor)}>
+      <div className="container mx-auto relative flex flex-col">
         {img.secondary && (
           <Image
             src={img.secondary.src}
             alt={img.secondary.alt || "Decorative"}
             width={500}
             height={500}
-            className={cn(
-              "absolute -top-10 left-0",
-              img.secondary.className
-            )}
+            className={cn("absolute -top-10 left-0", img.secondary.className)}
           />
         )}
-        <div className="relative h-full w-full">
-          <div className="flex items-center justify-between gap-10 h-full w-full overflow-hidden">
-            <div className="flex justify-center items-center h-full w-full">
+        <div className="relative h-full w-full flex-1">
+          <div className="flex flex-1 min-h-[169px] items-center justify-between gap-5 md:gap-10 h-full w-full overflow-hidden">
+            <div className="flex justify-center items-center h-full w-full pl-2 md:pl-0 mt-4 md:mt-0">
               <div className="flex flex-col items-start mx-auto">
                 <h1
                   className={cn(

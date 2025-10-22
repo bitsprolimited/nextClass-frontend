@@ -12,13 +12,9 @@ function HeroSchedule() {
   return (
     <ReusableHeroSection
       img={{
-        secondary: {
-          src: "/images/schedule-top.png",
-          className: "top-0 left-0 w-[240px]",
-        },
         primary: {
           src: "/images/schedule-bottom.png",
-          className: "bottom-0",
+          className: "bottom-0  w-[120px] lg:w-auto",
         },
       }}
       heading="Schedule"

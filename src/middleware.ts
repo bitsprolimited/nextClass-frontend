@@ -22,6 +22,7 @@ export default async function middleware(req: NextRequest) {
         headers: {
           cookie: req.headers.get("cookie") || "",
         },
+        credentials: "include",
       },
     });
 

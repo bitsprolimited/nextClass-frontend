@@ -11,16 +11,16 @@ import {
 
 function Login() {
   return (
-    <main className="min-h-screen flex flex-col items-center ">
+    <main className="min-h-screen flex flex-col items-center w-full">
       <ReusableHeroSection
         img={{
           secondary: {
             src: "/images/signup-Saly-17.png",
-            className: "top-0 left-0 w-[190px]",
+            className: "top-0 left-0 w-16 md:w-24 lg:w-[190px]",
           },
           primary: {
             src: "/images/signup-Saly-16.png",
-            className: "bottom-0",
+            className: "bottom-0 w-[200px] lg:w-auto",
           },
         }}
         heading="Create your Account"

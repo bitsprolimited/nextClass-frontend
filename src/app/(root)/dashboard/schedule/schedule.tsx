@@ -250,15 +250,15 @@ export default function ClassTabs() {
     <Tabs
       value={activeMainTab}
       onValueChange={handleMainTabChange}
-      className="gap-4"
+      className="gap-4 pt-4 md:pt-0"
     >
-      <TabsList className="bg-[#f3f3f3] justify-start rounded-none border-b px-4 py-0 w-full">
+      <TabsList className="bg-[#eff0ff] md:bg-[#f3f3f3] justify-start md:rounded-none md:border-b md:px-4 py-0 md:w-full flex w-fit mx-auto">
         <div className="flex w-full max-w-6xl mx-auto">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="bg-[#f3f3f3] data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+              className=" md:bg-[#f3f3f3] data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full md:rounded-none md:border-0 md:border-b-2 md:border-transparent md:data-[state=active]:shadow-none text-black"
             >
               {tab.name}
             </TabsTrigger>
@@ -271,7 +271,7 @@ export default function ClassTabs() {
           defaultValue="upcoming"
           value={activeSubTab}
           onValueChange={setActiveSubTab}
-          className="w-full max-w-6xl mx-auto my-[60px]"
+          className="w-full max-w-6xl mx-auto my-[30px] md:my-[60px]"
         >
           <TabsList className="flex justify-start mb-4 bg-transparent px-4 sm:px-0">
             <TabsTrigger
