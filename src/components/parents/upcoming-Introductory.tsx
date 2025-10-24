@@ -114,11 +114,11 @@ export default function UpcomingIntroductionTabs() {
                   {/* Buttons → move below on mobile, stay right on desktop */}
                   <div className="flex justify-end gap-3 sm:gap-6 mt-3 sm:mt-0 sm:self-end">
                     {item.reschedulable && (
-                      <button className="text-[#e94e4e] text-xs sm:text-sm font-medium px-4 sm:px-8 h-[36px] sm:h-[45px]">
+                      <button className="text-[#e94e4e] text-xs sm:text-sm font-medium px-4 sm:px-8 h-9 sm:h-[45px]">
                         Cancel
                       </button>
                     )}
-                    <Button className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-primary text-white font-semibold text-xs sm:text-sm">
+                    <Button className="px-5 sm:px-8 h-9 sm:h-[45px] rounded-full bg-primary text-white font-semibold text-xs sm:text-sm">
                       Reschedule Class
                     </Button>
                   </div>
@@ -187,7 +187,7 @@ export default function UpcomingIntroductionTabs() {
                   </div>
 
                   <div className="flex justify-end gap-3 sm:gap-6 mt-3 sm:mt-0 sm:self-end">
-                    <Button className="px-5 sm:px-8 h-[36px] sm:h-[45px] rounded-full bg-primary text-white font-semibold text-xs sm:text-sm">
+                    <Button className="px-5 sm:px-8 h-9 sm:h-[45px] rounded-full bg-primary text-white font-semibold text-xs sm:text-sm">
                       View Lesson Notes
                     </Button>
                   </div>
