@@ -50,9 +50,9 @@ export default async function middleware(req: NextRequest) {
       );
     }
 
-    if (path.includes("/admin") && session?.user.role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
+    // if (path.includes("/admin") && session?.user.role !== "admin") {
+    //   return NextResponse.redirect(new URL("/unauthorized", req.url));
+    // }
 
     if (
       path.startsWith("/dashboard/tutor") &&
