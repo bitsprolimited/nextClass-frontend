@@ -1,16 +1,16 @@
 "use client";
 
+import Loader from "@/components/Loader";
 import StepFour from "@/components/profileForm/StepFour";
 import StepOne from "@/components/profileForm/StepOne";
 import CustomStepper from "@/components/profileForm/Stepper";
 import StepThree from "@/components/profileForm/StepThree";
 import StepTwo from "@/components/profileForm/StepTwo";
 import { useUserProgress } from "@/hooks/useProfileFormSubmission";
+import { useAuth } from "@/providers/AuthProvider";
 import { useFormStore } from "@/store/useProfileSetupForm";
-import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
 function FormContent() {
   const {
     currentStep,
@@ -21,7 +21,6 @@ function FormContent() {
     updateIdentityDocument,
     updateIntroductionVideo,
     syncStepWithProgress,
-    resetForm,
   } = useFormStore();
 
   const {
@@ -30,6 +29,8 @@ function FormContent() {
     error: progressError,
     refetch: refetchProgress,
   } = useUserProgress();
+
+  const { isLoading, session, refetch } = useAuth();
 
   const stepTitles = ["Bio Data", "Career", "Documents", "Confirmation"];
   const router = useRouter();
@@ -101,24 +102,19 @@ function FormContent() {
   };
 
   const handleFinalSubmit = async () => {
+    refetch();
     await refetchProgress();
-
-    if (progress?.isComplete) {
-      resetForm();
-      console.log("Form submitted successfully!");
-      router.push("/dashboard/tutor");
-    }
   };
 
+  useEffect(() => {
+    if (session?.user.isProfileComplete) {
+      router.push("/dashboard/tutor");
+    }
+  }, [session?.user.isProfileComplete, router]);
+
   // Show loading state while fetching progress
-  if (progressLoading) {
-    return (
-      <div className="min-h-screen bg-[#f6f4f9] py-12 px-10 max-w-6xl w-full mx-auto my-10 justify-center items-center flex">
-        <div className="text-center space-y-4">
-          <Loader2 className="animate-spin" />
-        </div>
-      </div>
-    );
+  if (progressLoading || isLoading) {
+    return <Loader />;
   }
 
   // Show error state if progress fetch failed

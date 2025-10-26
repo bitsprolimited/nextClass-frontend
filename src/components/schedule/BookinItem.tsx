@@ -168,7 +168,6 @@ export function BookingItem({
             </div>
           </div>
         ) : (
-          // ... (Upcoming view - no changes) ...
           <>
             <div className="flex items-center gap-3 sm:gap-6 flex-wrap text-[#2c241b] text-xs sm:text-sm md:text-2xl font-medium">
               <span className="flex items-center gap-2">
@@ -231,8 +230,8 @@ export function BookingActionButtons({
   if (isHistory) {
     if (booking.eventType === EventType.CLASS) {
       return (
-        <Button className="px-5 sm:px-8 md:px-10 py-0 h-[36px] sm:h-[45px] bg-secondary rounded-full">
-          <span className="text-white text-xs sm:text-sm md:text-base font-medium leading-[36px] sm:leading-[45px] whitespace-nowrap">
+        <Button className="px-5 sm:px-8 md:px-10 py-0 h-9 sm:h-[45px] bg-secondary rounded-full">
+          <span className="text-white text-xs sm:text-sm md:text-base font-medium leading-9 sm:leading-[45px] whitespace-nowrap">
             View Lesson Notes
           </span>
         </Button>
@@ -249,7 +248,7 @@ export function BookingActionButtons({
 
   // Render Reschedule button if applicable
   const rescheduleButton = canReschedule ? (
-    <button className="text-[#e94e4e] text-xs sm:text-sm font-medium px-4 sm:px-8 h-[36px] sm:h-[45px]">
+    <button className="text-[#e94e4e] text-xs sm:text-sm font-medium px-4 sm:px-8 h-9 sm:h-[45px]">
       Reschedule
     </button>
   ) : null;

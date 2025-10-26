@@ -80,11 +80,11 @@ export default function AlertComponent({
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-3">
               <Icon
-                className={cn("w-6 h-6 md:w-8 md:h-8 flex-shrink-0", text)}
+                className={cn("w-6 h-6 md:w-8 md:h-8 shrink-0", text)}
               />
               <AlertTitle
                 className={cn(
-                  "m-0 font-aero-trial text-base md:text-lg font-medium break-words",
+                  "m-0 font-aero-trial text-base md:text-lg font-medium wrap-break-word",
                   text
                 )}
               >

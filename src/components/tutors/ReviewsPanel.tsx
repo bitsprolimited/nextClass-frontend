@@ -12,9 +12,9 @@ const reviews = Array(4).fill({
 export default function ReviewsPanel() {
   return (
     <div className="space-y-8 w-full max-w-6xl mx-auto">
-      <h2 className="text-2xl font-semibold text-[#2c241b] mb-2">My Reviews</h2>
+      <h2 className="text-2xl font-semibold text-[#2c241b] px-4 mb-2">My Reviews</h2>
       {/* Rating */}
-      <div className="text-base font-semibold flex items-center gap-2">
+      <div className="text-base font-semibold flex items-center gap-2 px-4">
         4.8/5{" "}
         <div className="flex gap-1 text-yellow-500">
           {[...Array(5)].map((_, i) => (

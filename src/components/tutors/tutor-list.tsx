@@ -114,7 +114,7 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
                 className="flex items-center gap-2 text-sm min-w-[45%]"
               >
                 <detail.icon className="w-4 h-4 shrink-0" />
-                <p className={cn(detail.color, "font-medium break-words")}>
+                <p className={cn(detail.color, "font-medium wrap-break-word")}>
                   {detail.text}
                 </p>
               </li>
@@ -124,14 +124,14 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
 
         {/* Action Buttons in blue footer */}
         <div className="bg-[#002b9a] flex justify-center gap-2 px-4 py-4">
-          <Link href={`/tutors/${tutorData.id}`}>
-            <Button className="w-1/2 h-auto bg-white text-secondary hover:bg-gray-100">
+          <Link className="w-1/2" href={`/tutors/${tutorData.id}`}>
+            <Button className="h-auto bg-secondary text-white hover:bg-secondary/80">
               View Full Profile
             </Button>
-            <Button className="w-1/2 h-auto border border-white text-white bg-transparent hover:bg-white hover:text-secondary">
-              Schedule a Meeting
-            </Button>
           </Link>
+          <Button className="w-1/2 h-auto border border-secondary text-secondary bg-white hover:bg-secondary hover:text-white focus:bg-secondary focus:text-white">
+            Schedule a Meeting
+          </Button>
         </div>
       </div>
 
@@ -277,26 +277,26 @@ function TutorList(): React.JSX.Element {
   }
 
   return (
-    <section className="py-[140px] px-4">
-      <div className="container flex flex-col items-center justify-center gap-[60px] w-full max-w-7xl mx-auto">
+    <section className="py-10 lg:py-[140px]">
+      <div className="container flex flex-col items-center justify-center gap-8 lg:gap-[60px] w-full max-w-7xl mx-auto">
         {/* Search & Filters Wrapper */}
-        <div className="flex flex-col items-start p-5 gap-2 bg-[#f5f4f8] w-full">
+        <div className="flex flex-col items-start p-3 md:p-5 gap-1.5 lg:gap-2 bg-[#f5f4f8] w-full">
           {/* Search Row */}
-          <div className="flex w-full items-center gap-3">
+          <div className="flex w-full items-center gap-1.5">
             {/* Input + Search (pilled container on mobile, inline on desktop) */}
-            <div className="flex w-full justify-between items-center py-2 pr-2 shadow-[0px_4px_4px_#031d9540] focus-within:ring-1 focus-within:ring-primary rounded-full">
+            <div className="flex w-full justify-between items-center pl-3 py-2 pr-2 lg:shadow-[0px_4px_4px_#031d9540] focus-within:ring-1 focus-within:ring-primary rounded-[5px] text-xs lg:text-base lg:border-0 border-[0.5px] border-[#7a7f8899] gap-1">
               <Input
                 type="text"
-                className="h-[50px] px-4 w-full shadow-none border-none font-medium text-[#757575] text-base sm:text-lg bg-transparent focus-visible:ring-0"
+                className="lg:h-[50px] p-0 lg:px-4 w-full shadow-none border-none font-medium text-[#757575] text-xs md:text-base lg:text-lg bg-transparent focus-visible:ring-0"
                 placeholder="Search Subjects or Tutors here"
               />
-              <Button className="px-5 sm:px-8 py-2 sm:py-3 rounded-full h-auto font-medium text-sm sm:text-base hover:bg-secondary">
+              <Button className="px-1.5 sm:px-8 py-2 sm:py-3 rounded-full h-auto font-medium text-xs lg:text-sm sm:text-base hover:bg-secondary">
                 <Search className="w-4 h-4 mr-1" /> Search
               </Button>
             </div>
 
             {/* Filter Button (only visible on mobile) */}
-            <Button className="flex sm:hidden flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-[#D9E2FF] text-primary font-medium shadow-sm">
+            <Button className="flex sm:hidden flex-col items-center justify-center gap-1 px-3 py-2 rounded-xl bg-[#D9E2FF] text-primary font-medium shadow-sm h-auto">
               <Filter className="w-5 h-5" />
               <span className="text-xs">Filter</span>
             </Button>

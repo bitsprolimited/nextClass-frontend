@@ -26,7 +26,7 @@ function ReusableHeroSection({
 }: ReusableHeroSectionProps): React.JSX.Element {
   return (
     <section className={cn("w-full bg-primary", bgColor)}>
-      <div className="container mx-auto relative flex flex-col">
+      <div className="container mx-auto relative flex flex-col pr-4">
         {img.secondary && (
           <Image
             src={img.secondary.src}

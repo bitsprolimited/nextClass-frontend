@@ -47,10 +47,10 @@ export default function CustomStepper({
                   className={cn(
                     "opacity-0 transition-all duration-200 text-secondary",
                     {
-                      "opacity-100": currentStep === step.number,
+                      "opacity-100": currentStep + 1 === step.number,
                     }
                   )}
-                >{`${currentStep}/${steps.length}`}</StepperTitle>
+                >{`${currentStep + 1}/${steps.length}`}</StepperTitle>
                 <StepperIndicator className="data-[state=active]:border-primary size-5 data-[state=active]:border-2 data-[state=active]:bg-transparent [&_span]:sr-only [&_svg]:size-3" />
               </StepperTrigger>
               {step.number < steps.length && (

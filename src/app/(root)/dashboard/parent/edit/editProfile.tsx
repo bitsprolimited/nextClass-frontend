@@ -131,7 +131,7 @@ export default function EditProfileForm() {
   }
 
   return (
-    <section className="w-full flex justify-center items-center my-10">
+    <section className="w-full flex justify-center items-center my-10 px-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-[420px] space-y-5 font-montserrat text-[15px] text-[#757575]"

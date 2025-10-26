@@ -253,33 +253,33 @@ export const slideConfigurations = [
 export const SOCIAL_ICONS = [FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn];
 
 export const tutors = [
-  {
-    id: 1,
-    name: "Ryan Patterson",
-    course: "Math",
-    price: "$50",
-    image: "/images/tutor-1.png",
-    duration: "8hrs",
-    lectures: "20",
-  },
-  {
-    id: 2,
-    name: "Ryan Patterson",
-    course: "Math",
-    price: "$50",
-    image: "/images/tutor-2.png",
-    duration: "8hrs",
-    lectures: "20",
-  },
-  {
-    id: 3,
-    name: "Ryan Patterson",
-    course: "Math",
-    price: "$50",
-    image: "/images/tutor-3.png",
-    duration: "8hrs",
-    lectures: "20",
-  },
+  // {
+  //   id: 1,
+  //   name: "Ryan Patterson",
+  //   course: "Math",
+  //   price: "$50",
+  //   image: "/images/tutor-1.png",
+  //   duration: "8hrs",
+  //   lectures: "20",
+  // },
+  // {
+  //   id: 2,
+  //   name: "Ryan Patterson",
+  //   course: "Math",
+  //   price: "$50",
+  //   image: "/images/tutor-2.png",
+  //   duration: "8hrs",
+  //   lectures: "20",
+  // },
+  // {
+  //   id: 3,
+  //   name: "Ryan Patterson",
+  //   course: "Math",
+  //   price: "$50",
+  //   image: "/images/tutor-3.png",
+  //   duration: "8hrs",
+  //   lectures: "20",
+  // },
 ];
 
 export const STEPS = {
