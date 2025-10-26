@@ -45,7 +45,7 @@ export default function Dashboard() {
             </Button>
           </div>
           {/* Alert Box */}
-          <AlertRotator />
+          <AlertRotator user={user.user as Teacher} />
 
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Profile Card */}

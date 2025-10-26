@@ -28,6 +28,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Spinner } from "../ui/spinner";
 
 export interface AddLearnerModalProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ export default function AddLearnerModal({
   const addLearnerMutation = useMutation({
     mutationFn: addLearner,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["learners"] });
       reset();
       setSelectedSubjects([]);
@@ -313,7 +314,7 @@ export default function AddLearnerModal({
             </Label>
 
             {/* Display selected Grade as input-like field */}
-            <div className="min-h-[44px] w-full flex flex-wrap gap-1 items-center">
+            <div className="min-h-11 w-full flex flex-wrap gap-1 items-center">
               {selectedGrade ? (
                 <Badge
                   variant="secondary"
@@ -361,7 +362,7 @@ export default function AddLearnerModal({
             </Label>
 
             {/* Display selected subjects as input-like field */}
-            <div className="min-h-[44px] w-full flex flex-wrap gap-1 items-center">
+            <div className="min-h-11 w-full flex flex-wrap gap-1 items-center">
               {selectedSubjects.length > 0 ? (
                 selectedSubjects.map((subject) => (
                   <Badge
@@ -417,7 +418,7 @@ export default function AddLearnerModal({
             }
           >
             {addLearnerMutation.isPending
-              ? "Adding Learner..."
+              ? <Spinner />
               : "Add New Learner"}
           </Button>
         </form>

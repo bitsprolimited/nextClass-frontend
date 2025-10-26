@@ -49,6 +49,9 @@ export default function StepOne({ onNext }: StepOneProps) {
   const selectedCountry = form.watch("country");
   const selectedState = form.watch("state");
 
+  console.log(!!selectedState);
+  
+
   // Dynamic dropdowns
   const countryList = useMemo(() => Country.getAllCountries(), []);
   const stateList = useMemo(() => {

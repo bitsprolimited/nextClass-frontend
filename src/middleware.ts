@@ -1,23 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authClient } from "./lib/auth-client";
 
-const protectedRoutes = ["/dashboard/tutor", "/dashboard/parent"];
-// const protectedRoutes: string[] = [];
-const publicRoutes = [
+const publicRoutes = new Set([
+  "/",
   "/login",
   "/sign-up",
   "/sign-up/tutor",
-  "/",
   "/forgot-password",
+]);
+
+const roleDashboards: Record<string, string> = {
+  parent: "/dashboard/parent",
+  teacher: "/dashboard/tutor",
+  admin: "/admin",
+};
+
+const protectedRoutes = [
+  "/dashboard/tutor",
+  "/dashboard/parent",
+  "/admin",
+  "/dashboard/profile-setup",
 ];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
-  const isPublicRoute = publicRoutes.includes(path);
+
+  // Skip middleware for assets and API
+  if (
+    path.startsWith("/_next") ||
+    path.startsWith("/api") ||
+    path.endsWith(".png") ||
+    path.endsWith(".jpg") ||
+    path.endsWith(".jpeg") ||
+    path.endsWith(".svg")
+  ) {
+    return NextResponse.next();
+  }
 
   try {
-    const response = await authClient.getSession({
+    const { data: session } = await authClient.getSession({
       fetchOptions: {
         headers: {
           cookie: req.headers.get("cookie") || "",
@@ -26,67 +47,67 @@ export default async function middleware(req: NextRequest) {
       },
     });
 
-    const session = response.data;
-    console.log("session", response);
-    console.log("cookie", req.headers.get("cookie"));
+    const user = session?.user;
+    const isAuthenticated = Boolean(user);
+    const isPublicRoute = publicRoutes.has(path);
+    const isProtectedRoute = protectedRoutes.some((r) => path.startsWith(r));
 
-    if (isProtectedRoute && (!session || !session.user))
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
-
-    if (
-      isPublicRoute &&
-      session?.user &&
-      !req.nextUrl.pathname.startsWith("/dashboard")
-    ) {
-      return NextResponse.redirect(
-        new URL(
-          `${
-            session.user.role === "parent"
-              ? "/dashboard/parent"
-              : "/dashboard/tutor"
-          }`,
-          req.nextUrl
-        )
-      );
+    // 1️⃣ Require login for protected routes
+    if (isProtectedRoute && !isAuthenticated) {
+      return redirect("/login", req);
     }
 
-    if (path.includes("/admin") && session?.user.role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    // 2️⃣ Redirect logged-in users away from public routes
+    if (isAuthenticated && isPublicRoute) {
+      const dashboard =
+        user && user.role && roleDashboards[user.role]
+          ? roleDashboards[user.role]
+          : "/dashboard";
+      return redirect(dashboard, req);
     }
 
-    if (
-      path.startsWith("/dashboard/tutor") &&
-      session?.user.role !== "teacher"
-    ) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    // 3️⃣ Role-based access control
+    if (path.startsWith("/admin") && user?.role !== "admin") {
+      return redirect("/unauthorized", req);
     }
 
-    if (
-      path.startsWith("/dashboard/parent") &&
-      session?.user.role !== "parent"
-    ) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+    if (path.startsWith("/dashboard/tutor") && user?.role !== "teacher") {
+      return redirect("/unauthorized", req);
     }
 
-    if (
-      path.includes("dashboard/tutor") &&
-      session?.user.role == "teacher" &&
-      !session?.user.isProfileComplete
-    ) {
-      return NextResponse.redirect(
-        new URL("/dashboard/profile-setup", req.url)
-      );
+    if (path.startsWith("/dashboard/parent") && user?.role !== "parent") {
+      return redirect("/unauthorized", req);
     }
 
+    // 4️⃣ Tutor profile setup flow
+    if (user?.role === "teacher") {
+      const isProfileComplete = user?.isProfileComplete;
+
+      // Redirect incomplete tutors trying to access tutor dashboard
+      if (path.startsWith("/dashboard/tutor") && !isProfileComplete) {
+        return redirect("/dashboard/profile-setup", req);
+      }
+
+      // Redirect complete tutors away from setup
+      if (path.startsWith("/dashboard/profile-setup") && isProfileComplete) {
+        return redirect("/dashboard/tutor", req);
+      }
+    }
+
+    // ✅ Allow request through
     return NextResponse.next();
   } catch (error) {
-    // Handle network or auth errors gracefully
-    console.error("Session check failed:", error);
-    return NextResponse.redirect(new URL("/login", req.url));
+    console.error("Middleware session check failed:", error);
+    return redirect("/login", req);
   }
+}
+
+// Helper function for clean redirects
+function redirect(path: string, req: NextRequest) {
+  const url = new URL(path, req.nextUrl.origin);
+  return NextResponse.redirect(url);
 }
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
-  runtime: "nodejs",
 };

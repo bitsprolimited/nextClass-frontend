@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <div className="mt-6">
-      <footer className="relative bg-[#0027A5] text-white pt-12 pb-6 px-10 md:px-20 overflow-hidden">
+      <footer className="relative bg-[#0027A5] text-white pt-12 pb-6 px-4 md:px-20 overflow-hidden">
         {/* Watermark Logo */}
         <Image
           src="/images/logo-background.png"
@@ -17,9 +17,9 @@ export default function Footer() {
         />
 
         {/* Main Grid */}
-        <div className="grid md:grid-cols-4 gap-6 z-10 relative">
+        <div className="grid md:grid-cols-4 gap-6 z-10 it relative">
           {/* Logo & Description */}
-          <div className="mr-20">
+          <div className="md:mr-20 self-center">
             <Image
               src="/images/footerLogo.png"
               alt="NextClass Logo"
@@ -39,10 +39,10 @@ export default function Footer() {
             <ul className="space-y-4 text-sm">
               {[
                 "KG/Nursery",
-                "Primary 1–3",
-                "Primary 3–6",
-                "JSS 1–3",
-                "SSS 1–3",
+                "Primary 1-3",
+                "Primary 3-6",
+                "JSS 1-3",
+                "SSS 1-3",
               ].map((item) => (
                 <li key={item}>
                   <a
