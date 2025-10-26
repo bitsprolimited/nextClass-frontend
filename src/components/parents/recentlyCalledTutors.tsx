@@ -109,7 +109,7 @@ function RecentlyCalledTutors(): React.JSX.Element {
                   <FeaturedTutorCard key={i} tutor={tutor} />
                 ))
               ) : (
-                <Empty className="">
+                <Empty className="col-span-full">
                   <EmptyHeader>
                     <EmptyMedia variant="icon" className="bg-transparent">
                       <SearchX />

@@ -110,4 +110,5 @@ function redirect(path: string, req: NextRequest) {
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  runtime: "nodejs",
 };
