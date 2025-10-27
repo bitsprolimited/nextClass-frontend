@@ -109,7 +109,7 @@ export const useFormStore = create<FormState>()(
         else if (!progress.careerExperienceComplete) currentStep = 1;
         else if (!progress.identityDocumentComplete) currentStep = 2;
         else if (!progress.introductionVideoComplete) currentStep = 3;
-        else currentStep = 4; // All completed
+        else currentStep = 3; // All completed
 
         set({ currentStep });
       },

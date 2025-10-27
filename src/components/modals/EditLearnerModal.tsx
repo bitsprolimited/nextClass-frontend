@@ -86,7 +86,7 @@ export default function EditLearnerModal({
   const editLearnerMutation = useMutation({
     mutationFn: editLearner,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       setSelectedSubjects([]);
       setSelectedGrade("");
       openModal("success", {
@@ -330,7 +330,7 @@ export default function EditLearnerModal({
             </Label>
 
             {/* Display selected Grade as input-like field */}
-            <div className="min-h-[44px] w-full flex flex-wrap gap-1 items-center">
+            <div className="min-h-11 w-full flex flex-wrap gap-1 items-center">
               {selectedGrade ? (
                 <Badge
                   variant="secondary"
@@ -392,7 +392,7 @@ export default function EditLearnerModal({
             </Label>
 
             {/* Display selected subjects as input-like field */}
-            <div className="min-h-[44px] w-full flex flex-wrap gap-1 items-center">
+            <div className="min-h-11 w-full flex flex-wrap gap-1 items-center">
               {selectedSubjects.length > 0 ? (
                 selectedSubjects.map((subject) => (
                   <Badge

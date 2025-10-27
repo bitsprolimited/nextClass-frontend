@@ -1,10 +1,19 @@
 "use client";
 
-import Image from "next/image";
-import React, { useRef, useState, useEffect } from "react";
-import { Card, CardContent } from "../ui/card";
 import { tutors } from "@/lib/constants";
+import { SearchX } from "lucide-react";
+import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "../ui/empty";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export type Tutor = {
   id: number;
@@ -18,7 +27,7 @@ export type Tutor = {
 
 function FeaturedTutorCard({ tutor }: { tutor: Tutor }): React.JSX.Element {
   return (
-    <Card className="group border-none shadow-none w-full max-w-[360px]">
+    <Card className="group border-none shrink-0 lg:shadow-none w-full max-w-[317px] rounded-[15px] lg:rounded-none shadow-[0px_2px_4px_#00000040] pb-4 lg:pb-0">
       <CardContent className="p-0 w-full flex flex-col">
         <div className="relative">
           <div className="w-full h-[300px]">
@@ -86,28 +95,39 @@ function RecentlyCalledTutors(): React.JSX.Element {
   }, []);
 
   return (
-    <section className="flex flex-col justify-center items-center py-14 px-4">
-      <div className="flex flex-col max-w-7xl items-start mx-auto gap-14 w-full">
-        <h2 className="text-zeus text-5xl font-medium">You recently Called:</h2>
+    <section className="flex flex-col justify-center items-center py-4 lg:py-14 px-4 font-montserrat">
+      <div className="flex flex-col max-w-7xl items-start mx-auto gap-7 lg:gap-14 w-full">
+        <h2 className="text-zeus text-base font-aero-trial md:text-5xl font-medium">
+          You recently Called:
+        </h2>
 
         <div className="w-full">
-          <div
-            ref={scrollRef}
-            className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible scroll-smooth scrollbar-hide"
-          >
-            {tutors.map((tutor) => (
-              <div
-                key={tutor.id}
-                className="min-w-[280px] md:min-w-0 flex-shrink-0"
-              >
-                <FeaturedTutorCard tutor={tutor} />
-              </div>
-            ))}
-          </div>
+          <ScrollArea ref={scrollRef}>
+            <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 py-4 px-1 overflow-x-auto md:overflow-visible scroll-smooth scrollbar-hide">
+              {tutors.length > 0 ? (
+                tutors.map((tutor, i) => (
+                  <FeaturedTutorCard key={i} tutor={tutor} />
+                ))
+              ) : (
+                <Empty className="col-span-full">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon" className="bg-transparent">
+                      <SearchX />
+                    </EmptyMedia>
+                    <EmptyTitle>No Tutors</EmptyTitle>
+                    <EmptyDescription>
+                      You haven&apos;t called any tutors yet
+                    </EmptyDescription>
+                  </EmptyHeader>
+                </Empty>
+              )}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
 
         {/* Pagination Dots (only visible on mobile) */}
-        <div className="flex justify-center gap-2 mt-4 md:hidden w-full">
+        {tutors.length > 0 && <div className="flex justify-center gap-2 mt-4 md:hidden w-full">
           {tutors.map((_, index) => (
             <span
               key={index}
@@ -116,10 +136,10 @@ function RecentlyCalledTutors(): React.JSX.Element {
               }`}
             />
           ))}
-        </div>
+        </div>}
 
         {/* View More button (only visible on mobile) */}
-        <div className="flex justify-center w-full mt-4 md:hidden">
+        <div className="flex justify-center w-full md:hidden">
           <button className="bg-secondary px-12 py-3 rounded-full text-white font-semibold">
             View More Tutors
           </button>

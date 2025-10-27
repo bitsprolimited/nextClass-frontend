@@ -128,7 +128,7 @@ export const bioDataSchema = z.object({
   country: z.string().min(1, "Please select a country"),
   state: z.string().min(1, "Please select a state"),
   city: z.string().min(1, "Please select a city"),
-  address: z.string().optional(),
+  address: z.string().min(1, "Please enter your address"),
   bio: z
     .string()
     .min(10, "Please tell us more about yourself (minimum 10 characters)"),

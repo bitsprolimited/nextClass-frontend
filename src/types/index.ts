@@ -119,6 +119,8 @@ export interface User {
   timezone: string;
   isEmailVerified?: boolean;
   qualifications: Qualification[];
+  isAdminVerified: boolean;
+  isAvailabilitySet: boolean;
   grades: string[];
   rating: number;
   subjects: string[];
