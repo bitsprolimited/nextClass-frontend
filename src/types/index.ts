@@ -34,10 +34,10 @@ export interface AxioErrorResponse {
 }
 
 export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  country?: string;
 }
 
 export interface ParentSignupRequest {
@@ -68,20 +68,20 @@ export interface Child {
 }
 
 export interface Qualification {
-  _id: string;
-  type: string; // e.g. "certificate"
-  courseName: string;
-  issuingInstitution: string;
-  expiryDate: string; // ISO Date string
-  certificateUrl: string;
-  createdAt: string;
+  _id?: string;
+  type?: string;
+  courseName?: string;
+  issuingInstitution?: string;
+  expiryDate?: string;
+  certificateUrl?: string;
+  createdAt?: string;
 }
 
 export interface Availability {
-  _id: string;
-  dayOfWeek: number; // 0-6 (Sunday-Saturday)
-  slots: TimeSlot[];
-  isAvailable: boolean;
+  _id?: string;
+  dayOfWeek?: number;
+  slots?: TimeSlot[];
+  isAvailable?: boolean;
 }
 
 export interface TimeSlot {
@@ -129,17 +129,23 @@ export interface User {
   role: Role;
   children: Child[];
   ratingCount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
 export interface Teacher extends User {
+  gender: string;
   role: Role.TEACHER;
+  bio?: string;
   bankDetails?: BankDetails;
   identityDocument?: IdentityDocument;
   introductionVideoUrl?: string;
-  availability?: Availability[];
+  availability?: Availability[] | Record<string, string[]>;
+  countryCode?: string;
+  countryFlag?: string;
+  // status?: "pending" | "accepted" | "declined";
 }
+
 export interface AuthResponse {
   accessToken: string;
   user: User;
@@ -179,5 +185,9 @@ export interface Pagination {
 
 export interface TeacherResponse {
   teachers: Teacher[];
-  pagination: Pagination;
+  pagination?: Pagination;
+}
+export interface TimeSlot {
+  startTime: string; // "HH:mm"
+  endTime: string; // "HH:mm"
 }

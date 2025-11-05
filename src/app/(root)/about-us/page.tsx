@@ -135,7 +135,7 @@ function AboutPage() {
             <div className="flex flex-col gap-5">
               {CORE_VALUES.map((coreValue, index) => (
                 <div key={index} className="flex gap-8">
-                  <div className="w-[10px] h-[10px] rounded-full shrink-0 bg-secondary mt-4" />
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-secondary mt-4" />
                   <div className="flex flex-col gap-3">
                     <h3 className="font-medium text-zeus font-montserrat text-[22px]/[38px]">
                       {coreValue.title}

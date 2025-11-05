@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
@@ -144,7 +145,14 @@ export default function TutorsPage() {
                     className="rounded-full"
                   />
                   <div>
-                    <p className="font-medium">{tutor.name}</p>
+                    <p className="font-medium">
+                      <Link
+                        href={`./${tutor.id}`}
+                        className="text-primary underline"
+                      >
+                        {tutor.name}
+                      </Link>
+                    </p>
                     <p className="text-xs text-gray-500">{tutor.email}</p>
                   </div>
                 </TableCell>
@@ -194,7 +202,9 @@ export default function TutorsPage() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View</DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href={`./${tutor.id}`}>View</Link>
+                      </DropdownMenuItem>
                       <DropdownMenuItem>
                         {tutor.status === "Active" ? "Suspend" : "Activate"}
                       </DropdownMenuItem>
