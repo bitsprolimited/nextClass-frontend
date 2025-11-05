@@ -734,30 +734,6 @@ export interface Country {
   flag: string; // path to flag image
 }
 
-export interface Tutor {
-  profileData: any;
-  bio: any;
-  id: string;
-  avatar?: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  country?: Country;
-  status?: string;
-  gender?: string;
-  address?: string;
-  cityState?: string;
-  grades?: string;
-  experience?: string;
-  fee?: string;
-  bankName?: string;
-  accountNumber?: string;
-  subjects?: string;
-  learners?: Learner[];
-  classes?: ClassItem[];
-  transactions?: Transaction[];
-}
-
 // --- MOCK DATA to be used as initial state ---
 export const INITIAL_PROFILE_DATA: ProfileData = {
   name: "JOHN DOE SANDERS",

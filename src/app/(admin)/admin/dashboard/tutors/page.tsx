@@ -147,7 +147,7 @@ export default function TutorsPage() {
                   <div>
                     <p className="font-medium">
                       <Link
-                        href={`./${tutor.id}`}
+                        href={`/admin/dashboard/tutors/${tutor.id}`}
                         className="text-primary underline"
                       >
                         {tutor.name}
@@ -203,7 +203,9 @@ export default function TutorsPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`./${tutor.id}`}>View</Link>
+                        <Link href={`/admin/dashboard/tutors/${tutor.id}`}>
+                          View
+                        </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         {tutor.status === "Active" ? "Suspend" : "Activate"}

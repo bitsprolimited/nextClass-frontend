@@ -1,15 +1,11 @@
-"use client";
-
-import type { Tutor } from "@/lib/constants";
 import TutorProfileCard from "@/components/admin/tutors/TutorProfileCard";
 import TutorClassesCard from "@/components/admin/tutors/TutorClassesCard";
 import TutorTransactionsCard from "@/components/admin/tutors/TutorTransactionsCard";
 import TutorSidebarCard from "@/components/admin/tutors/TutorSidebarCard";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-import { useRouter } from "next/navigation";
-
-const mockTutor = (id: string): Tutor => ({
+const mockTutor = (id: string) => ({
   id,
   avatar: "/images/ryan.png",
   name: "JOHN DOE SANDERS",
@@ -81,7 +77,6 @@ export default function TutorDetailsPage({
 }: {
   params: { id: string };
 }) {
-  const router = useRouter();
   // replace with await fetch(`/api/tutors/${params.id}`) when API is available
   const tutor = mockTutor(params.id);
 
@@ -112,14 +107,12 @@ export default function TutorDetailsPage({
 
       {/* Back Header */}
       <div className="flex items-center justify-start ">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex items-center gap-2 text-gray-600 hover:bg-gray-100 p-0"
-          onClick={() => router.push("/admin/dashboard/tutors")}
+        <Link
+          href="/admin/dashboard/tutors"
+          className="flex items-center gap-2 text-gray-600 hover:bg-gray-100 p-2 text-sm"
         >
           &lt; Back to Tutors
-        </Button>
+        </Link>
       </div>
 
       {/* Title and Top Action Buttons */}
