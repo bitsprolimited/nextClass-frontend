@@ -241,9 +241,7 @@ export default function TutorProfileCard({ tutor }: { tutor: Tutor }) {
           onClose={() => setOpenModal(null)}
         />
       )}
-      {openModal === "id" && (
-        <EditIDModal tutor={tutor} onClose={() => setOpenModal(null)} />
-      )}
+      {openModal === "id" && <EditIDModal onClose={() => setOpenModal(null)} />}
     </Card>
   );
 }

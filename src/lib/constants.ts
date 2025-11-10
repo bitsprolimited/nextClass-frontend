@@ -252,35 +252,35 @@ export const slideConfigurations = [
 
 export const SOCIAL_ICONS = [FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn];
 
-export const tutors = [
-  // {
-  //   id: 1,
-  //   name: "Ryan Patterson",
-  //   course: "Math",
-  //   price: "$50",
-  //   image: "/images/tutor-1.png",
-  //   duration: "8hrs",
-  //   lectures: "20",
-  // },
-  // {
-  //   id: 2,
-  //   name: "Ryan Patterson",
-  //   course: "Math",
-  //   price: "$50",
-  //   image: "/images/tutor-2.png",
-  //   duration: "8hrs",
-  //   lectures: "20",
-  // },
-  // {
-  //   id: 3,
-  //   name: "Ryan Patterson",
-  //   course: "Math",
-  //   price: "$50",
-  //   image: "/images/tutor-3.png",
-  //   duration: "8hrs",
-  //   lectures: "20",
-  // },
-];
+// export const tutors = [
+// {
+//   id: 1,
+//   name: "Ryan Patterson",
+//   course: "Math",
+//   price: "$50",
+//   image: "/images/tutor-1.png",
+//   duration: "8hrs",
+//   lectures: "20",
+// },
+// {
+//   id: 2,
+//   name: "Ryan Patterson",
+//   course: "Math",
+//   price: "$50",
+//   image: "/images/tutor-2.png",
+//   duration: "8hrs",
+//   lectures: "20",
+// },
+// {
+//   id: 3,
+//   name: "Ryan Patterson",
+//   course: "Math",
+//   price: "$50",
+//   image: "/images/tutor-3.png",
+//   duration: "8hrs",
+//   lectures: "20",
+// },
+// ];
 
 export const STEPS = {
   parents: {
@@ -803,5 +803,180 @@ export const MOCK_TRANSACTIONS = [
     sessions: "2 Sessions",
     price: 12000,
     status: "Paid",
+  },
+];
+
+// ======== TUTORS (TEMP MOCK UNTIL API IS READY) ========
+
+export interface Tutor {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  cityState: string; // e.g. "Houston/Texas"
+  country: Country; // uses Country { code, flag } defined above
+  status: "Pending" | "Accepted" | "Declined" | "Active" | string;
+
+  // optional UI fields used in TutorProfileCard
+  avatar?: string;
+  grades?: string; // e.g. "Grade 1, 2, 3, 4, 5."
+  experience?: string; // e.g. "5yrs"
+  fee?: string; // e.g. "₦5,000 / hr"
+  bankName?: string; // e.g. "Access Bank"
+  accountNumber?: string; // e.g. "0123456789"
+  subjects?: string; // plain comma-separated string for the card
+  bio?: string;
+
+  // optional fallback bucket (your card already checks profileData.*)
+  profileData?: {
+    grades?: string;
+    experience?: string;
+    fee?: string;
+    bankName?: string;
+    accountNumber?: string;
+    subjects?: string;
+    bio?: string;
+  };
+}
+
+/**
+ * Simple mock list for development.
+ * Pick one with: const tutor = MOCK_TUTORS[0];
+ */
+export const MOCK_TUTORS: Tutor[] = [
+  {
+    id: "t-001",
+    name: "JOHN DOE SANDERS",
+    email: "johndoe@xyz.com",
+    phone: "+54 756 287 410",
+    address: "1234, Street Name, Area.",
+    cityState: "Houston/Texas",
+    country: { code: "USA", flag: "/images/USA.png" },
+    status: "Pending",
+    avatar: "/images/tutor-3.png",
+    grades: "Grade 1, 2, 3, 4, 5.",
+    experience: "5yrs",
+    fee: "₦5,000 / hr",
+    bankName: "Access Bank",
+    accountNumber: "0123456789",
+    subjects: "Mathematics, Physics, English, Basic Sciences",
+    bio:
+      "My philosophy is that all students can and will learn. Each student is unique and learns in their own way. " +
+      "My enthusiasm, lifelong passion for education and many years of experience are all qualities I bring to the table.",
+  },
+  {
+    id: "t-002",
+    name: "JANE DOE",
+    email: "jane.doe@example.com",
+    phone: "+44 123 456 789",
+    address: "56, River Street, Downtown",
+    cityState: "London/England",
+    country: { code: "GBR", flag: "/images/UK.png" }, // adjust path if you store flags differently
+    status: "Active",
+    avatar: "/images/tutor-2.png",
+    grades: "Grade 6, 7, 8.",
+    experience: "7yrs",
+    fee: "£25 / hr",
+    bankName: "HSBC",
+    accountNumber: "98-76-54",
+    subjects: "English, Chemistry, Literature",
+    bio: "Experienced English and Chemistry tutor with a focus on building strong fundamentals and exam confidence.",
+  },
+  {
+    id: "t-003",
+    name: "PEDRO ÁLVAREZ",
+    email: "pedro.alvarez@example.com",
+    phone: "+54 756 111 222",
+    address: "Av. 9 de Julio 101",
+    cityState: "Buenos Aires/Argentina",
+    country: { code: "ARG", flag: "/images/ARG.png" },
+    status: "Accepted",
+    avatar: "/images/tutor-1.png",
+    // demonstrate the fallback via profileData
+    profileData: {
+      grades: "Grade 3, 4, 5.",
+      experience: "4yrs",
+      fee: "$20 / hr",
+      bankName: "Banco Nación",
+      accountNumber: "00012345678",
+      subjects: "Science, Math",
+      bio: "STEM-focused tutor passionate about hands-on learning and problem solving.",
+    },
+  },
+];
+// ======== FEATURED / RECENTLY-CALLED TUTORS (for the homepage/parent dashboard cards) ========
+
+export type FeaturedTutor = {
+  id: number;
+  name: string;
+  price: string; // e.g. "$50"
+  course: string; // e.g. "Math"
+  image: string; // path to image
+  duration: string; // e.g. "8hrs"
+  lectures: string; // e.g. "20"
+};
+
+/**
+ * This array is used by:
+ *   src/components/parents/recentlyCalledTutors.tsx
+ *
+ * It matches that component's expected shape exactly:
+ *  - id, name, price, course, image, duration, lectures
+ */
+export const tutors: FeaturedTutor[] = [
+  {
+    id: 1,
+    name: "Ryan Patterson",
+    course: "Mathematics",
+    price: "$50",
+    image: "/images/tutor-1.png",
+    duration: "8hrs",
+    lectures: "20",
+  },
+  {
+    id: 2,
+    name: "Sarah James",
+    course: "English",
+    price: "$45",
+    image: "/images/tutor-2.png",
+    duration: "6hrs",
+    lectures: "15",
+  },
+  {
+    id: 3,
+    name: "Liam Cole",
+    course: "Physics",
+    price: "$55",
+    image: "/images/tutor-3.png",
+    duration: "10hrs",
+    lectures: "22",
+  },
+  {
+    id: 4,
+    name: "Amelia Brown",
+    course: "Chemistry",
+    price: "$52",
+    image: "/images/tutor-4.png",
+    duration: "7hrs",
+    lectures: "18",
+  },
+  {
+    id: 5,
+    name: "Noah Wilson",
+    course: "Biology",
+    price: "$48",
+    image: "/images/tutor-5.png",
+    duration: "9hrs",
+    lectures: "19",
+  },
+  {
+    id: 6,
+    name: "Ava Thompson",
+    course: "Computer Science",
+    price: "$60",
+    image: "/images/tutor-6.png",
+    duration: "12hrs",
+    lectures: "25",
   },
 ];

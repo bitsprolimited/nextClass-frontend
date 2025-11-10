@@ -143,6 +143,7 @@ export interface Teacher extends User {
   availability?: Availability[] | Record<string, string[]>;
   countryCode?: string;
   countryFlag?: string;
+  qualifications: Qualification[];
   // status?: "pending" | "accepted" | "declined";
 }
 

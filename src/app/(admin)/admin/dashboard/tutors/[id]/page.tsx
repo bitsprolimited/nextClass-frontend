@@ -4,7 +4,9 @@ import TutorTransactionsCard from "@/components/admin/tutors/TutorTransactionsCa
 import TutorSidebarCard from "@/components/admin/tutors/TutorSidebarCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { MOCK_TUTORS } from "@/lib/constants";
 
+// keep your helper that adds classes/transactions/learners
 const mockTutor = (id: string) => ({
   id,
   avatar: "/images/ryan.png",
@@ -72,39 +74,23 @@ const mockTutor = (id: string) => ({
   bio: undefined,
 });
 
-export default function TutorDetailsPage({
+// NOTE: async page + await params (fixes the build error)
+export default async function TutorDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  // replace with await fetch(`/api/tutors/${params.id}`) when API is available
-  const tutor = mockTutor(params.id);
+  const { id } = await params;
+
+  // Try find a tutor by id from your constants; fallback to first item
+  const fromList = MOCK_TUTORS.find((t) => t.id === id) ?? MOCK_TUTORS[0];
+
+  // Merge the found tutor with our page-specific defaults that include classes/transactions
+  // Properties from `fromList` will override the defaults where overlapping
+  const tutor = { ...mockTutor(id), ...fromList };
 
   return (
     <main className="min-h-screen bg-[#F5F5F5] p-6 lg:p-8">
-      {/* --- MODAL IMPLEMENTATION --- */}
-      {/* <SuspendParentModal
-         isOpen={isSuspendModalOpen}
-         onClose={() => setIsSuspendModalOpen(false)}
-         onConfirm={handleSuspendAccount}
-       /> */}
-      {/* <EditProfileModal
-         isOpen={isEditModalOpen}
-         onClose={() => setIsEditModalOpen(false)}
-         // Pass the subset of data the form needs: name, email, phone, address, city, state, country
-         currentProfile={{
-           name: profileData.name,
-           email: profileData.email,
-           phone: profileData.phone,
-           address: profileData.address,
-           city: profileData.city,
-           state: profileData.state,
-           country: profileData.country,
-         }}
-         onSave={handleSaveProfile}
-       /> */}
-      {/* ---------------------------- */}
-
       {/* Back Header */}
       <div className="flex items-center justify-start ">
         <Link
@@ -125,10 +111,7 @@ export default function TutorDetailsPage({
           >
             Deactivate Account
           </Button>
-          <Button
-            //  onClick={() => setIsSuspendModalOpen(true)}
-            className="bg-secondary rounded-full text-white shadow-md"
-          >
+          <Button className="bg-secondary rounded-full text-white shadow-md">
             Suspend Account
           </Button>
         </div>
@@ -136,21 +119,15 @@ export default function TutorDetailsPage({
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Section (8/12 width) */}
+        {/* Left Section */}
         <div className="lg:col-span-8 space-y-6">
-          {/* Parent Profile Card with Tabs */}
           <TutorProfileCard tutor={tutor} />
-
-          {/* Classes Tabs (Upcoming and History) */}
           <TutorClassesCard classes={tutor.classes} />
         </div>
 
-        {/* Right Section (4/12 width) */}
+        {/* Right Section */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Learners Card */}
           <TutorSidebarCard learners={tutor.learners} />
-
-          {/* Transactions Card */}
           <TutorTransactionsCard transactions={tutor.transactions} />
         </div>
       </div>
