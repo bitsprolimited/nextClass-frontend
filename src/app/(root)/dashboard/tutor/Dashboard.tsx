@@ -62,8 +62,8 @@ export default function Dashboard() {
               </Button>
             </div>
             {/* Alert Box */}
-            <AlertRotator user={user.user as Teacher} />;{/* Next Class Card */}
-            <div className="bg-[#FFF5E9] rounded-xl shadow-xl mt-6 flex flex-col w-full md:max-w-7xl md:mx-auto">
+            <AlertRotator user={user.user as Teacher} />{/* Next Class Card */}
+            <div className="bg-[#FFF5E9] rounded-xl shadow-md mt-6 flex flex-col w-full md:max-w-7xl md:mx-auto">
               {/* Top Header Section */}
               <div className="relative pt-6 px-6 md:pt-4 md:pl-6 md:pr-4">
                 <h2 className="hidden md:block text-2xl font-bold font-aero-trial text-gray-800 tracking-wide md:self-start">

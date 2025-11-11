@@ -18,19 +18,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useCreateBooking } from "@/hooks/useBooking";
+import { useCreateCheckoutSession } from "@/hooks/usePayment";
 import { BetterAuthSession } from "@/lib/auth-client";
+import { BookingType, EventType } from "@/services/booking.service";
 import { getLearners } from "@/services/learner.service";
 import { getAvailableSlots } from "@/services/tutors.service";
 import { Teacher } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { addMinutes, format, parse } from "date-fns";
+import { format, parse } from "date-fns";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Calendar } from "../../ui/calendar";
 import { ScrollArea } from "../../ui/scroll-area";
 import { Skeleton } from "../../ui/skeleton";
+import { StripeCheckoutModal } from "../StripeCheckoutModal";
 import ReviewClassSchedule from "./ReviewClassSchedule";
 
 export default function AlertComponent({
@@ -162,15 +164,22 @@ export function BookAClassModal({
     enabled: !!session,
   });
 
-  const { mutate: createBooking, isPending } = useCreateBooking();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [checkoutClientSecret, setCheckoutClientSecret] = useState<
+    string | null
+  >(null);
 
+  const { mutate: createCheckoutSession, isPending: isCreatingCheckout } =
+    useCreateCheckoutSession();
+
+  // Replace onSubmit function
   const onSubmit = () => {
     if (session && selectedDates && Object.keys(selectedSlots).length > 0) {
-      // Create slots array for all selected dates and times
+      // Prepare slots
       const slots = selectedDates
         .filter((date) => {
           const dateKey = format(date, "yyyy-MM-dd");
-          return selectedSlots[dateKey]; // Only include dates with selected times
+          return selectedSlots[dateKey];
         })
         .map((date) => {
           const dateKey = format(date, "yyyy-MM-dd");
@@ -184,39 +193,45 @@ export function BookAClassModal({
 
       if (slots.length === 0) return;
 
-      // Use the latest end time for the booking end time
-      const endTimes = slots.map((slot) =>
-        addMinutes(slot.startTime, duration)
-      );
-      const latestEndTime = new Date(
-        Math.max(...endTimes.map((date) => date.getTime()))
-      );
+      // // Create checkout session
+      // const successUrl = `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`;
+      // const cancelUrl = window.location.href;
 
-      const bookingData = {
-        teacherId: tutor._id,
-        endTime: latestEndTime.toISOString(),
-        eventType: "class",
-        slots: slots,
-        bookingType: "one_time" as const,
-        ...(selectedSubject && { subject: selectedSubject }),
-        ...(selectedLearners.length > 0 && { learnerIds: selectedLearners }),
-      };
-
-      console.log("Booking data:", bookingData);
-
-      createBooking(bookingData, {
-        onSuccess: () => {
-          setIsMainModalOpen(false);
-          setIsAlertOpen(false);
-          // Reset all form data
-          setSelectedSlots({});
-          setSelectedDates([]);
-          setSelectedSubject("");
-          setSelectedLearners([]);
-          setCurrentStep(1);
+      createCheckoutSession(
+        {
+          teacherId: tutor._id,
+          slots,
+          subject: selectedSubject,
+          learnerIds:
+            selectedLearners.length > 0 ? selectedLearners : undefined,
+          bookingType: BookingType.ONE_TIME,
+          eventType: EventType.CLASS,
         },
-      });
+        {
+          onSuccess: (data) => {
+            setCheckoutClientSecret(data.clientSecret);
+            setShowPaymentModal(true);
+            setIsMainModalOpen(false);
+            setIsAlertOpen(false);
+          },
+          onError: (error) => {
+            console.error("Failed to create checkout session:", error);
+            alert("Failed to initialize payment. Please try again.");
+          },
+        }
+      );
     }
+  };
+
+  const handlePaymentComplete = () => {
+    setShowPaymentModal(false);
+    setCheckoutClientSecret(null);
+    // Reset form
+    setSelectedSlots({});
+    setSelectedDates([]);
+    setSelectedSubject("");
+    setSelectedLearners([]);
+    setCurrentStep(1);
   };
 
   const handleBookingClick = () => {
@@ -549,9 +564,16 @@ export function BookAClassModal({
         selectedSubject={selectedSubject}
         selectedLearners={selectedLearners}
         onSubmit={onSubmit}
-        isPending={isPending}
+        isPending={isCreatingCheckout}
         isAlertOpen={isAlertOpen}
         onAlertClose={setIsAlertOpen}
+      />
+
+      <StripeCheckoutModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        clientSecret={checkoutClientSecret}
+        onComplete={handlePaymentComplete}
       />
     </Dialog>
   );
