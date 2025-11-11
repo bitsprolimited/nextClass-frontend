@@ -68,20 +68,20 @@ export interface Child {
 }
 
 export interface Qualification {
-  _id?: string;
-  type?: string;
-  courseName?: string;
-  issuingInstitution?: string;
-  expiryDate?: string;
-  certificateUrl?: string;
-  createdAt?: string;
+  _id: string;
+  type: string; // e.g. "certificate"
+  courseName: string;
+  issuingInstitution: string;
+  expiryDate: string; // ISO Date string
+  certificateUrl: string;
+  createdAt: string;
 }
 
 export interface Availability {
-  _id?: string;
-  dayOfWeek?: number;
-  slots?: TimeSlot[];
-  isAvailable?: boolean;
+  _id: string;
+  dayOfWeek: number; // 0-6 (Sunday-Saturday)
+  slots: TimeSlot[];
+  isAvailable: boolean;
 }
 
 export interface TimeSlot {
@@ -128,22 +128,21 @@ export interface User {
   hourlyRate?: number;
   role: Role;
   children: Child[];
+  gender: string;
   ratingCount: number;
   createdAt: Date | string;
   updatedAt: Date | string;
 }
 
 export interface Teacher extends User {
-  gender: string;
   role: Role.TEACHER;
   bio?: string;
   bankDetails?: BankDetails;
   identityDocument?: IdentityDocument;
   introductionVideoUrl?: string;
-  availability?: Availability[] | Record<string, string[]>;
+  availability?: Availability[];
   countryCode?: string;
   countryFlag?: string;
-  qualifications: Qualification[];
   // status?: "pending" | "accepted" | "declined";
 }
 

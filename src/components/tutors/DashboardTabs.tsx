@@ -82,32 +82,37 @@ export default function DashboardTabs({ tutor }: { tutor: Teacher }) {
         >
           <div className="inline-flex flex-col items-center gap-8 w-full">
             <div className="flex flex-wrap self-stretch items-start w-full relative">
-              {tutor?.qualifications?.map((qualification, index) => (
-                <Card key={index} className="w-full max-w-[600px] px-8 py-6">
-                  <CardContent className="inline-flex flex-col gap-4 relative p-0 w-full capitalize">
-                    <div className="inline-flex gap-1.5 flex-col items-start">
-                      <h3 className="font-light font-montserrat italic text-[#ffa300]">
-                        {qualification.type}
-                      </h3>
-                      <p className="text-[#031d95] font-semibold text-2xl">
-                        {qualification.courseName}
-                      </p>
-                    </div>
-                    <div className="flex items-end justify-between relative w-full">
-                      <span className="font-montserrat text-[#757575]">
-                        {qualification.issuingInstitution}
-                      </span>
-                      <span className="text-[#031d9559] font-montserrat flex items-center gap-2">
-                        <span>Exp</span>
-                        {format(
-                          new Date(qualification.expiryDate),
-                          "dd.MM.yyyy"
-                        )}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              {tutor.qualifications
+                ? tutor?.qualifications?.map((qualification, index) => (
+                    <Card
+                      key={index}
+                      className="w-full max-w-[600px] px-8 py-6"
+                    >
+                      <CardContent className="inline-flex flex-col gap-4 relative p-0 w-full capitalize">
+                        <div className="inline-flex gap-1.5 flex-col items-start">
+                          <h3 className="font-light font-montserrat italic text-[#ffa300]">
+                            {qualification.type}
+                          </h3>
+                          <p className="text-[#031d95] font-semibold text-2xl">
+                            {qualification.courseName}
+                          </p>
+                        </div>
+                        <div className="flex items-end justify-between relative w-full">
+                          <span className="font-montserrat text-[#757575]">
+                            {qualification.issuingInstitution}
+                          </span>
+                          <span className="text-[#031d9559] font-montserrat flex items-center gap-2">
+                            <span>Exp</span>
+                            {format(
+                              new Date(qualification.expiryDate),
+                              "dd.MM.yyyy"
+                            )}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                : null}
             </div>
           </div>
         </TabsContent>

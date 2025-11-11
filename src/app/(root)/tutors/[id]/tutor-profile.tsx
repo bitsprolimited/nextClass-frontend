@@ -32,11 +32,16 @@ type AvailabilityRecord = Record<string, string[]>;
 
 function recordToAvailability(rec: AvailabilityRecord): Availability[] {
   return Object.entries(rec).map(([dayKey, slots]) => ({
-    dayOfWeek: Number(dayKey) || 0, // adjust if keys aren't numeric indices
+    _id: `avail-${dayKey}`, // satisfy required _id
+    dayOfWeek: Number(dayKey) || 0,
     isAvailable: Array.isArray(slots) && slots.length > 0,
-    slots: (slots || []).map((s) => {
+    slots: (slots || []).map((s, idx) => {
       const [startTime, endTime] = s.split("-");
-      return { startTime, endTime };
+      return {
+        _id: `slot-${dayKey}-${idx}`, // if Slot requires an id; remove if not needed
+        startTime: startTime?.trim() ?? "",
+        endTime: endTime?.trim() ?? "",
+      };
     }),
   }));
 }
