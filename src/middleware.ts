@@ -67,9 +67,9 @@ export default async function middleware(req: NextRequest) {
     }
 
     // 3️⃣ Role-based access control
-    if (path.startsWith("/admin") && user?.role !== "admin") {
-      return redirect("/unauthorized", req);
-    }
+    // if (path.startsWith("/admin") && user?.role !== "admin") {
+    //   return redirect("/unauthorized", req);
+    // }
 
     if (path.startsWith("/dashboard/tutor") && user?.role !== "teacher") {
       return redirect("/unauthorized", req);

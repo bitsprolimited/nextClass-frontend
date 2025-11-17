@@ -1,237 +1,459 @@
+// src/components/admin/TutorVerificationModal.tsx
+"use client";
+
+import * as React from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-
-import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
-import QualificationCard from "../tutors/QualificationCard";
+import { Loader2, X } from "lucide-react";
 
-// Define interfaces
-interface Qualification {
-  title: string;
-  fileName: string;
-  fileType: string;
-  fileSize: string;
-  institution?: string;
-  expDate?: string;
-}
+/** ---------- Types (unchanged) ---------- */
+type TutorQualification = {
+  id: string | number;
+  courseName: string;
+  issuingInstitution: string;
+  certificateUrl?: string;
+  expiryDate?: string;
+};
 
-interface Tutor {
-  id: number;
+type TutorIdentityDoc = {
+  idType: string;
+  documentUrl?: string;
+  issuingAuthority?: string;
+  issueDate?: string;
+  expiryDate?: string;
+  isVerified?: boolean;
+};
+
+export interface TutorVerificationViewModel {
+  id: string | number;
   name: string;
-  avatar: string;
   email: string;
-  phone?: string;
+  phoneNumber: string;
+  status: string;
+  profilePicture?: string;
   gender?: string;
   address?: string;
-  cityState?: string;
-  country: { code: string; flag: string };
-  status: string;
-  grades?: string;
+  state?: string;
+  country?: string;
+  countryFlagUrl?: string;
+  grade?: string;
   subjects?: string;
   experience?: string;
-  description?: string;
-  qualification?: Qualification[];
-  introVideo?: string;
+  bio?: string;
+  identityDocument?: TutorIdentityDoc;
+  qualifications?: TutorQualification[];
+  introductionVideoUrl?: string;
+  timezone?: string;
+  createdAt?: string;
 }
 
-// Use the interface in props
-export default function TutorVerificationModal({
+export interface TutorVerificationModalProps {
+  open: boolean;
+  onClose: () => void;
+  tutor: TutorVerificationViewModel | null;
+}
+
+/** ---------- Small UI helpers ---------- */
+const Label: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="text-xs text-gray-400">{children}</div>
+);
+
+const Value: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+  <div className="font-semibold text-[15px] leading-snug wrap-break-word">
+    {children ?? "—"}
+  </div>
+);
+
+const StatusPill: React.FC<{ status: string }> = ({ status }) => {
+  const s = status?.toLowerCase() ?? "pending";
+  const tone =
+    s === "accepted" || s === "verified"
+      ? "bg-green-100 text-green-700"
+      : s === "pending"
+      ? "bg-yellow-100 text-yellow-700"
+      : "bg-red-100 text-red-700";
+  return (
+    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${tone}`}>
+      {status}
+    </span>
+  );
+};
+
+/** ---------- Reusable atoms for the card look ---------- */
+const ViewPill: React.FC<{ href?: string }> = ({ href }) =>
+  href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="text-[11px] px-3 py-1 rounded-full border border-secondary text-secondary hover:bg-[#FFF3D6] inline-flex items-center"
+    >
+      View
+    </a>
+  ) : (
+    <button
+      className="text-[11px] px-3 py-1 rounded-full border border-[#FFA300] text-[#FFA300] opacity-40 cursor-not-allowed"
+      disabled
+    >
+      View
+    </button>
+  );
+
+const FileTile: React.FC<{
+  ext?: string;
+  name?: string;
+  sizeLabel?: string;
+  formatLabel?: string;
+}> = ({ ext = "PNG", name = "—", sizeLabel = "—", formatLabel = "—" }) => (
+  <div className="mt-3 w-full rounded-md  bg-gray-200">
+    <div className="flex items-center gap-3 p-3">
+      <div className="w-10 h-12 rounded-md bg-[#3C5BFF] text-white flex items-center justify-center text-[10px] font-semibold">
+        {ext}
+      </div>
+      <div className="min-w-0">
+        <div className="text-[13px] font-semibold truncate">{name}</div>
+        <div className="text-xs text-gray-500">
+          {sizeLabel} <span className="mx-1">•</span> {formatLabel}
+        </div>
+      </div>
+      <button
+        type="button"
+        className="ml-auto text-[11px] text-red-500 hover:underline"
+        aria-label="Remove file"
+      >
+        Remove
+      </button>
+    </div>
+  </div>
+);
+
+/** ---------- Styled to match screenshot ---------- */
+const IDCard: React.FC<{ doc?: TutorIdentityDoc }> = ({ doc }) => {
+  if (!doc) {
+    return (
+      <div className="border rounded-xl p-4 text-sm text-gray-600">
+        No ID uploaded.
+      </div>
+    );
+  }
+
+  const filename = doc.documentUrl
+    ? decodeURIComponent(doc.documentUrl.split("/").pop() ?? "")
+    : "Document";
+  // simple size/format placeholders; replace with real metadata if you have it
+  const sizeLabel = "8mb";
+  const formatLabel = "PNG";
+
+  return (
+    <div className="rounded-xl border p-4">
+      <div className="flex items-center justify-between">
+        <p className="italic text-sm text-[#A87C00]">Drivers License</p>
+        <ViewPill href={doc.documentUrl} />
+      </div>
+
+      <FileTile
+        ext="PNG"
+        name={filename}
+        sizeLabel={sizeLabel}
+        formatLabel={formatLabel}
+      />
+
+      <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
+        <div>
+          Issuance Date:{" "}
+          {doc.issueDate ? new Date(doc.issueDate).toLocaleDateString() : "—"}
+        </div>
+        <div>
+          exp.{" "}
+          {doc.expiryDate ? new Date(doc.expiryDate).toLocaleDateString() : "—"}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const QualificationCard: React.FC<{ q: TutorQualification }> = ({ q }) => {
+  const filename = q.certificateUrl
+    ? decodeURIComponent(q.certificateUrl.split("/").pop() ?? "")
+    : "IMGVV001";
+  const sizeLabel = "8mb";
+  const formatLabel = "PNG";
+
+  return (
+    <div className="rounded-xl border p-4">
+      <div className="flex items-center justify-between">
+        <p className="italic text-sm text-secondary">Diploma in</p>
+        <ViewPill href={q.certificateUrl} />
+      </div>
+
+      <p className="mt-2 text-[18px] font-semibold text-[#031D95]">
+        {q.courseName || "—"}
+      </p>
+
+      <FileTile
+        ext="PNG"
+        name={filename}
+        sizeLabel={sizeLabel}
+        formatLabel={formatLabel}
+      />
+
+      <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
+        <div>{q.issuingInstitution || "—"}</div>
+        <div>
+          exp.{" "}
+          {q.expiryDate ? new Date(q.expiryDate).toLocaleDateString() : "—"}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/** ---------- Main ---------- */
+export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
   open,
   onClose,
   tutor,
-}: {
-  open: boolean;
-  onClose: () => void;
-  tutor: Tutor | null;
-}) {
-  if (!tutor) return null;
+}) => {
+  const [isPlaying, setPlaying] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  const [expanded, setExpanded] = React.useState(false);
+
+  React.useEffect(() => {
+    setExpanded(false);
+  }, [tutor?.id]);
+
+  if (!tutor) {
+    return (
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="max-w-[420px] w-[420px] h-[220px] flex flex-col items-center justify-center text-center">
+          <Loader2 className="w-6 h-6 mb-3 animate-spin text-gray-500" />
+          <p className="text-gray-600 text-sm">Loading tutor details…</p>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  const description = tutor.bio ?? "";
+  const clamp = description.length > 320;
+  const text =
+    expanded || !clamp ? description : description.slice(0, 320) + "…";
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[800px] rounded-xl p-0 overflow-hidden">
-        <DialogHeader className="flex flex-row items-center justify-between px-8 pt-8 pb-2 border-b">
-          <DialogTitle className="text-2xl font-bold">
-            Verification Approval
-          </DialogTitle>
-          <DialogClose asChild>
-            <button onClick={onClose}>
-              <X size={28} />
-            </button>
-          </DialogClose>
+      <DialogContent className="max-w-[975px] w-[975px] h-[900px] p-0 overflow-hidden">
+        <DialogHeader className="px-6 pt-5 pb-3 border-b">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-[22px] font-semibold">
+              Verification Approval
+            </DialogTitle>
+            <DialogClose asChild>
+              <button aria-label="Close" className="p-1">
+                <X className="h-6 w-6" />
+              </button>
+            </DialogClose>
+          </div>
         </DialogHeader>
-        {/* Scrollable content */}
-        <div className="px-8 py-8 overflow-y-auto h-[calc(800px-80px)]">
-          {/* Profile Image */}
-          <div className="flex items-center gap-4 mb-8">
-            <Image
-              src={tutor.avatar}
-              alt={tutor.name}
-              width={70}
-              height={70}
-              className="rounded-full object-cover"
-            />
-          </div>
-          {/* Profile Details */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 mb-8">
-            <div>
-              <div className="text-xs text-gray-400">Name</div>
-              <div className="font-semibold">{tutor.name}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Email</div>
-              <div className="font-semibold">{tutor.email}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Phone Number</div>
-              <div className="font-semibold">{tutor.phone}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Gender</div>
-              <div className="font-semibold">{tutor.gender || "Male"}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Address</div>
-              <div className="font-semibold">
-                {tutor.address || "1234, Street Name, Area."}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">City/State</div>
-              <div className="font-semibold">
-                {tutor.cityState || "Houston/Texas"}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Country</div>
-              <div className="flex items-center gap-2 font-semibold">
-                <Image
-                  src={tutor.country.flag}
-                  alt={tutor.country.code}
-                  width={24}
-                  height={16}
-                />
-                {tutor.country.code}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Status</div>
-              <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
-                {tutor.status}
-              </span>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Grades</div>
-              <div className="font-semibold">
-                {tutor.grades || "Grade 1, 2, 3, 4, 5."}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Subjects</div>
-              <div className="font-semibold whitespace-pre-line">
-                {tutor.subjects ||
-                  "Mathematics\nEnglish\nPhysics\nBasic Sciences"}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-400">Experience</div>
-              <div className="font-semibold">{tutor.experience || "5yrs"}</div>
-            </div>
-          </div>
-          {/* Description */}
-          <div className="mb-8">
-            <div className="text-xs text-gray-400 mb-1">Description</div>
-            <div className="bg-[#F5F4F8] rounded-lg p-4 text-sm">
-              {tutor.description ||
-                "My philosophy is that all students can and will learn. Each student is unique and learn their own way. My enthusiasm, lifelong passion for education and many years of experience are all qualities I bring to the table."}
-            </div>
-          </div>
-          {/* ID Verification */}
-          <div className="mb-8">
-            <div className="text-xs text-gray-400 mb-2">ID Verification</div>
-            <QualificationCard
-              qualification={{
-                id: "",
-                title: "",
-                type: "",
-                fileName: "",
-                fileSize: "",
-                fileFormat: "",
-                institution: "",
-                expiry: "",
-              }}
-              onRemove={function (): void {
-                throw new Error("Function not implemented.");
-              }}
-              onEdit={function (): void {
-                throw new Error("Function not implemented.");
-              }}
-            />
-          </div>
 
-          {/* Qualifications */}
-          <div className="mb-8">
-            <div className="text-xs text-gray-400 mb-2">Qualifications</div>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {tutor.qualification?.map((_q, _idx) => (
-                <QualificationCard
-                  qualification={{
-                    id: "",
-                    title: "",
-                    type: "",
-                    fileName: "",
-                    fileSize: "",
-                    fileFormat: "",
-                    institution: "",
-                    expiry: "",
-                  }}
-                  onRemove={function (_id: string): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                  onEdit={function (_id: string): void {
-                    throw new Error("Function not implemented.");
-                  }} // key={q.fileName + idx}
-                  // // type="diploma"
-                  // title={q.title}
-                  // fileName={q.fileName}
-                  // fileType={q.fileType}
-                  // fileSize={q.fileSize}
-                  // institution={q.institution}
-                  // expDate={q.expDate}
-                />
-              ))}
-            </div> */}
+        <DialogDescription asChild>
+          <div className="h-[calc(900px-64px)]">
+            <ScrollArea className="h-full">
+              <div className="px-6 py-6 space-y-8">
+                {/* Section 1: profile + grid */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={tutor.profilePicture ?? "/images/tutor-3.png"}
+                      alt={tutor.name}
+                      width={72}
+                      height={72}
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-8">
+                    <div>
+                      <Label>Name</Label>
+                      <Value>{tutor.name}</Value>
+                    </div>
+                    <div>
+                      <Label>Email</Label>
+                      <Value>{tutor.email}</Value>
+                    </div>
+                    <div>
+                      <Label>Phone Number</Label>
+                      <Value>{tutor.phoneNumber}</Value>
+                    </div>
+                    <div>
+                      <Label>Gender</Label>
+                      <Value>{tutor.gender ?? "—"}</Value>
+                    </div>
+                    <div>
+                      <Label>Address</Label>
+                      <Value>{tutor.address ?? "—"}</Value>
+                    </div>
+                    <div>
+                      <Label>City/State</Label>
+                      <Value>{tutor.state ?? "—"}</Value>
+                    </div>
+                    <div>
+                      <Label>Country</Label>
+                      <Value>
+                        <span className="inline-flex items-center gap-2">
+                          {tutor.countryFlagUrl ? (
+                            <Image
+                              src={tutor.countryFlagUrl}
+                              alt={tutor.country ?? "flag"}
+                              width={20}
+                              height={14}
+                              className="rounded-sm"
+                            />
+                          ) : null}
+                          {tutor.country ?? "—"}
+                        </span>
+                      </Value>
+                    </div>
+                    <div>
+                      <Label>Status</Label>
+                      <div className="mt-0.5">
+                        <StatusPill status={tutor.status} />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Subjects</Label>
+                      <Value>
+                        <span className="whitespace-pre-line">
+                          {tutor.subjects ?? "—"}
+                        </span>
+                      </Value>
+                    </div>
+                    <div>
+                      <Label>Grades</Label>
+                      <Value>{tutor.grade ?? "—"}</Value>
+                    </div>
+                    <div>
+                      <Label>Experience</Label>
+                      <Value>{tutor.experience ?? "—"}</Value>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Section 2: description */}
+                <section className="space-y-2">
+                  <Label>Description</Label>
+                  <div className="bg-[#F5F4F8] rounded-lg p-4 text-sm">
+                    {text || "—"}
+                  </div>
+                  {clamp && (
+                    <button
+                      type="button"
+                      className="text-[#FFA300] text-sm font-medium"
+                      onClick={() => setExpanded((v) => !v)}
+                    >
+                      {expanded ? "View less" : "View more"}
+                    </button>
+                  )}
+                </section>
+
+                {/* Section 3: ID verification (styled) */}
+                <section className="space-y-3">
+                  <Label>ID Verification</Label>
+                  <IDCard doc={tutor.identityDocument} />
+                </section>
+
+                {/* Section 4: qualifications (styled) */}
+                <section className="space-y-3">
+                  <Label>Qualifications</Label>
+                  {tutor.qualifications && tutor.qualifications.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {tutor.qualifications.map((q) => (
+                        <QualificationCard key={q.id} q={q} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border p-4 text-sm text-gray-600">
+                      No qualifications uploaded.
+                    </div>
+                  )}
+                </section>
+
+                {/* Section 5: Introductory Video (styled) */}
+                {tutor.introductionVideoUrl && (
+                  <section className="space-y-2">
+                    <Label>Introductory Video</Label>
+
+                    {/* light grey card */}
+                    <div className="bg-[#F5F4F8] rounded-xl px-3 sm:px-4 py-2">
+                      {/* fixed 16:9 frame */}
+                      <div className="relative aspect-video rounded-lg overflow-hidden mx-auto w-full max-w-[560px] md:max-w-[640px]">
+                        {/* black video surface */}
+                        <video
+                          ref={videoRef}
+                          src={tutor.introductionVideoUrl}
+                          className="h-full w-full bg-black object-cover"
+                          controls={isPlaying} // controls appear when playing
+                          onEnded={() => setPlaying(false)}
+                        />
+
+                        {/* centered play icon overlay */}
+                        {!isPlaying && (
+                          <button
+                            type="button"
+                            className="absolute inset-0 grid place-items-center"
+                            onClick={() => {
+                              setPlaying(true);
+                              videoRef.current?.play();
+                            }}
+                          >
+                            <span className="grid place-items-center h-12 w-12 rounded-full ring-2 ring-white">
+                              {/* minimal play glyph */}
+                              <svg
+                                viewBox="0 0 24 24"
+                                className="h-5 w-5 fill-white"
+                                aria-hidden="true"
+                              >
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </section>
+                )}
+
+                {/* Footer buttons (passive for now) */}
+                <section className="flex justify-end gap-4 pt-2">
+                  <Button
+                    variant="outline"
+                    className="border-red-500 text-red-500 hover:bg-red-50"
+                    disabled
+                    title="Endpoint not ready"
+                  >
+                    Decline Tutor
+                  </Button>
+                  <Button
+                    className="bg-primary text-white hover:bg-primary/90"
+                    disabled
+                    title="Endpoint not ready"
+                  >
+                    Approve Tutor
+                  </Button>
+                </section>
+              </div>
+            </ScrollArea>
           </div>
-          {/* Introduction Video */}
-          <div className="mb-8">
-            <div className="text-xs text-gray-400 mb-1">Introduction Video</div>
-            <video controls className="rounded-lg w-full max-w-xs">
-              <source
-                src={tutor.introVideo || "/videos/sample-intro.mp4"}
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-4 mt-8">
-            <Button
-              variant="outline"
-              className="border-red-500 text-red-500 hover:bg-red-50"
-            >
-              Decline Tutor
-            </Button>
-            <Button className="bg-primary text-white hover:bg-primary/90">
-              Approve Tutor
-            </Button>
-          </div>
-        </div>
+        </DialogDescription>
       </DialogContent>
     </Dialog>
   );
-}
+};

@@ -208,6 +208,7 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
             )}
           />
 
+          {/* Issuance Date */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -231,15 +232,20 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
                 </span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+
+            <PopoverContent
+              align="start"
+              sideOffset={6}
+              className="w-[360px] p-0"
+            >
               <Calendar
                 mode="single"
                 selected={issueDate}
-                onSelect={(date) => {
-                  setIssueDate(date);
-                  form.setValue("issueDate", date);
-                }}
-                initialFocus
+                onSelect={setIssueDate}
+                captionLayout="dropdown"
+                fromYear={1970}
+                toYear={new Date().getFullYear() + 10}
+                className="rounded-md border shadow-sm p-7 w-full"
               />
             </PopoverContent>
           </Popover>
@@ -271,15 +277,19 @@ export default function StepThree({ onNext, onBack }: StepThreeProps) {
                 </span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent
+              align="start"
+              sideOffset={6}
+              className="w-[360px] p-0"
+            >
               <Calendar
                 mode="single"
                 selected={expiryDate}
-                onSelect={(date) => {
-                  setExpiryDate(date);
-                  form.setValue("expiryDate", date);
-                }}
-                initialFocus
+                onSelect={setExpiryDate}
+                captionLayout="dropdown"
+                fromYear={1970}
+                toYear={new Date().getFullYear() + 10}
+                className="rounded-md border shadow-sm p-7 w-full"
               />
             </PopoverContent>
           </Popover>

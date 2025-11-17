@@ -34,10 +34,10 @@ export interface AxioErrorResponse {
 }
 
 export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  country: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  country?: string;
 }
 
 export interface ParentSignupRequest {
@@ -128,18 +128,24 @@ export interface User {
   hourlyRate?: number;
   role: Role;
   children: Child[];
+  gender: string;
   ratingCount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
 export interface Teacher extends User {
   role: Role.TEACHER;
+  bio?: string;
   bankDetails?: BankDetails;
   identityDocument?: IdentityDocument;
   introductionVideoUrl?: string;
   availability?: Availability[];
+  countryCode?: string;
+  countryFlag?: string;
+  // status?: "pending" | "accepted" | "declined";
 }
+
 export interface AuthResponse {
   accessToken: string;
   user: User;
@@ -179,5 +185,9 @@ export interface Pagination {
 
 export interface TeacherResponse {
   teachers: Teacher[];
-  pagination: Pagination;
+  pagination?: Pagination;
+}
+export interface TimeSlot {
+  startTime: string; // "HH:mm"
+  endTime: string; // "HH:mm"
 }

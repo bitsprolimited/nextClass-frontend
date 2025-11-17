@@ -12,7 +12,7 @@ import {
   Watch,
 } from "lucide-react";
 import Image from "next/image";
-import ReactPlayer from "react-player";
+import dynamic from "next/dynamic";
 
 import ErrorComponent from "@/components/ErrorComponent";
 import Loader from "@/components/Loader";
@@ -23,6 +23,28 @@ import { useTutor } from "@/hooks/useTutors";
 import { getScheduleString } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import { format } from "date-fns";
+import type { Availability } from "@/types";
+
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+
+/** ---------- Availability normalizer (Option A) ---------- */
+type AvailabilityRecord = Record<string, string[]>;
+
+function recordToAvailability(rec: AvailabilityRecord): Availability[] {
+  return Object.entries(rec).map(([dayKey, slots]) => ({
+    _id: `avail-${dayKey}`, // satisfy required _id
+    dayOfWeek: Number(dayKey) || 0,
+    isAvailable: Array.isArray(slots) && slots.length > 0,
+    slots: (slots || []).map((s, idx) => {
+      const [startTime, endTime] = s.split("-");
+      return {
+        _id: `slot-${dayKey}-${idx}`, // if Slot requires an id; remove if not needed
+        startTime: startTime?.trim() ?? "",
+        endTime: endTime?.trim() ?? "",
+      };
+    }),
+  }));
+}
 
 export default function TutorProfile({ id }: { id: string }) {
   const { data: tutor, isLoading, error } = useTutor(id);
@@ -32,26 +54,34 @@ export default function TutorProfile({ id }: { id: string }) {
   if (error || authError) return <ErrorComponent />;
 
   const badges = [
-    { text: tutor?.grades[0], color: "bg-[#7c4cff26] text-[#7c4cff]" },
+    { text: tutor?.grades?.[0] ?? "—", color: "bg-[#7c4cff26] text-[#7c4cff]" },
     { text: "Age 4-12", color: "bg-[#4c76ff26] text-[#4c76ff]" },
     {
-      text: `${tutor?.subjects?.length} subjects`,
+      text: `${
+        Array.isArray(tutor?.subjects) ? tutor!.subjects.length : 0
+      } subjects`,
       color: "bg-[#ff9d4c26] text-[#ff9d4c]",
     },
-    { text: tutor?.timezone, color: "bg-[#c6f6d5] text-[#038536]" },
+    { text: tutor?.timezone ?? "—", color: "bg-[#c6f6d5] text-[#038536]" },
   ];
 
-  console.log(tutor);
+  // Normalize availability to an array for getScheduleString
+  const availabilityArray: Availability[] = Array.isArray(tutor?.availability)
+    ? (tutor?.availability as Availability[])
+    : tutor?.availability
+    ? recordToAvailability(tutor.availability as Record<string, string[]>)
+    : [];
 
-  const schedule = getScheduleString(tutor?.availability || []);
+  const schedule = getScheduleString(availabilityArray);
+
   return (
     <div className="flex flex-col gap-6 items-center py-10">
       {/* Card + Video Side by Side */}
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl items-center">
         {/* Tutor Card */}
-        <Card className="flex flex-col md:flex-row  gap-6 p-6 rounded-xl shadow-md flex-1 h-full font-montserrat">
+        <Card className="flex flex-col md:flex-row gap-6 p-6 rounded-xl shadow-md flex-1 h-full font-montserrat">
           {/* Left Profile Section */}
-          <div className="flex flex-col items-center gap-3 min-w-[160px]">
+          <div className="flex flex-col items-center gap-3 min-w-40">
             <Image
               src={tutor?.profilePicture || "/images/tutor-1.png"}
               alt={tutor?.fullName || "Tutor"}
@@ -134,7 +164,9 @@ export default function TutorProfile({ id }: { id: string }) {
             {/* Subjects */}
             <div className="mt-3 text-lg text-gray-700 flex items-center gap-2 capitalize">
               <BookOpen className="size-4" />
-              {tutor?.subjects.join(". ")}.
+              {Array.isArray(tutor?.subjects)
+                ? tutor!.subjects.join(". ") + "."
+                : "—"}
             </div>
 
             {/* Joined */}
@@ -147,14 +179,9 @@ export default function TutorProfile({ id }: { id: string }) {
         {/* Video Section (separate card) */}
         <div className="relative w-[300px] overflow-hidden rounded-lg shadow h-full">
           <ReactPlayer
-            src={tutor?.introductionVideoUrl}
-            poster={tutor?.profilePicture || "/images/tutor-1.png"}
-            className="object-cover w-full h-full"
+            // url={tutor?.introductionVideoUrl ?? ""}
             controls
-            autoPlay
-            muted
-            crossOrigin="anonymous"
-            loop
+            playing={false}
             width="100%"
             height="100%"
           />
@@ -177,6 +204,7 @@ export default function TutorProfile({ id }: { id: string }) {
           <Mail className="w-4 h-4" /> Send Message
         </Button>
       </div>
+
       {tutor && <DashboardTabs tutor={tutor} />}
     </div>
   );
