@@ -435,12 +435,59 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                       </span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
+
+                  {/* <PopoverContent
+                    align="start"
+                    sideOffset={6}
+                    className="w-[360px] p-0"
+                  >
                     <Calendar
                       mode="single"
-                      selected={expiryDate ? new Date(expiryDate) : undefined}
+                      captionLayout="dropdown"
+                      fromYear={1970}
+                      toYear={new Date().getFullYear() + 10}
+                      showOutsideDays
+                      fixedWeeks
+                      defaultMonth={expiryDate ?? new Date()}
+                      selected={expiryDate}
                       onSelect={setExpiryDate}
-                      initialFocus
+                      className="p-3"
+                      classNames={{
+                        months: "w-full flex justify-center",
+                        month: "space-y-3",
+                        caption:
+                          "flex items-center justify-between w-full px-2 mb-2",
+                        caption_label: "text-sm font-medium w-40 text-center",
+                        // nav: "flex items-center gap-2",
+                        // nav_button: "h-8 w-8 rounded-md",
+                        head_row: "grid grid-cols-7 gap-1 px-1",
+                        head_cell: "text-[12px] text-muted-foreground",
+                        table: "w-full border-collapse",
+                        row: "grid grid-cols-7 gap-1",
+
+                        day: "h-9 w-9 rounded-md text-sm aria-selected:opacity-100",
+                        day_selected:
+                          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                        day_today: "border border-primary",
+                        day_outside: "text-muted-foreground/50",
+                        day_disabled: "text-muted-foreground opacity-50",
+                      }}
+                    />
+                  </PopoverContent> */}
+
+                  <PopoverContent
+                    align="start"
+                    sideOffset={6}
+                    className="w-[360px] p-0"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={expiryDate}
+                      onSelect={setExpiryDate}
+                      captionLayout="dropdown"
+                      fromYear={1970}
+                      toYear={new Date().getFullYear() + 10}
+                      className="rounded-md border shadow-sm p-7 w-full"
                     />
                   </PopoverContent>
                 </Popover>
