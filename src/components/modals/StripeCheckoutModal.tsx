@@ -6,8 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, PaymentElement } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 
 const stripePromise = loadStripe(
@@ -64,12 +64,9 @@ export function StripeCheckoutModal({
           <DialogTitle>Complete Your Booking Payment</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <Elements stripe={stripePromise} options={options}>
-            <form>
-              <PaymentElement />
-              <button>Submit</button>
-            </form>
-          </Elements>
+          <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+            <EmbeddedCheckout />
+          </EmbeddedCheckoutProvider>
         </div>
       </DialogContent>
     </Dialog>

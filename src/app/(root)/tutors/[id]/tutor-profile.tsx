@@ -51,7 +51,7 @@ export default function TutorProfile({ id }: { id: string }) {
         {/* Tutor Card */}
         <Card className="flex flex-col md:flex-row  gap-6 p-6 rounded-xl shadow-md flex-1 h-full font-montserrat">
           {/* Left Profile Section */}
-          <div className="flex flex-col items-center gap-3 min-w-[160px]">
+          <div className="flex flex-col items-center gap-3 min-w-40">
             <Image
               src={tutor?.profilePicture || "/images/tutor-1.png"}
               alt={tutor?.fullName || "Tutor"}
@@ -171,7 +171,7 @@ export default function TutorProfile({ id }: { id: string }) {
           />
         )}
         {tutor && (
-          <BookAClassModal session={session} tutor={tutor} duration={30} />
+          <BookAClassModal session={session} tutor={tutor} duration={60} />
         )}
         <Button variant="outline" className="px-6 rounded-full">
           <Mail className="w-4 h-4" /> Send Message

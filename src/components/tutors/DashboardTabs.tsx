@@ -99,10 +99,12 @@ export default function DashboardTabs({ tutor }: { tutor: Teacher }) {
                       </span>
                       <span className="text-[#031d9559] font-montserrat flex items-center gap-2">
                         <span>Exp</span>
-                        {format(
-                          new Date(qualification.expiryDate),
-                          "dd.MM.yyyy"
-                        )}
+                        {qualification.expiryDate
+                          ? format(
+                              new Date(qualification.expiryDate),
+                              "dd.MM.yyyy"
+                            )
+                          : "—"}
                       </span>
                     </div>
                   </CardContent>
