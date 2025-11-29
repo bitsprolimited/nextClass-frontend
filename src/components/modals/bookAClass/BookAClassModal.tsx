@@ -520,10 +520,10 @@ export function BookAClassModal({
                     </div>
                   )}
 
-                  <p className="text-sm">
+                  {/* <p className="text-sm">
                     Timezone:{" "}
                     <span className="font-semibold">{tutor.timezone}</span>
-                  </p>
+                  </p> */}
                 </div>
 
                 <DialogFooter className="flex items-center sm:justify-center w-full">

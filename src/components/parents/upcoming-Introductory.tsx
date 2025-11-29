@@ -53,7 +53,10 @@ export default function UpcomingCallTabs() {
       </TabsList>
 
       {/* Main Content */}
-      <TabsContent value="classes" className="w-full bg-[#f8f6f4] space-y-10">
+      <TabsContent
+        value="classes"
+        className="w-full bg-[#f8f6f4] space-y-10 p-4"
+      >
         <BookingTabContent
           bookings={upcomingClassesQuery.bookings}
           isLoading={upcomingClassesQuery.isLoading}
@@ -68,7 +71,7 @@ export default function UpcomingCallTabs() {
       {/* Upcoming Classes Tab */}
       <TabsContent
         value="introductory_calls"
-        className="w-full bg-[#f8f6f4] space-y-10"
+        className="w-full bg-[#f8f6f4] space-y-10 p-4"
       >
         <BookingTabContent
           bookings={upcomingCallsQuery.bookings}

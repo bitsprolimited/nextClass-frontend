@@ -1,5 +1,16 @@
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { bookingUtils } from "@/hooks/useBooking";
+import { BetterAuthSession } from "@/lib/auth-client";
+import {
+  acceptBooking,
+  Booking,
+  BookingStatus,
+  EventType,
+} from "@/services/booking.service";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format, isAfter, parseISO } from "date-fns";
 import {
   BookOpenIcon,
   CalendarIcon,
@@ -8,19 +19,8 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import {
-  acceptBooking,
-  Booking,
-  BookingStatus,
-  EventType,
-} from "@/services/booking.service";
-import Image from "next/image";
-import { bookingUtils } from "@/hooks/useBooking";
-import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { format, isAfter, parseISO } from "date-fns";
 import { useRouter } from "next/navigation";
-import { BetterAuthSession } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 type BookingActionProps = {
   booking: Booking;
@@ -66,6 +66,8 @@ export function BookingItem({
   // Get images
   const tutorImage = booking.teacher?.profilePicture || "/images/tutor-1.png";
   const parentImage = booking.parent?.profilePicture || "/images/tutor-1.png";
+  const tutorName = booking.teacher?.fullName || "Tutor";
+  const parentName = booking.parent?.fullName || "Parent";
 
   const isTutor = session?.user && session?.user.role === "teacher";
 
@@ -99,15 +101,12 @@ export function BookingItem({
     <div className="grid grid-cols-[auto_1fr] sm:grid-cols-[auto_1fr_auto] gap-4 sm:gap-6 w-full">
       {/* Left: Image */}
       <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-36 md:h-36 rounded-[10px] border border-[#ada1a1] overflow-hidden">
-        <Image
-          src={isTutor ? parentImage : tutorImage}
-          alt="User"
-          fill
-          className="object-cover"
-          onError={(e) => {
-            e.currentTarget.src = "/images/tutor-default.png";
-          }}
-        />
+        <Avatar className="h-auto w-auto rounded-none">
+          <AvatarImage src={isTutor ? parentImage : tutorImage} />
+          <AvatarFallback>
+            {isTutor ? parentName[0] : tutorName[0]}
+          </AvatarFallback>
+        </Avatar>
         {!isHistory && (
           <div
             className={`absolute top-2 right-2 w-3 h-3 rounded-full bg-${statusColor}-500`}
@@ -117,7 +116,7 @@ export function BookingItem({
 
       {/* Middle: Content */}
       <div className="flex flex-col justify-between gap-2 sm:gap-3">
-        <h2 className="text-base sm:text-lg md:text-3xl text-[#2c241b] leading-snug font-aero-trial">
+        <h2 className="capitalize text-base sm:text-lg md:text-3xl text-[#2c241b] leading-snug font-aero-trial">
           {title}
         </h2>
 

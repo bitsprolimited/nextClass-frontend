@@ -12,11 +12,8 @@ import {
 import { Calendar, ChevronDownIcon, DollarSign } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { AlertCircle, CheckCircle, Clock } from "lucide-react";
-import Image from "next/image";
-import { useMemo } from "react";
-import { IoBookOutline } from "react-icons/io5";
-import { MdOutlineCalendarMonth } from "react-icons/md";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import AlertRotator from "@/components/alerts/AlertRotator";
 import ErrorComponent from "@/components/ErrorComponent";
@@ -25,14 +22,15 @@ import Loader from "@/components/Loader";
 import { useUser } from "@/hooks/useUser";
 
 import UpcomingIntroductionTabs from "@/components/parents/upcoming-Introductory";
+import { Spinner } from "@/components/ui/spinner";
+import { createStripeConnect } from "@/services/tutors.service";
 import { useModalStore } from "@/store/useModal";
 import { Teacher } from "@/types";
 import { useMutation } from "@tanstack/react-query";
-import { createStripeConnect } from "@/services/tutors.service";
 import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function Dashboard() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: user, isLoading, isError } = useUser();
   const { openModal } = useModalStore();
 
@@ -40,6 +38,7 @@ export default function Dashboard() {
     mutationKey: ["create-stripe-connect"],
     mutationFn: createStripeConnect,
     onSuccess: (data) => {
+      setIsDropdownOpen(false);
       window.location.href = data.onboardingUrl;
     },
     onError: (error) => {
@@ -133,7 +132,7 @@ export default function Dashboard() {
                 >
                   View My Schedule
                 </Button>
-                <DropdownMenu>
+                <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
@@ -165,14 +164,12 @@ export default function Dashboard() {
             {/* Alert Box */}
             <AlertRotator user={user.user as Teacher} />
             {/* Next Class Card */}
-            <div className="bg-[#FFF5E9] rounded-xl shadow-md mt-6 flex flex-col w-full md:max-w-7xl md:mx-auto">
-              {/* Top Header Section */}
+            {/* <div className="bg-[#FFF5E9] rounded-xl shadow-md mt-6 flex flex-col w-full md:max-w-7xl md:mx-auto">
               <div className="relative pt-6 px-6 md:pt-4 md:pl-6 md:pr-4">
                 <h2 className="hidden md:block text-2xl font-bold font-aero-trial text-gray-800 tracking-wide md:self-start">
                   Your Next Class
                 </h2>
 
-                {/* Mobile Header */}
                 <div className="flex items-center justify-between md:hidden">
                   <h2 className="text-lg font-bold font-aero-trial text-gray-800 tracking-wide">
                     Your Next Class
@@ -183,9 +180,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Main Content */}
               <div className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 md:p-6 pt-2 w-full">
-                {/* Left Content */}
                 <div className="flex items-start md:items-center gap-4 md:gap-6 grow">
                   <div className="w-12 h-12 md:w-20 md:h-20 rounded-lg overflow-hidden border border-gray-200 shrink-0">
                     <Image
@@ -197,7 +192,6 @@ export default function Dashboard() {
                     />
                   </div>
 
-                  {/* Class Details */}
                   <div className="flex flex-col justify-center">
                     <h1 className="text-base md:text-[32px] font-medium font-aero-trial text-gray-900 mb-1 md:mb-2">
                       Basics of Algebra
@@ -226,14 +220,13 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Desktop Join Button */}
                 <div className="hidden md:block md:ml-6">
                   <button className="bg-[#FF9500] hover:bg-[#E38500] text-white font-semibold py-3 md:py-4 px-8 rounded-full transition duration-200 shadow-md">
                     Join Class
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* Two-column Section */}
             <div className="flex flex-col-reverse lg:flex-row gap-6">
               {/* Upcoming Intro Tab */}

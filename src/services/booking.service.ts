@@ -1,3 +1,4 @@
+import { RecentlyCalledTutor } from "@/components/parents/recentlyCalledTutors";
 import axiosInstance from "@/lib/axios";
 import { Child, User } from "@/types";
 
@@ -110,6 +111,15 @@ export async function getBookings(
   params?: GetBookingsParams
 ): Promise<PaginatedBookingsResponse> {
   const response = await axiosInstance.get("/bookings", { params });
+  return response.data;
+}
+
+export async function getRecentlyCalled(params?: {
+  limit?: number;
+}): Promise<RecentlyCalledTutor[]> {
+  const response = await axiosInstance.get("/bookings/recently-called", {
+    params,
+  });
   return response.data;
 }
 

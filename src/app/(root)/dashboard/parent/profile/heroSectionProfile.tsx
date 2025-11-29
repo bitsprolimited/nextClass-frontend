@@ -14,7 +14,7 @@ function HeroProfile() {
       img={{
         primary: {
           src: "/images/profile.png",
-          className: "lg:w-full w-[100px] bottom-0",
+          className: "lg:w-[500px] w-[100px] bottom-0 lg:bottom-0",
         },
       }}
       heading="Profile"

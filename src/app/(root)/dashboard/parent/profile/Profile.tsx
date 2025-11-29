@@ -3,7 +3,6 @@ import ErrorComponent from "@/components/ErrorComponent";
 import Loader from "@/components/Loader";
 import LearnersSection from "@/components/parents/learnersSection";
 import LessonNotesSection from "@/components/parents/lessonNotesSection";
-import TransactionsHistory from "@/components/parents/transactionHistory";
 import ReviewsPanel from "@/components/tutors/ReviewsPanel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/hooks/useUser";
@@ -176,7 +175,7 @@ export const Profile = (): JSX.Element => {
       <LearnersSection learners={user.user.children} />
       <LessonNotesSection />
       <ReviewsPanel />
-      <TransactionsHistory />
+      {/* <TransactionsHistory /> */}
     </div>
   );
 };
