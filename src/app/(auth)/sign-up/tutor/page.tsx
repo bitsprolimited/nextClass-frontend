@@ -18,7 +18,7 @@ function SignUp() {
         img={{
           primary: {
             src: "/images/signup-Saly-16.png",
-            className: "bottom-0 w-[200px] lg:w-auto",
+            className: "bottom-0 lg:bottom-0 w-[200px] lg:w-[500px]",
           },
         }}
         heading="Create your Account"

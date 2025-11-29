@@ -198,7 +198,7 @@ export default function TutorProfile({ id }: { id: string }) {
           />
         )}
         {tutor && (
-          <BookAClassModal session={session} tutor={tutor} duration={30} />
+          <BookAClassModal session={session} tutor={tutor} duration={60} />
         )}
         <Button variant="outline" className="px-6 rounded-full">
           <Mail className="w-4 h-4" /> Send Message

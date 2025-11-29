@@ -191,3 +191,41 @@ export interface TimeSlot {
   startTime: string; // "HH:mm"
   endTime: string; // "HH:mm"
 }
+
+export interface PaymentRecord {
+  _id: string;
+  parentId: ParentInfo;
+  teacherId: TeacherInfo;
+  stripePaymentIntentId: string;
+  amount: number;
+  platformFee: number;
+  teacherEarnings: number;
+  currency: string;
+  status: PaymentStatus;
+  type: PaymentType;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  bookingId: string;
+}
+
+export interface ParentInfo {
+  _id: string;
+  fullName: string;
+  email: string;
+}
+
+export interface TeacherInfo {
+  _id: string;
+  fullName: string;
+  profilePicture: string
+}
+
+export type PaymentStatus =
+  | "pending"
+  | "succeeded"
+  | "failed"
+  | "refunded"
+  | "canceled";
+
+export type PaymentType = "one_time" | "recurring";

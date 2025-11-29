@@ -20,3 +20,17 @@ export const getAvailableSlots = async (
   });
   return response.data;
 };
+
+export const createStripeConnect = async (): Promise<{
+  onboardingUrl: string;
+}> => {
+  const response = await axiosInstance.post("/teachers/create-connect-account");
+  return response.data;
+};
+
+export const createDashboardLink = async (): Promise<{
+  url: string;
+}> => {
+  const response = await axiosInstance.post("/teachers/stripe/dashboard");
+  return response.data;
+};

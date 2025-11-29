@@ -1,34 +1,22 @@
 import { BookOpen, Calendar, Clock, CreditCard } from "lucide-react";
 import Image from "next/image";
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
+import { PaymentRecord } from "@/types";
+import { format } from "date-fns";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const transactions: any[] = [
-  // {
-  //   name: "James Patterson",
-  //   day: "Mon, May 26",
-  //   time: "9:00am - 9:30",
-  //   dateTime: "16/06/2025 9:00am - 9:30",
-  //   type: "Transfer",
-  //   ref: "123163ye657dbhwbdbjjk",
-  //   status: "Paid",
-  //   image: "/images/avatar-1.png",
-  // },
-  // {
-  //   name: "James Patterson",
-  //   day: "Mon, May 26",
-  //   time: "9:00am - 9:30",
-  //   dateTime: "16/06/2025 9:00am - 9:30",
-  //   type: "Transfer",
-  //   ref: "123163ye657dbhwbdbjjk",
-  //   status: "Paid",
-  //   image: "/images/avatar-1.png",
-  // },
-];
-
-export default function TransactionsHistory() {
+export default function TransactionsHistory({
+  transactions,
+}: {
+  transactions: PaymentRecord[];
+}) {
   return (
-    <section className="w-full max-w-6xl mx-auto space-y-6">
+    <section className="w-full max-w-6xl mx-auto space-y-6 font-montserrat">
       {/* Header */}
       <div className="flex justify-between items-center px-2">
         <h2 className="text-xl font-semibold text-[#2c241b]">
@@ -44,14 +32,14 @@ export default function TransactionsHistory() {
         transactions.map((tx, index) => (
           <div
             key={index}
-            className="bg-[#FBF8F3] rounded-xl px-6 py-6 shadow-xs"
+            className="bg-[#FBF8F3] rounded-xl p-4 lg:p-6 shadow-xs"
           >
             <div className="flex gap-6 items-start">
               {/* Image */}
-              <div className="w-36 h-36 rounded-xl overflow-hidden border shrink-0">
+              <div className="w-10 h-10 md:w-20 md:h-20 lg:w-36 lg:h-36 rounded-xl overflow-hidden border shrink-0">
                 <Image
-                  src="/Images/tutor-3.png"
-                  alt={tx.name}
+                  src={tx.teacherId.profilePicture || "/images/tutor-1.png"}
+                  alt={tx.teacherId.fullName}
                   width={144}
                   height={144}
                   className="object-cover w-full h-full"
@@ -63,15 +51,9 @@ export default function TransactionsHistory() {
                 {/* Top row: Name + Date/Time + Status */}
                 <div className="flex justify-between items-start flex-wrap">
                   <div>
-                    <h3 className="text-lg font-semibold text-[#2c241b]">
-                      {tx.name}
+                    <h3 className="text-lg font-semibold font-aero-trial text-[#2c241b] capitalize">
+                      {tx.teacherId.fullName}
                     </h3>
-                    <div className="flex gap-2">
-                      <BookOpen className="w-5 h-5 " />
-
-                      <p className="text-sm text-[#2c241b]">{tx.day}</p>
-                    </div>
-                    <p className="text-sm text-[#6e6e6e]">{tx.time}</p>
                   </div>
                   <span className="bg-[#BFE2CE] text-green-800 text-sm px-4 py-1 rounded-full font-medium self-center sm:self-end">
                     {tx.status}
@@ -79,12 +61,12 @@ export default function TransactionsHistory() {
                 </div>
 
                 {/* Bottom row: Icons and info */}
-                <div className="flex gap-10 pt-2">
+                <div className="flex flex-wrap gap-3 lg:gap-10 pt-2">
                   {/* DateTime */}
-                  <div className="flex flex-col text-sm text-[#2c241b]">
-                    <Calendar className="w-5 h-5 mb-1" />
+                  <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 text-sm text-[#2c241b]">
+                    <Calendar className="w-5 h-5" />
                     <span className="text-center whitespace-nowrap">
-                      {tx.dateTime}
+                      {format(tx.createdAt, "Pp")}
                     </span>
                   </div>
 
@@ -92,8 +74,8 @@ export default function TransactionsHistory() {
                   <div className="self-center text-[#ccc] text-lg">|</div>
 
                   {/* Type */}
-                  <div className="flex flex-col  text-sm text-[#2c241b]">
-                    <Clock className="w-5 h-5 mb-1" />
+                  <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 text-sm text-[#2c241b]">
+                    <Clock className="w-5 h-5" />
                     <span>{tx.type}</span>
                   </div>
 
@@ -101,9 +83,11 @@ export default function TransactionsHistory() {
                   <div className="self-center text-[#ccc] text-lg">|</div>
 
                   {/* Ref */}
-                  <div className="flex flex-col  text-sm text-[#2c241b]">
-                    <BookOpen className="w-5 h-5 mb-1" />
-                    <span className="break-all text-center">{tx.ref}</span>
+                  <div className="flex items-center lg:items-start lg:flex-col gap-2 lg:gap-4 text-sm text-[#2c241b]">
+                    <BookOpen className="w-5 h-5" />
+                    <span className="text-center break-all w-fit">
+                      {tx.stripePaymentIntentId}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -117,9 +101,7 @@ export default function TransactionsHistory() {
               <CreditCard />
             </EmptyMedia>
             <EmptyTitle>No Transaction History</EmptyTitle>
-            <EmptyDescription>
-              You have no transaction history
-            </EmptyDescription>
+            <EmptyDescription>You have no transaction history</EmptyDescription>
           </EmptyHeader>
         </Empty>
       )}

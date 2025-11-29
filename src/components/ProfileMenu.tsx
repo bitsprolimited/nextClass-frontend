@@ -4,6 +4,7 @@ import {
   Bell,
   ChevronDown,
   Layers,
+  LayoutDashboard,
   LogOut,
   NotepadText,
   PieChart,
@@ -24,6 +25,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { createDashboardLink } from "@/services/tutors.service";
 
 export const links = {
   parent: [
@@ -94,6 +97,20 @@ function ProfileMenu({
 }) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: createDashboardLink,
+    onSuccess: (data) => {
+      window.location.href = data.url;
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleDashboard = () => {
+    mutate();
+  };
+
   const currentLinks = user.role === "parent" ? links.parent : links.tutor;
   const router = useRouter();
 
@@ -162,14 +179,24 @@ function ProfileMenu({
               </Link>
             </DropdownMenuItem>
           ))}
+          {user.role === "teacher" && (
+            <DropdownMenuItem
+              className="focus:bg-[#D9D9D9] cursor-pointer"
+              asChild
+            >
+              <Button
+                className="w-full px-4 py-2 flex text-gray-700 items-center justify-start gap-2 rounded-none bg-white"
+                onClick={handleDashboard}
+                disabled={isPending}
+              >
+                <LayoutDashboard /> Stripe Dashboard
+              </Button>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator className="bg-[#9A98C1] m-0" />
           <DropdownMenuItem
             className="focus:bg-[#D9D9D9] cursor-pointer"
             asChild
-            onSelect={(e) => {
-              e.preventDefault();
-              setIsProfileMenuOpen(false);
-            }}
           >
             <Button
               className="w-full px-4 py-2 flex text-gray-700 items-center justify-start gap-2 rounded-none bg-white"

@@ -18,7 +18,8 @@ function HeroForgot() {
         },
         primary: {
           src: "/images/Saly-16-login.png",
-          className: "bottom-0 size-[97px] lg:size-auto",
+          className:
+            "bottom-0 lg:bottom-0 w-[97px] h-[97px] lg:w-[500px] lg:h-auto",
         },
       }}
       heading="Forgot Password"

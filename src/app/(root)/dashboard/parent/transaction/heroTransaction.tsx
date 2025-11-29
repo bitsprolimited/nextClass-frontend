@@ -14,7 +14,7 @@ function HeroTransaction() {
       img={{
         primary: {
           src: "/images/Transaction.png",
-          className: "bottom-0",
+          className: "bottom-0 lg:-bottom-0",
         },
       }}
       heading="Transactions History"

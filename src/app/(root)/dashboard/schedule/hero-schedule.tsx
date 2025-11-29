@@ -14,7 +14,7 @@ function HeroSchedule() {
       img={{
         primary: {
           src: "/images/schedule-bottom.png",
-          className: "bottom-0  w-[120px] lg:w-auto",
+          className: "bottom-0 lg:-bottom-0 w-[120px] md:w-[300px] lg:w-[500px]",
         },
       }}
       heading="Schedule"

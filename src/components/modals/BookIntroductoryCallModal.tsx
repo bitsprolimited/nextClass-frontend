@@ -174,10 +174,10 @@ export function BookIntroductoryCallModal({
                 error={error as Error}
                 slots={data}
               />
-              <p className="text-sm">
+              {/* <p className="text-sm">
                 Timezone:{" "}
                 <span className="font-semibold">{tutor.timezone}</span>
-              </p>
+              </p> */}
               <Alert className="bg-[#DBE4FC]">
                 <AlertCircle className="size-4" />
                 <AlertTitle className="text-primary text-xs">
