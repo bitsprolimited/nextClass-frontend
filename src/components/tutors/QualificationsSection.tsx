@@ -1,44 +1,11 @@
-// components/MyQualificationsSection.tsx
 "use client";
 
-import QualificationCard from "./QualificationCard";
-import { useState } from "react";
+import { Teacher } from "@/types";
+import { format } from "date-fns";
+import { Pencil, Trash2 } from "lucide-react";
+import { Card, CardContent } from "../ui/card";
 
-const dummyData = [
-  {
-    id: "1",
-    title: "Fundamentals of Web Design",
-    type: "Diploma",
-    fileName: "IMGVV001",
-    fileSize: "8mb",
-    fileFormat: "PNG",
-    institution: "BITSPRO ACADEMY",
-    expiry: "26.07.2030",
-  },
-  {
-    id: "2",
-    title: "Fundamentals of Web Design",
-    type: "Diploma",
-    fileName: "IMGVV001",
-    fileSize: "8mb",
-    fileFormat: "PNG",
-    institution: "BITSPRO ACADEMY",
-    expiry: "26.07.2030",
-  },
-];
-
-export default function MyQualificationsSection() {
-  const [qualifications, setQualifications] = useState(dummyData);
-
-  const handleRemove = (id: string) => {
-    setQualifications((prev) => prev.filter((q) => q.id !== id));
-  };
-
-  const handleEdit = (id: string) => {
-    console.log("Edit qualification with ID:", id);
-    // Implement edit logic or modal
-  };
-
+export default function MyQualificationsSection({ tutor }: { tutor: Teacher }) {
   const handleAdd = () => {
     // Trigger modal or new form
     console.log("Add qualification");
@@ -60,15 +27,47 @@ export default function MyQualificationsSection() {
           </button>
         </div>
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
-          {qualifications.map((q) => (
-            <QualificationCard
-              key={q.id}
-              qualification={q}
-              onRemove={handleRemove}
-              onEdit={handleEdit}
-            />
-          ))}
+        <div className="inline-flex flex-col items-center gap-8 w-full">
+          <div className="flex flex-wrap self-stretch items-start w-full relative">
+            {tutor?.qualifications?.map((qualification, index) => (
+              <Card key={index} className="w-full max-w-[600px] px-8 py-6">
+                <CardContent className="inline-flex flex-col gap-4 relative p-0 w-full capitalize">
+                  <div className="flex justify-between gap-4">
+                    <div className="inline-flex gap-1.5 flex-col items-start">
+                      <h3 className="font-light font-montserrat italic text-[#ffa300]">
+                        {qualification.type}
+                      </h3>
+                      <p className="text-[#031d95] font-semibold text-2xl">
+                        {qualification.courseName}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-[#003B95]">
+                      <button>
+                        <Pencil size={16} />
+                      </button>
+                      <button>
+                        <Trash2 size={16} className="text-red-500" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-end justify-between relative w-full">
+                    <span className="font-montserrat text-[#757575]">
+                      {qualification.issuingInstitution}
+                    </span>
+                    <span className="text-[#031d9559] font-montserrat flex items-center gap-2">
+                      <span>Exp</span>
+                      {qualification.expiryDate
+                        ? format(
+                            new Date(qualification.expiryDate),
+                            "dd.MM.yyyy"
+                          )
+                        : "—"}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </section>

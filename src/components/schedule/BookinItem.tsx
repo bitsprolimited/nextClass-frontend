@@ -21,8 +21,11 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { RescheduleModal } from "../modals/RescheduleModal";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type BookingActionProps = {
+  session: BetterAuthSession | null | undefined;
   booking: Booking;
   isHistory: boolean;
   isTutor: boolean;
@@ -200,6 +203,7 @@ export function BookingItem({
           }`}
         >
           <BookingActionButtons
+            session={session}
             booking={booking}
             isHistory={isHistory}
             isTutor={isTutor ?? false}
@@ -216,6 +220,7 @@ export function BookingItem({
 
 export function BookingActionButtons({
   booking,
+  session,
   isHistory,
   isTutor,
   canReschedule,
@@ -247,9 +252,7 @@ export function BookingActionButtons({
 
   // Render Reschedule button if applicable
   const rescheduleButton = canReschedule ? (
-    <button className="text-[#e94e4e] text-xs sm:text-sm font-medium px-4 sm:px-8 h-9 sm:h-[45px]">
-      Reschedule
-    </button>
+    <RescheduleModal session={session} booking={booking} />
   ) : null;
 
   // Render the Main Action Button based on status and role
@@ -271,13 +274,28 @@ export function BookingActionButtons({
       } else {
         // Parent sees "Join Session" but it's disabled
         mainButton = (
-          <Button
-            className={actionButtonClasses}
-            disabled={true}
-            title="Waiting for teacher to accept booking"
-          >
-            Join Session
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-block">
+                <Button
+                  className={actionButtonClasses}
+                  disabled
+                  title="Waiting for teacher to accept booking"
+                >
+                  Join Session
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="w-full max-w-xs">
+                Waiting for{" "}
+                {typeof booking.teacherId === "string"
+                  ? "Teacher"
+                  : booking.teacherId.fullName}{" "}
+                to accept the call. You can join the session after that
+              </p>
+            </TooltipContent>
+          </Tooltip>
         );
       }
       break;

@@ -30,7 +30,7 @@ const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 /** ---------- Availability normalizer (Option A) ---------- */
 type AvailabilityRecord = Record<string, string[]>;
 
-function recordToAvailability(rec: AvailabilityRecord): Availability[] {
+export function recordToAvailability(rec: AvailabilityRecord): Availability[] {
   return Object.entries(rec).map(([dayKey, slots]) => ({
     _id: `avail-${dayKey}`, // satisfy required _id
     dayOfWeek: Number(dayKey) || 0,

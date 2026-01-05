@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Calendar, ChevronDownIcon, DollarSign } from "lucide-react";
+import { Calendar, ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle } from "lucide-react";
@@ -22,30 +22,13 @@ import Loader from "@/components/Loader";
 import { useUser } from "@/hooks/useUser";
 
 import UpcomingIntroductionTabs from "@/components/parents/upcoming-Introductory";
-import { Spinner } from "@/components/ui/spinner";
-import { createStripeConnect } from "@/services/tutors.service";
 import { useModalStore } from "@/store/useModal";
 import { Teacher } from "@/types";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 export default function Dashboard() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: user, isLoading, isError } = useUser();
   const { openModal } = useModalStore();
-
-  const { mutate, isPending: isCreating } = useMutation({
-    mutationKey: ["create-stripe-connect"],
-    mutationFn: createStripeConnect,
-    onSuccess: (data) => {
-      setIsDropdownOpen(false);
-      window.location.href = data.onboardingUrl;
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Failed to create stripe connect");
-    },
-  });
 
   // ✅ Dynamic checklist based on user data
   const steps = useMemo(() => {
@@ -104,10 +87,6 @@ export default function Dashboard() {
     ];
   }, [user]);
 
-  const handleConnect = () => {
-    mutate();
-  };
-
   if (isLoading) return <Loader />;
   if (isError || !user) return <ErrorComponent />;
 
@@ -132,7 +111,10 @@ export default function Dashboard() {
                 >
                   View My Schedule
                 </Button>
-                <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+                <DropdownMenu
+                  open={isDropdownOpen}
+                  onOpenChange={setIsDropdownOpen}
+                >
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
@@ -143,13 +125,6 @@ export default function Dashboard() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="[--radius:1rem]">
                     <DropdownMenuGroup>
-                      <DropdownMenuItem
-                        disabled={isCreating}
-                        onClick={handleConnect}
-                      >
-                        <DollarSign />
-                        {isCreating ? <Spinner /> : "Connect Stripe"}
-                      </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => openModal("setAvailability", {})}
                       >

@@ -19,8 +19,8 @@ type NotificationSettingsState = {
 };
 
 const defaultSettings: NotificationSettingsState = {
-  parentsResponse: { inApp: true, email: false },
-  scheduleReminders: { inApp: true, email: false },
+  parentsResponse: { inApp: true, email: true },
+  scheduleReminders: { inApp: true, email: true },
   marketingPromos: { inApp: true, email: false },
   transactional: { inApp: true, email: true },
 };
