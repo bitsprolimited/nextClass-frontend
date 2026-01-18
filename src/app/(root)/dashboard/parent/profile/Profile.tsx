@@ -30,12 +30,12 @@ export const Profile = (): JSX.Element => {
     : "N/A";
 
   return (
-    <div className="flex flex-col gap-10 lg:gap-[100px] items-center py-8 lg:py-[60px] font-montserrat">
+    <div className="flex flex-col gap-10 lg:gap-25 items-center py-8 lg:py-15 font-montserrat">
       {/* Top Section */}
       <div className="flex flex-col md:flex-row items-center gap-10 w-full max-w-6xl">
         {/* Profile Image */}
         <div className="hidden lg:flex flex-col items-center">
-          <Avatar className="w-[120px] lg:w-[300px] h-[120px] lg:h-[300px]">
+          <Avatar className="w-30 lg:w-75 h-30 lg:h-75">
             <AvatarImage src={user.user.profilePicture ?? ""} />
             <AvatarFallback className="text-2xl lg:text-7xl">
               {user.user.fullName.charAt(0)}
@@ -49,7 +49,7 @@ export const Profile = (): JSX.Element => {
           <div className="w-full flex flex-col gap-4 lg:gap-8">
             <div className="flex items-center lg:items-stretch lg:flex-col gap-4 px-4">
               <div className="lg:hidden flex flex-col items-center">
-                <Avatar className="w-[66px] lg:w-[300px] h-[66px] lg:h-[300px]">
+                <Avatar className="w-16.5 lg:w-75 h-16.5 lg:h-75">
                   <AvatarImage src={user.user.profilePicture ?? ""} />
                   <AvatarFallback className="text-2xl lg:text-7xl">
                     {user.user.fullName.charAt(0)}
@@ -144,7 +144,7 @@ export const Profile = (): JSX.Element => {
         {/* Phone */}
         <div className="flex items-center gap-2 lg:gap-4">
           <div className="bg-[#4c76ff45] border border-[#4c75ff] p-1.5 lg:p-4 rounded-lg">
-            <Phone className="w-4 lg:w-[34px] h-4 lg:h-[34px]" />
+            <Phone className="w-4 lg:w-8.5 h-4 lg:h-8.5" />
           </div>
           <p className="text-[#292d32] font-aero-trial font-medium text-xs lg:text-lg">
             {user.user.phoneNumber}
@@ -154,7 +154,7 @@ export const Profile = (): JSX.Element => {
         {/* Email */}
         <div className="flex items-center gap-2 lg:gap-4">
           <div className="bg-[#4cff9a45] border border-[#4cff99] p-1.5 lg:p-4 rounded-lg">
-            <Mail className="w-4 lg:w-[34px] h-4 lg:h-[34px]" color="#039536" />
+            <Mail className="w-4 lg:w-8.5 h-4 lg:h-8.5" color="#039536" />
           </div>
           <p className="text-[#292d32] font-aero-trial font-medium text-xs lg:text-lg">
             {user.user.email}
@@ -165,7 +165,7 @@ export const Profile = (): JSX.Element => {
         <div className="flex items-center gap-2 lg:gap-4">
           <div className="bg-[#ff4cff45] border border-[#ff4cff] p-1.5 lg:p-4 rounded-lg">
             <MapPin
-              className="w-4 lg:w-[34px] h-4 lg:h-[34px]"
+              className="w-4 lg:w-8.5 h-4 lg:h-8.5"
               color="#8B0395"
             />
           </div>

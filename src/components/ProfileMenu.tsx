@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import {
   Bell,
   ChevronDown,
+  DollarSign,
   Layers,
   LayoutDashboard,
   LogOut,
@@ -26,7 +27,12 @@ import {
 } from "./ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { createDashboardLink } from "@/services/tutors.service";
+import {
+  createDashboardLink,
+  createStripeConnect,
+} from "@/services/tutors.service";
+import { Spinner } from "./ui/spinner";
+import { toast } from "sonner";
 
 export const links = {
   parent: [
@@ -97,9 +103,24 @@ function ProfileMenu({
 }) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
+  const { mutate: createStripeConnectMutate, isPending: isCreating } =
+    useMutation({
+      mutationKey: ["create-stripe-connect"],
+      mutationFn: createStripeConnect,
+      onSuccess: (data) => {
+        setIsProfileMenuOpen(false);
+        window.location.href = data.onboardingUrl;
+      },
+      onError: (error) => {
+        console.log(error);
+        toast.error("Failed to create stripe connect");
+      },
+    });
+
   const { mutate, isPending } = useMutation({
     mutationFn: createDashboardLink,
     onSuccess: (data) => {
+      setIsProfileMenuOpen(false);
       window.location.href = data.url;
     },
     onError: (error) => {
@@ -109,6 +130,10 @@ function ProfileMenu({
 
   const handleDashboard = () => {
     mutate();
+  };
+
+  const handleConnect = () => {
+    createStripeConnectMutate();
   };
 
   const currentLinks = user.role === "parent" ? links.parent : links.tutor;
@@ -180,18 +205,37 @@ function ProfileMenu({
             </DropdownMenuItem>
           ))}
           {user.role === "teacher" && (
-            <DropdownMenuItem
-              className="focus:bg-[#D9D9D9] cursor-pointer"
-              asChild
-            >
-              <Button
-                className="w-full px-4 py-2 flex text-gray-700 items-center justify-start gap-2 rounded-none bg-white"
-                onClick={handleDashboard}
-                disabled={isPending}
-              >
-                <LayoutDashboard /> Stripe Dashboard
-              </Button>
-            </DropdownMenuItem>
+            <>
+              {user.hasStripeAccount ? (
+                <DropdownMenuItem
+                  className="focus:bg-[#D9D9D9] cursor-pointer"
+                  asChild
+                  onSelect={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <Button
+                    className="w-full px-4 py-2 flex text-gray-700 items-center justify-start gap-2 rounded-none bg-white"
+                    onClick={handleDashboard}
+                    disabled={isPending}
+                  >
+                    <LayoutDashboard /> Stripe Dashboard
+                  </Button>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                  }}
+                  className="focus:bg-[#D9D9D9] cursor-pointer w-full px-4 py-2 flex text-gray-700 items-center justify-start gap-2 rounded-none bg-white"
+                  disabled={isCreating}
+                  onClick={handleConnect}
+                >
+                  <DollarSign />
+                  {isCreating ? <Spinner /> : "Connect Stripe"}
+                </DropdownMenuItem>
+              )}
+            </>
           )}
           <DropdownMenuSeparator className="bg-[#9A98C1] m-0" />
           <DropdownMenuItem

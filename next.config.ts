@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
   env: {
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
   },
+  output: "standalone",
 };
 
 export default nextConfig;

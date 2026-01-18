@@ -293,7 +293,7 @@ export default function VideoModal({
                       <Button
                         onClick={resetRecording}
                         variant="outline"
-                        className="flex items-center gap-2 rounded-full max-w-[160px] h-10 bg-[#00000099] hover:bg-[#000000b3] text-white text-xs hover:text-white"
+                        className="flex items-center gap-2 rounded-full max-w-40 h-10 bg-[#00000099] hover:bg-[#000000b3] text-white text-xs hover:text-white"
                       >
                         <RotateCcw className="h-4 w-4" />
                         Record Again

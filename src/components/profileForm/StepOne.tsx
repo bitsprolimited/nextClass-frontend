@@ -271,7 +271,7 @@ export default function StepOne({ onNext }: StepOneProps) {
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a little about yourself"
-                    className="min-h-[80px] border border-gray-300 rounded-lg px-4 py-3 text-gray-700 bg-white resize-none"
+                    className="min-h-20 border border-gray-300 rounded-lg px-4 py-3 text-gray-700 bg-white resize-none"
                     {...field}
                   />
                 </FormControl>

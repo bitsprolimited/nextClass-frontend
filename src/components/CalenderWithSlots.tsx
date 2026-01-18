@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AxioErrorResponse } from "@/types";
+import { AxiosError } from "axios";
 import { format } from "date-fns";
+import { TriangleAlert } from "lucide-react";
 
 interface CalendarWithSlotsProps {
   date: Date;
@@ -14,7 +17,7 @@ interface CalendarWithSlotsProps {
   today?: Date;
   isLoading: boolean;
   isError: boolean;
-  error?: Error | null;
+  error?: AxiosError<AxioErrorResponse> | null;
   slots: { startTime: string; endTime: string }[] | undefined;
 }
 
@@ -66,9 +69,19 @@ export default function CalendarWithSlots({
 
                   {/* Error state */}
                   {isError && (
-                    <p className="text-red-500 text-sm col-span-2">
-                      Failed to load slots: {error?.message || "Unknown error"}
-                    </p>
+                    <div className="col-span-2">
+                      {isError && (
+                        <div className="col-span-2 flex flex-col items-center justify-center text-center p-2 h-full">
+                          <div className="mb-3 rounded-full bg-red-50 p-2 dark:bg-red-900/20">
+                            <TriangleAlert className="size-4 text-red-600" />
+                          </div>
+                          <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+                            {error?.response?.data.message ||
+                              "Please try again later"}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   )}
 
                   {/* Success state */}

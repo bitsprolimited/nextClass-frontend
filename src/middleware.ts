@@ -16,10 +16,14 @@ const roleDashboards: Record<string, string> = {
 };
 
 const protectedRoutes = [
-  "/dashboard/tutor",
+  "/dashboard/meeting",
+  "/dashboard/messages",
   "/dashboard/parent",
-  "/admin",
   "/dashboard/profile-setup",
+  "/dashboard/schedule",
+  "/dashboard/settings",
+  "/dashboard/tutor",
+  "/admin",
 ];
 
 export default async function middleware(req: NextRequest) {

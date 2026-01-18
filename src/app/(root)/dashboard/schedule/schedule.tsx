@@ -9,11 +9,23 @@ import {
   SortBy,
   SortOrder,
 } from "@/services/booking.service";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ClassTabs() {
-  const [activeMainTab, setActiveMainTab] = useState("classes");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+
+  const [activeMainTab, setActiveMainTab] = useState(
+    tabParam === "introductory_calls" ? "introductory_calls" : "classes"
+  );
   const [activeSubTab, setActiveSubTab] = useState("upcoming");
+
+  useEffect(() => {
+    if (tabParam === "introductory_calls" || tabParam === "classes") {
+      setActiveMainTab(tabParam);
+    }
+  }, [tabParam]);
 
   const handleMainTabChange = (value: string) => {
     setActiveMainTab(value);
