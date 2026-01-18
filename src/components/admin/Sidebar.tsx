@@ -49,7 +49,7 @@ const navSections = [
     title: "Application",
     links: [
       { name: "Reports", href: "/reports", icon: FileText },
-      { name: "Transactions", href: "/transactions", icon: CreditCard },
+      { name: "Transactions", href: "/admin/dashboard/transactions", icon: CreditCard },
     ],
   },
   {
