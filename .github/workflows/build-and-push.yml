@@ -8,8 +8,15 @@ on:
       - '**/*.txt'
       - '**/*.css'
       - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
       - '**/*.html'
       - '**/*.svg'
+      - '**/*.json'
+      - '.env*'
+      - 'src/**'
+      - 'public/**'
 
 env:
   AWS_REGION: us-east-1
