@@ -1,33 +1,46 @@
-# Building the binary of the App
-FROM golang:1.19 AS build
+# Use official nginx image
+FROM nginx:alpine
 
-WORKDIR /go/src/tasky
-COPY . .
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/src/tasky/tasky
+# Update base image packages
+RUN apk update && apk upgrade
 
+# Create a non-root user and group
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-FROM alpine:3.17.0 as release
-
-#Updates for security vulnerabilities
-RUN apk --no-cache update && apk --no-cache upgrade \
-    && apk --no-cache add libcrypto3 libssl3
-
-##Created non-root user for container security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup  
-
+# Set working directory
 WORKDIR /app
-COPY --from=build  /go/src/tasky/tasky .
-COPY --from=build  /go/src/tasky/assets ./assets
 
-# This will copy my text file into the container
-COPY wizexercise.txt .
+# Create the HTML file
+RUN echo '<!DOCTYPE html>\
+<html lang="en">\
+<head>\
+  <meta charset="UTF-8">\
+  <title>Coming Soon</title>\
+  <style>\
+    body { \
+      display: flex; \
+      justify-content: center; \
+      align-items: center; \
+      height: 100vh; \
+      font-family: Arial, sans-serif; \
+      background-color: #f5f5f5; \
+    } \
+    h1 { color: #333; } \
+  </style>\
+</head>\
+<body>\
+  <h1>NEXT CLASS COMING SOON</h1>\
+</body>\
+</html>' > index.html
 
-# Gave  non root user access to workdir to be able to run the app
-RUN chown -R appuser:appgroup /app
+
+RUN cp /app/index.html /usr/share/nginx/html/index.html
+
+RUN chown -R appuser:appgroup /app /usr/share/nginx/html
+
 USER appuser
 
-EXPOSE 8080
-ENTRYPOINT ["/app/tasky"]
+EXPOSE 80
 
 
+CMD ["nginx", "-g", "daemon off;"]
