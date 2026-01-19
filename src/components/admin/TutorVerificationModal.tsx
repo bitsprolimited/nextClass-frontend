@@ -14,8 +14,9 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
+import { useUpdateTeacherVerification } from "@/hooks/useTutors";
 
-/** ---------- Types (unchanged) ---------- */
+/** ---------- Types ---------- */
 type TutorQualification = {
   id: string | number;
   courseName: string;
@@ -47,7 +48,7 @@ export interface TutorVerificationViewModel {
   countryFlagUrl?: string;
   grade?: string;
   subjects?: string;
-  experience?: string;
+  experience?: number | string;
   bio?: string;
   identityDocument?: TutorIdentityDoc;
   qualifications?: TutorQualification[];
@@ -60,9 +61,11 @@ export interface TutorVerificationModalProps {
   open: boolean;
   onClose: () => void;
   tutor: TutorVerificationViewModel | null;
+  /** Optional: let the parent react immediately to a status change */
+  onAfterAction?: (newStatus: "accepted" | "declined") => void;
 }
 
-/** ---------- Small UI helpers ---------- */
+/** ---------- Small UI atoms ---------- */
 const Label: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="text-xs text-gray-400">{children}</div>
 );
@@ -88,7 +91,6 @@ const StatusPill: React.FC<{ status: string }> = ({ status }) => {
   );
 };
 
-/** ---------- Reusable atoms for the card look ---------- */
 const ViewPill: React.FC<{ href?: string }> = ({ href }) =>
   href ? (
     <a
@@ -114,7 +116,7 @@ const FileTile: React.FC<{
   sizeLabel?: string;
   formatLabel?: string;
 }> = ({ ext = "PNG", name = "—", sizeLabel = "—", formatLabel = "—" }) => (
-  <div className="mt-3 w-full rounded-md  bg-gray-200">
+  <div className="mt-3 w-full rounded-md bg-gray-200">
     <div className="flex items-center gap-3 p-3">
       <div className="w-10 h-12 rounded-md bg-[#3C5BFF] text-white flex items-center justify-center text-[10px] font-semibold">
         {ext}
@@ -125,18 +127,12 @@ const FileTile: React.FC<{
           {sizeLabel} <span className="mx-1">•</span> {formatLabel}
         </div>
       </div>
-      <button
-        type="button"
-        className="ml-auto text-[11px] text-red-500 hover:underline"
-        aria-label="Remove file"
-      >
-        Remove
-      </button>
+      <span className="ml-auto text-[11px] text-gray-400"> </span>
     </div>
   </div>
 );
 
-/** ---------- Styled to match screenshot ---------- */
+/** ---------- Sections ---------- */
 const IDCard: React.FC<{ doc?: TutorIdentityDoc }> = ({ doc }) => {
   if (!doc) {
     return (
@@ -149,14 +145,15 @@ const IDCard: React.FC<{ doc?: TutorIdentityDoc }> = ({ doc }) => {
   const filename = doc.documentUrl
     ? decodeURIComponent(doc.documentUrl.split("/").pop() ?? "")
     : "Document";
-  // simple size/format placeholders; replace with real metadata if you have it
-  const sizeLabel = "8mb";
-  const formatLabel = "PNG";
+  const sizeLabel = "8mb"; // placeholder
+  const formatLabel = "PNG"; // placeholder
 
   return (
     <div className="rounded-xl border p-4">
       <div className="flex items-center justify-between">
-        <p className="italic text-sm text-[#A87C00]">Drivers License</p>
+        <p className="italic text-sm text-[#A87C00]">
+          {doc.idType?.replaceAll("_", " ") || "ID Document"}
+        </p>
         <ViewPill href={doc.documentUrl} />
       </div>
 
@@ -184,9 +181,9 @@ const IDCard: React.FC<{ doc?: TutorIdentityDoc }> = ({ doc }) => {
 const QualificationCard: React.FC<{ q: TutorQualification }> = ({ q }) => {
   const filename = q.certificateUrl
     ? decodeURIComponent(q.certificateUrl.split("/").pop() ?? "")
-    : "IMGVV001";
-  const sizeLabel = "8mb";
-  const formatLabel = "PNG";
+    : "certificate";
+  const sizeLabel = "8mb"; // placeholder
+  const formatLabel = "PNG"; // placeholder
 
   return (
     <div className="rounded-xl border p-4">
@@ -209,28 +206,53 @@ const QualificationCard: React.FC<{ q: TutorQualification }> = ({ q }) => {
       <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
         <div>{q.issuingInstitution || "—"}</div>
         <div>
-          exp.{" "}
-          {q.expiryDate ? new Date(q.expiryDate).toLocaleDateString() : "—"}
+          exp. {q.expiryDate ? new Date(q.expiryDate).toLocaleDateString() : "—"}
         </div>
       </div>
     </div>
   );
 };
 
-/** ---------- Main ---------- */
+/** ---------- Main Modal ---------- */
 export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
   open,
   onClose,
   tutor,
+  onAfterAction,
 }) => {
   const [isPlaying, setPlaying] = React.useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
-
   const [expanded, setExpanded] = React.useState(false);
 
   React.useEffect(() => {
     setExpanded(false);
+    setPlaying(false);
+    videoRef.current?.pause?.();
   }, [tutor?.id]);
+
+  // Mutation to approve/decline
+  const updateVerification = useUpdateTeacherVerification();
+  const busy = updateVerification.isPending;
+
+  const handleApprove = () => {
+    if (!tutor?.id) return;
+    updateVerification.mutate(
+      { id: String(tutor.id), isAdminVerified: true },
+      {
+        onSuccess: () => onAfterAction?.("accepted"),
+      }
+    );
+  };
+
+  const handleDecline = () => {
+    if (!tutor?.id) return;
+    updateVerification.mutate(
+      { id: String(tutor.id), isAdminVerified: false },
+      {
+        onSuccess: () => onAfterAction?.("declined"),
+      }
+    );
+  };
 
   if (!tutor) {
     return (
@@ -342,7 +364,7 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                     </div>
                     <div>
                       <Label>Experience</Label>
-                      <Value>{tutor.experience ?? "—"}</Value>
+                      <Value>{tutor.experience}</Value>
                     </div>
                   </div>
                 </section>
@@ -364,13 +386,13 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                   )}
                 </section>
 
-                {/* Section 3: ID verification (styled) */}
+                {/* Section 3: ID verification */}
                 <section className="space-y-3">
                   <Label>ID Verification</Label>
                   <IDCard doc={tutor.identityDocument} />
                 </section>
 
-                {/* Section 4: qualifications (styled) */}
+                {/* Section 4: qualifications */}
                 <section className="space-y-3">
                   <Label>Qualifications</Label>
                   {tutor.qualifications && tutor.qualifications.length > 0 ? (
@@ -386,25 +408,20 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                   )}
                 </section>
 
-                {/* Section 5: Introductory Video (styled) */}
+                {/* Section 5: Introductory Video */}
                 {tutor.introductionVideoUrl && (
                   <section className="space-y-2">
                     <Label>Introductory Video</Label>
 
-                    {/* light grey card */}
                     <div className="bg-[#F5F4F8] rounded-xl px-3 sm:px-4 py-2">
-                      {/* fixed 16:9 frame */}
                       <div className="relative aspect-video rounded-lg overflow-hidden mx-auto w-full max-w-[560px] md:max-w-[640px]">
-                        {/* black video surface */}
                         <video
                           ref={videoRef}
                           src={tutor.introductionVideoUrl}
                           className="h-full w-full bg-black object-cover"
-                          controls={isPlaying} // controls appear when playing
+                          controls={isPlaying}
                           onEnded={() => setPlaying(false)}
                         />
-
-                        {/* centered play icon overlay */}
                         {!isPlaying && (
                           <button
                             type="button"
@@ -415,7 +432,6 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                             }}
                           >
                             <span className="grid place-items-center h-12 w-12 rounded-full ring-2 ring-white">
-                              {/* minimal play glyph */}
                               <svg
                                 viewBox="0 0 24 24"
                                 className="h-5 w-5 fill-white"
@@ -431,22 +447,36 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                   </section>
                 )}
 
-                {/* Footer buttons (passive for now) */}
+                {/* Footer actions */}
                 <section className="flex justify-end gap-4 pt-2">
                   <Button
                     variant="outline"
                     className="border-red-500 text-red-500 hover:bg-red-50"
-                    disabled
-                    title="Endpoint not ready"
+                    onClick={handleDecline}
+                    disabled={busy}
                   >
-                    Decline Tutor
+                    {busy ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing…
+                      </>
+                    ) : (
+                      "Decline Tutor"
+                    )}
                   </Button>
                   <Button
                     className="bg-primary text-white hover:bg-primary/90"
-                    disabled
-                    title="Endpoint not ready"
+                    onClick={handleApprove}
+                    disabled={busy}
                   >
-                    Approve Tutor
+                    {busy ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing…
+                      </>
+                    ) : (
+                      "Approve Tutor"
+                    )}
                   </Button>
                 </section>
               </div>

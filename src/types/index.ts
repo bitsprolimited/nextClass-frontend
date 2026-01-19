@@ -135,6 +135,8 @@ export interface User {
 }
 
 export interface Teacher extends User {
+  cityState: string | undefined;
+  state: string | undefined;
   role: Role.TEACHER;
   bio?: string;
   bankDetails?: BankDetails;
