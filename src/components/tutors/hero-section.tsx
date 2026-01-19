@@ -15,7 +15,7 @@ function HeroSection(): React.JSX.Element {
       img={{
         primary: {
           src: "/images/tutor-saly-16.png",
-          className: "w-[200px] lg:w-full bottom-0 max-w-[500px]",
+          className: "w-[200px] lg:w-[500px] bottom-0 lg:bottom-0",
         },
         secondary: {
           src: "/images/tutor-saly-17.png",

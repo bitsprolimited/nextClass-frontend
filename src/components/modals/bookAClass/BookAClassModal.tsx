@@ -18,20 +18,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useCreateBooking } from "@/hooks/useBooking";
+import { useCreateCheckoutSession } from "@/hooks/usePayment";
 import { BetterAuthSession } from "@/lib/auth-client";
+import { BookingType, EventType } from "@/services/booking.service";
 import { getLearners } from "@/services/learner.service";
 import { getAvailableSlots } from "@/services/tutors.service";
-import { Teacher } from "@/types";
+import { AxioErrorResponse, Teacher } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { addMinutes, format, parse } from "date-fns";
-import { Loader } from "lucide-react";
+import { format, parse } from "date-fns";
+import { Loader, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Calendar } from "../../ui/calendar";
 import { ScrollArea } from "../../ui/scroll-area";
 import { Skeleton } from "../../ui/skeleton";
+import { StripeCheckoutModal } from "../StripeCheckoutModal";
 import ReviewClassSchedule from "./ReviewClassSchedule";
+import { AxiosError } from "axios";
 
 export default function AlertComponent({
   selectedSlots,
@@ -43,7 +46,7 @@ export default function AlertComponent({
   isAlertOpen,
   onAlertClose,
 }: {
-  selectedSlots: Record<string, string>;
+  selectedSlots: Record<string, string[]>;
   selectedDates: Date[] | undefined;
   selectedSubject: string;
   selectedLearners: string[];
@@ -66,27 +69,28 @@ export default function AlertComponent({
                 You are about to book {slotCount} class
                 {slotCount > 1 ? "es" : ""}:
               </div>
-
               <div className="mt-2 space-y-1">
-                {Object.entries(selectedSlots).map(([dateKey, timeString]) => {
+                {Object.entries(selectedSlots).map(([dateKey, times]) => {
                   const date = selectedDates?.find(
                     (d) => format(d, "yyyy-MM-dd") === dateKey
                   );
-                  return (
-                    <div key={dateKey} className="text-sm font-medium">
+                  // CHANGED: Map through the array of times for this date
+                  return times.map((timeString) => (
+                    <div
+                      key={`${dateKey}-${timeString}`}
+                      className="text-sm font-medium"
+                    >
                       • {date && format(date, "EEEE, MMM d, yyyy")} at{" "}
                       {timeString}
                     </div>
-                  );
+                  ));
                 })}
               </div>
-
               {selectedSubject && (
                 <div className="text-sm">
                   <strong>Subject:</strong> {selectedSubject}
                 </div>
               )}
-
               {selectedLearners.length > 0 && (
                 <div className="text-sm">
                   <strong>Learners:</strong> {selectedLearners.length} selected
@@ -97,11 +101,17 @@ export default function AlertComponent({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-          <AlertDialogAction disabled={isPending} onClick={onSubmit}>
+          <AlertDialogAction
+            disabled={isPending}
+            onClick={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+          >
             {isPending ? (
               <Loader className="animate-spin" />
             ) : (
-              `Confirm Booking`
+              `Confirm Booking (${slotCount} class${slotCount > 1 ? "es" : ""})`
             )}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -129,7 +139,8 @@ export function BookAClassModal({
   const [currentViewDate, setCurrentViewDate] = useState<Date | null>(
     selectedDates?.[0] || null
   );
-  const [selectedSlots, setSelectedSlots] = useState<Record<string, string>>(
+
+  const [selectedSlots, setSelectedSlots] = useState<Record<string, string[]>>(
     {}
   );
 
@@ -151,7 +162,6 @@ export function BookAClassModal({
       });
     },
     refetchOnWindowFocus: false,
-    retry: false,
     enabled: !!session && !!currentViewDate,
   });
 
@@ -159,64 +169,96 @@ export function BookAClassModal({
   const { data: learners } = useQuery({
     queryKey: ["learners"],
     queryFn: () => getLearners(),
+    refetchOnWindowFocus: false,
     enabled: !!session,
   });
 
-  const { mutate: createBooking, isPending } = useCreateBooking();
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [checkoutClientSecret, setCheckoutClientSecret] = useState<
+    string | null
+  >(null);
 
+  const { mutate: createCheckoutSession, isPending: isCreatingCheckout } =
+    useCreateCheckoutSession();
+
+  // Replace onSubmit function
   const onSubmit = () => {
     if (session && selectedDates && Object.keys(selectedSlots).length > 0) {
-      // Create slots array for all selected dates and times
-      const slots = selectedDates
-        .filter((date) => {
-          const dateKey = format(date, "yyyy-MM-dd");
-          return selectedSlots[dateKey]; // Only include dates with selected times
-        })
-        .map((date) => {
-          const dateKey = format(date, "yyyy-MM-dd");
-          const timeString = selectedSlots[dateKey];
-          const start = parse(timeString, "HH:mm", date);
-          return {
-            startTime: start,
-            duration,
-          };
+      const finalSlots: { startTime: Date; duration: number }[] = [];
+
+      selectedDates.forEach((date) => {
+        const dateKey = format(date, "yyyy-MM-dd");
+        const times = selectedSlots[dateKey] || [];
+        if (times.length === 0) return;
+
+        // 1. Sort times (e.g., "13:00", "14:00")
+        const sortedTimes = [...times].sort();
+
+        // 2. Merge contiguous slots
+        let currentBooking: { startTime: Date; duration: number } | null = null;
+
+        sortedTimes.forEach((timeString) => {
+          const startTime = parse(timeString, "HH:mm", date);
+
+          if (!currentBooking) {
+            // Start a new booking block
+            currentBooking = { startTime, duration };
+          } else {
+            // Check if this slot starts exactly when the previous one ends
+            const previousEnd = new Date(
+              currentBooking.startTime.getTime() +
+                currentBooking.duration * 60000
+            );
+
+            if (startTime.getTime() === previousEnd.getTime()) {
+              // Contiguous! Just extend the duration
+              currentBooking.duration += duration;
+            } else {
+              // Not contiguous. Push the completed block and start a new one
+              finalSlots.push(currentBooking);
+              currentBooking = { startTime, duration };
+            }
+          }
         });
 
-      if (slots.length === 0) return;
-
-      // Use the latest end time for the booking end time
-      const endTimes = slots.map((slot) =>
-        addMinutes(slot.startTime, duration)
-      );
-      const latestEndTime = new Date(
-        Math.max(...endTimes.map((date) => date.getTime()))
-      );
-
-      const bookingData = {
-        teacherId: tutor._id,
-        endTime: latestEndTime.toISOString(),
-        eventType: "class",
-        slots: slots,
-        bookingType: "one_time" as const,
-        ...(selectedSubject && { subject: selectedSubject }),
-        ...(selectedLearners.length > 0 && { learnerIds: selectedLearners }),
-      };
-
-      console.log("Booking data:", bookingData);
-
-      createBooking(bookingData, {
-        onSuccess: () => {
-          setIsMainModalOpen(false);
-          setIsAlertOpen(false);
-          // Reset all form data
-          setSelectedSlots({});
-          setSelectedDates([]);
-          setSelectedSubject("");
-          setSelectedLearners([]);
-          setCurrentStep(1);
-        },
+        if (currentBooking) finalSlots.push(currentBooking);
       });
+
+      createCheckoutSession(
+        {
+          teacherId: tutor._id,
+          slots: finalSlots, // This now contains multiple items if multiple times selected
+          subject: selectedSubject,
+          learnerIds:
+            selectedLearners.length > 0 ? selectedLearners : undefined,
+          bookingType: BookingType.ONE_TIME,
+          eventType: EventType.CLASS,
+        },
+        {
+          onSuccess: (data) => {
+            setCheckoutClientSecret(data.clientSecret);
+            setShowPaymentModal(true);
+            setIsMainModalOpen(false);
+            setIsAlertOpen(false);
+          },
+          onError: (error) => {
+            console.error("Failed to create checkout session:", error);
+            alert("Failed to initialize payment. Please try again.");
+          },
+        }
+      );
     }
+  };
+
+  const handlePaymentComplete = () => {
+    setShowPaymentModal(false);
+    setCheckoutClientSecret(null);
+    // Reset form
+    setSelectedSlots({});
+    setSelectedDates([]);
+    setSelectedSubject("");
+    setSelectedLearners([]);
+    setCurrentStep(1);
   };
 
   const handleBookingClick = () => {
@@ -236,7 +278,6 @@ export function BookAClassModal({
   // Handle date selection - supports multiple dates
   const handleDateSelect = (dates: Date[] | undefined) => {
     setSelectedDates(dates);
-    // Clear selected slots for dates that are no longer selected
     if (dates) {
       const dateKeys = dates.map((date) => format(date, "yyyy-MM-dd"));
       setSelectedSlots((prev) => {
@@ -245,14 +286,12 @@ export function BookAClassModal({
             acc[key] = prev[key];
           }
           return acc;
-        }, {} as Record<string, string>);
+        }, {} as Record<string, string[]>); // Typed as string array
         return filtered;
       });
     } else {
       setSelectedSlots({});
     }
-
-    // Set the first selected date as the current view date
     if (dates && dates.length > 0) {
       setCurrentViewDate(dates[0]);
     } else {
@@ -269,20 +308,34 @@ export function BookAClassModal({
   const handleTimeSelect = (timeString: string) => {
     if (currentViewDate) {
       const dateKey = format(currentViewDate, "yyyy-MM-dd");
-      setSelectedSlots((prev) => ({
-        ...prev,
-        [dateKey]: timeString,
-      }));
+      setSelectedSlots((prev) => {
+        const currentTimes = prev[dateKey] || [];
+        const isSelected = currentTimes.includes(timeString);
+
+        let newTimes;
+        if (isSelected) {
+          // Remove if already selected
+          newTimes = currentTimes.filter((t) => t !== timeString);
+        } else {
+          // Add if not selected
+          newTimes = [...currentTimes, timeString];
+        }
+
+        // If no times left for this date, potentially delete the key or keep empty array
+        return {
+          ...prev,
+          [dateKey]: newTimes.sort(), // Optional: keep them sorted nicely
+        };
+      });
     }
   };
 
-  // Get current selected time for the viewed date
-  const getCurrentSelectedTime = () => {
+  const isTimeSelected = (timeString: string) => {
     if (currentViewDate) {
       const dateKey = format(currentViewDate, "yyyy-MM-dd");
-      return selectedSlots[dateKey] || null;
+      return selectedSlots[dateKey]?.includes(timeString) ?? false;
     }
-    return null;
+    return false;
   };
 
   // Check if step 1 is valid (has selected dates and times)
@@ -322,7 +375,7 @@ export function BookAClassModal({
 
         {/* Only render dialog content if user is authenticated */}
         {session && (
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-[690px]">
             {currentStep === 1 && (
               <>
                 <DialogHeader>
@@ -356,7 +409,11 @@ export function BookAClassModal({
                             <div className="space-y-2">
                               {selectedDates.map((date) => {
                                 const dateKey = format(date, "yyyy-MM-dd");
-                                const hasTimeSelected = selectedSlots[dateKey];
+                                // Check length of array
+                                const selectedCount =
+                                  selectedSlots[dateKey]?.length || 0;
+                                const hasTimeSelected = selectedCount > 0;
+
                                 return (
                                   <Button
                                     key={date.toISOString()}
@@ -378,7 +435,9 @@ export function BookAClassModal({
                                       <span>{format(date, "MMM d, yyyy")}</span>
                                       {hasTimeSelected && (
                                         <span className="text-xs text-green-600 font-medium">
-                                          {hasTimeSelected}
+                                          {selectedCount} slot
+                                          {selectedCount > 1 ? "s" : ""}{" "}
+                                          selected
                                         </span>
                                       )}
                                     </div>
@@ -424,11 +483,21 @@ export function BookAClassModal({
 
                                 {/* Error state */}
                                 {currentViewDate && isError && (
-                                  <p className="text-red-500 text-sm col-span-2">
-                                    Failed to load slots:{" "}
-                                    {(error as Error)?.message ||
-                                      "Unknown error"}
-                                  </p>
+                                  <div className="col-span-2">
+                                    {isError && (
+                                      <div className="col-span-2 flex flex-col items-center justify-center text-center p-2 h-full">
+                                        <div className="mb-3 rounded-full bg-red-50 p-2 dark:bg-red-900/20">
+                                          <TriangleAlert className="size-4 text-red-600" />
+                                        </div>
+                                        <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+                                          {(
+                                            error as AxiosError<AxioErrorResponse>
+                                          )?.response?.data.message ||
+                                            "Please try again later"}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
 
                                 {/* Success state */}
@@ -439,16 +508,16 @@ export function BookAClassModal({
                                     <>
                                       {data.length > 0 ? (
                                         data.map(({ startTime }) => {
-                                          const currentTime =
-                                            getCurrentSelectedTime();
+                                          const isSelected =
+                                            isTimeSelected(startTime); // Use new helper
                                           return (
                                             <Button
                                               key={startTime}
                                               variant={
-                                                currentTime === startTime
+                                                isSelected
                                                   ? "default"
                                                   : "outline"
-                                              }
+                                              } // Highlight if in array
                                               size="sm"
                                               className="w-full"
                                               onClick={() =>
@@ -484,17 +553,20 @@ export function BookAClassModal({
                           </p>
                           <div className="text-xs space-y-1 max-h-20 overflow-y-auto">
                             {Object.entries(selectedSlots).map(
-                              ([dateKey, timeString]) => {
+                              ([dateKey, times]) => {
                                 const date = selectedDates.find(
                                   (d) => format(d, "yyyy-MM-dd") === dateKey
                                 );
+                                if (!times || times.length === 0) return null;
+
+                                // Display times joined by comma
                                 return (
                                   <div
                                     key={dateKey}
                                     className="p-1 rounded text-primary font-bold"
                                   >
-                                    {date && format(date, "MMM d")} at{" "}
-                                    {timeString}
+                                    {date && format(date, "MMM d")}:{" "}
+                                    {times.join(", ")}
                                   </div>
                                 );
                               }
@@ -505,10 +577,10 @@ export function BookAClassModal({
                     </div>
                   )}
 
-                  <p className="text-sm">
+                  {/* <p className="text-sm">
                     Timezone:{" "}
                     <span className="font-semibold">{tutor.timezone}</span>
-                  </p>
+                  </p> */}
                 </div>
 
                 <DialogFooter className="flex items-center sm:justify-center w-full">
@@ -549,9 +621,16 @@ export function BookAClassModal({
         selectedSubject={selectedSubject}
         selectedLearners={selectedLearners}
         onSubmit={onSubmit}
-        isPending={isPending}
+        isPending={isCreatingCheckout}
         isAlertOpen={isAlertOpen}
         onAlertClose={setIsAlertOpen}
+      />
+
+      <StripeCheckoutModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        clientSecret={checkoutClientSecret}
+        onComplete={handlePaymentComplete}
       />
     </Dialog>
   );

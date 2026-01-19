@@ -41,7 +41,7 @@ function ReviewClassSchedule({
   tutor: Teacher;
   setCurrentStep: Dispatch<SetStateAction<number>>;
   selectedDates: Date[] | undefined;
-  selectedSlots: Record<string, string>;
+  selectedSlots: Record<string, string[]>;
   selectedSubject: string;
   setSelectedSubject: (subject: string) => void;
   selectedLearners: string[];

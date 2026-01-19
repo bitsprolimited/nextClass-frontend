@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import { AeroTrial, StudioSans } from "./fonts";
 import Modal from "@/components/modals/Modal";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,9 +50,11 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} ${AeroTrial.variable} ${StudioSans.variable} ${playfairDisplay.variable} ${MontserratFont.variable} antialiased font`}
         >
           <AuthProvider>
-            {children}
-            <Toaster richColors />
-            <Modal />
+            <TooltipProvider>
+              {children}
+              <Toaster richColors />
+              <Modal />
+            </TooltipProvider>
           </AuthProvider>
         </body>
       </html>

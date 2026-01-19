@@ -42,7 +42,7 @@ function ReusableHeroSection({
               <div className="flex flex-col items-start mx-auto">
                 <h1
                   className={cn(
-                    "text-[20px] lg:text-[58px] font-aero-trial font-medium",
+                    "text-[20px] md:text-[48px] lg:text-[58px] font-aero-trial font-medium",
                     bgColor === "bg-primary" ? "text-white" : "text-zeus"
                   )}
                 >

@@ -37,6 +37,10 @@ export const authClient = createAuthClient({
           type: "number",
           defaultValue: 0,
         },
+        hasStripeAccount: {
+          type: "boolean",
+          defaultValue: false,
+        },
         isProfileComplete: {
           type: "boolean",
           defaultValue: false,

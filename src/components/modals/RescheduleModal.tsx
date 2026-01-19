@@ -19,22 +19,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useCreateBooking } from "@/hooks/useBooking";
+import { useRescheduleBooking } from "@/hooks/useBooking";
+import { BetterAuthSession } from "@/lib/auth-client";
+import { Booking } from "@/services/booking.service";
 import { getAvailableSlots } from "@/services/tutors.service";
-import { AxioErrorResponse, Teacher } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { addMinutes, format, parse } from "date-fns";
+import { format, parse } from "date-fns";
 import { AlertCircle, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import CalendarWithSlots from "../CalenderWithSlots";
 import { Alert, AlertTitle } from "../ui/alert";
-import { BetterAuthSession } from "@/lib/auth-client";
 import { AxiosError } from "axios";
+import { AxioErrorResponse, Teacher } from "@/types";
 
 export default function AlertComponent({
-  time,
   tutor,
+  time,
   onSubmit,
   isPending,
   isAlertOpen,
@@ -55,16 +56,15 @@ export default function AlertComponent({
           className="bg-secondary rounded-full"
           disabled={!time}
         >
-          Book Introduction Call
+          Reschedule Call
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            You are about to book an introductory call with{" "}
-            <b>{tutor.fullName}</b> on{" "}
-            <b>{time ? format(time, "PPP p") : "—"}</b>
+            You are about to reschedule Your call with <b>{tutor.fullName}</b>{" "}
+            on <b>{time ? format(time, "PPP p") : "—"}</b>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -76,7 +76,11 @@ export default function AlertComponent({
               onSubmit();
             }}
           >
-            {isPending ? <Loader className="animate-spin" /> : "Yes, Book call"}
+            {isPending ? (
+              <Loader className="animate-spin" />
+            ) : (
+              "Yes, reschedule call"
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -84,53 +88,55 @@ export default function AlertComponent({
   );
 }
 
-export function BookIntroductoryCallModal({
-  tutor,
-  duration,
+export function RescheduleModal({
+  booking,
   session,
 }: {
   session: BetterAuthSession | null | undefined;
-  tutor: Teacher;
-  duration: number;
+  booking: Booking;
 }) {
   const router = useRouter();
   const today = new Date();
-  const [date, setDate] = useState<Date>(today);
+  const [date, setDate] = useState<Date>(new Date(booking.startTime));
   const [time, setTime] = useState<string | null>(null);
   const [isMainModalOpen, setIsMainModalOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const parsedTime = time ? parse(time, "HH:mm", date) : undefined;
+  const teacherId =
+    typeof booking.teacherId === "string"
+      ? booking.teacherId
+      : booking.teacherId._id;
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["schedule", tutor._id, date, duration],
+    queryKey: ["schedule", teacherId, date, booking.duration],
     queryFn: async () =>
-      getAvailableSlots(tutor._id, {
+      getAvailableSlots(teacherId, {
         date: format(date, "yyyy-MM-dd"),
-        duration,
+        duration: booking.duration,
       }),
     refetchOnWindowFocus: false,
     retry: false,
-    enabled: !!session,
+    enabled: !!session && isMainModalOpen,
   });
 
-  const { mutate: createBooking, isPending } = useCreateBooking();
+  const { mutate: reschedule, isPending } = useRescheduleBooking();
 
   const onSubmit = () => {
     if (time && session) {
       const start = parse(time, "HH:mm", date);
-      const end = addMinutes(start, duration);
-      createBooking(
+      reschedule(
         {
-          teacherId: tutor._id,
-          slots: [{ startTime: start, duration }],
-          endTime: end.toISOString(),
-          eventType: "introduction_call",
-          bookingType: "one_time",
+          startTime: start,
+          id: booking._id,
         },
         {
           onSuccess: () => {
-            setIsMainModalOpen(false);
             setIsAlertOpen(false);
+            setIsMainModalOpen(false);
+          },
+          onError: () => {
+            // Keep alert open on error so user can retry
+            // Main modal stays open as well
           },
         }
       );
@@ -157,9 +163,10 @@ export function BookIntroductoryCallModal({
         <DialogTrigger asChild>
           <Button
             onClick={handleBookingClick}
-            className="bg-primary text-white px-6 rounded-full"
+            variant="link"
+            className="text-[#e94e4e] bg-transparent text-xs sm:text-sm font-medium px-4 sm:px-8 h-9 sm:h-[45px]"
           >
-            Book Introduction Call
+            Reschedule
           </Button>
         </DialogTrigger>
 
@@ -168,10 +175,10 @@ export function BookIntroductoryCallModal({
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-primary">
-                Book an Introductory Call
+                Reschedule Call
               </DialogTitle>
               <DialogDescription>
-                View tutor availability to book a call with them
+                View tutor availability to reschedule a call
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4">
@@ -186,16 +193,11 @@ export function BookIntroductoryCallModal({
                 error={error as AxiosError<AxioErrorResponse>}
                 slots={data}
               />
-              {/* <p className="text-sm">
-                Timezone:{" "}
-                <span className="font-semibold">{tutor.timezone}</span>
-              </p> */}
               <Alert className="bg-[#DBE4FC]">
                 <AlertCircle className="size-4" />
                 <AlertTitle className="text-primary text-xs">
-                  Kindly note that introductory calls last for a maximum of{" "}
-                  <span className="font-semibold">15mins</span> only. Engage
-                  tutors to ensure they are the right fit for your child/ward
+                  Kindly note that you Rescheduling is only allowed up to 24
+                  hours before class
                 </AlertTitle>
               </Alert>
             </div>
@@ -203,7 +205,7 @@ export function BookIntroductoryCallModal({
             <DialogFooter className="flex items-center justify-center w-full">
               <AlertComponent
                 time={parsedTime}
-                tutor={tutor}
+                tutor={booking.teacherId as Teacher}
                 onSubmit={onSubmit}
                 isPending={isPending}
                 isAlertOpen={isAlertOpen}

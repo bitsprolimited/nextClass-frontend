@@ -69,7 +69,7 @@ type Tutor = {
 function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
   const router = useRouter();
   return (
-    <Card className="relative w-full max-w-[400px] bg-white rounded-[10px] p-0 border-none">
+    <Card className="hover:bg-primary group relative w-full max-w-[400px] bg-white rounded-[10px] p-0 border-none">
       {/* ==== MOBILE VERSION ==== */}
       <div className="flex flex-col md:hidden">
         {/* Avatar + Name + Rating */}
@@ -137,7 +137,7 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
 
       {/* ==== DESKTOP VERSION ==== */}
       <div className="hidden md:block w-full">
-        <CardContent className="flex flex-col gap-4 mt-4 pt-10 group hover:bg-primary w-full rounded-[10px]">
+        <CardContent className="flex flex-col gap-4 mt-4 pt-10 w-full h-full rounded-[10px]">
           {/* Avatar */}
           <div className="w-[120px] h-[120px] mx-auto absolute left-1/2 -top-[60px] -translate-x-1/2">
             <Avatar className="w-full h-full shadow-[0px_4px_4px_#00000040]">
@@ -177,7 +177,7 @@ function TutorCard({ tutorData }: { tutorData: Tutor }): React.JSX.Element {
             {tutorData.badges.map((badge, index) => (
               <Badge
                 key={index}
-                className={`${badge.color} text-xs group-hover:bg-white`}
+                className={`${badge.color} text-xs group-hover:bg-white transition-all duration-300`}
               >
                 {badge.text}
               </Badge>
@@ -240,7 +240,7 @@ function TutorList(): React.JSX.Element {
       },
       {
         text: `${teacher.subjects?.length} subjects`,
-        color: "text-[#ff9d4c] bg-[#ff9d4c4c]",
+        color: "text-[#ff9d4c] bg-white",
       },
     ],
     details: [
@@ -278,7 +278,7 @@ function TutorList(): React.JSX.Element {
 
   return (
     <section className="py-10 lg:py-[140px]">
-      <div className="container flex flex-col items-center justify-center gap-8 lg:gap-[60px] w-full max-w-7xl mx-auto">
+      <div className="container flex flex-col items-center justify-center gap-8 lg:gap-20 w-full max-w-7xl mx-auto">
         {/* Search & Filters Wrapper */}
         <div className="flex flex-col items-start p-3 md:p-5 gap-1.5 lg:gap-2 bg-[#f5f4f8] w-full">
           {/* Search Row */}
@@ -320,7 +320,7 @@ function TutorList(): React.JSX.Element {
         </div>
 
         {/* Tutors Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
           {data.teachers.map((teacher, i) => (
             <TutorCard key={i} tutorData={mapTeacherToTutor(teacher)} />
           ))}

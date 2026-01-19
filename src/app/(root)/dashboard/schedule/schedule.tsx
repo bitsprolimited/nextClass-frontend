@@ -7,13 +7,25 @@ import {
   BookingStatus,
   EventType,
   SortBy,
-  SortOrder
+  SortOrder,
 } from "@/services/booking.service";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ClassTabs() {
-  const [activeMainTab, setActiveMainTab] = useState("classes");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+
+  const [activeMainTab, setActiveMainTab] = useState(
+    tabParam === "introductory_calls" ? "introductory_calls" : "classes"
+  );
   const [activeSubTab, setActiveSubTab] = useState("upcoming");
+
+  useEffect(() => {
+    if (tabParam === "introductory_calls" || tabParam === "classes") {
+      setActiveMainTab(tabParam);
+    }
+  }, [tabParam]);
 
   const handleMainTabChange = (value: string) => {
     setActiveMainTab(value);
@@ -136,7 +148,7 @@ export default function ClassTabs() {
           </TabsList>
 
           <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl shadow-md w-full bg-[#f8f6f4] mb-3">
-            <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl w-full mb-3">
+            <div className="w-full mb-3">
               <TabsContent value="upcoming">
                 <BookingTabContent
                   bookings={upcomingClassesQuery.bookings}
@@ -186,7 +198,7 @@ export default function ClassTabs() {
           </TabsList>
 
           <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl shadow-md w-full bg-[#f8f6f4] mb-3">
-            <div className="px-4 py-6 sm:px-6 sm:py-8 rounded-2xl w-full mb-3">
+            <div className="w-full mb-3">
               <TabsContent value="upcoming">
                 <BookingTabContent
                   bookings={upcomingCallsQuery.bookings}

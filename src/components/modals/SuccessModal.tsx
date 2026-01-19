@@ -28,7 +28,7 @@ export default function SuccessDialog({
   highlight,
   message,
   buttonText,
-  onProceed,
+  // onProceed,
 }: SuccessDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -46,12 +46,12 @@ export default function SuccessDialog({
         <div className="flex flex-col items-center gap-6 mt-6">
           <div className="relative w-[120px] h-[120px] flex items-center justify-center">
             <CheckIcon className="w-full h-full text-green-500 stroke-[1.5]" />
-            <div className="absolute bottom-0 w-[80px] h-1 bg-[#59bf354f] rounded-full" />
+            <div className="absolute bottom-0 w-20 h-1 bg-[#59bf354f] rounded-full" />
           </div>
 
           <Button
             className="w-[300px] h-[50px] bg-[#ffa300] rounded-full hover:bg-[#e89400]"
-            onClick={onProceed}
+            onClick={onClose}
           >
             {buttonText}
           </Button>

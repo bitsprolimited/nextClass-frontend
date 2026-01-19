@@ -1,6 +1,7 @@
 "use client";
 
-import { tutors } from "@/lib/constants";
+import { getRecentlyCalled } from "@/services/booking.service";
+import { useQuery } from "@tanstack/react-query";
 import { SearchX } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
@@ -11,28 +12,32 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle
+  EmptyTitle,
 } from "../ui/empty";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
-export type Tutor = {
+export type RecentlyCalledTutor = {
   id: number;
   name: string;
-  price: string;
-  course: string;
-  image: string;
+  hourlyRate: string;
+  profilePicture: string;
+  subjects: string[];
   duration: string;
-  lectures: string;
+  lecture: string;
 };
 
-function FeaturedTutorCard({ tutor }: { tutor: Tutor }): React.JSX.Element {
+function FeaturedTutorCard({
+  tutor,
+}: {
+  tutor: RecentlyCalledTutor;
+}): React.JSX.Element {
   return (
     <Card className="group border-none shrink-0 lg:shadow-none w-full max-w-[317px] rounded-[15px] lg:rounded-none shadow-[0px_2px_4px_#00000040] pb-4 lg:pb-0">
       <CardContent className="p-0 w-full flex flex-col">
         <div className="relative">
           <div className="w-full h-[300px]">
             <Image
-              src={tutor.image}
+              src={tutor.profilePicture || "/images/tutor-1.png"}
               alt={tutor.name}
               width={500}
               height={500}
@@ -40,27 +45,27 @@ function FeaturedTutorCard({ tutor }: { tutor: Tutor }): React.JSX.Element {
             />
           </div>
           <div className="flex flex-col items-center justify-center w-20 h-20 rounded-full absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-primary border-2 border-[#f8f6f4] text-center text-white">
-            <span className="font-bold text-xl">{tutor.price}</span>
+            <span className="font-bold text-xl">${tutor.hourlyRate}</span>
             <span className="text-sm">per hour</span>
           </div>
         </div>
         <div className="mt-12 px-[30px]">
-          <div className="flex items-center">
-            <span className="text-sm text-[#9b9ea1]">By:</span>
-            <span className="text-zeus ml-2 group-hover:text-secondary ease-in-out transition-all">
-              {tutor.name}
+          <h3 className="font-medium text-2xl text-zeus group-hover:text-secondary ease-in-out transition-all capitalize">
+            {tutor.name}
+          </h3>
+
+          <div className="mt-2 flex items-center">
+            <span className="text-sm text-[#9b9ea1]">For:</span>
+            <span className="text-zeus capitalize ml-2 group-hover:text-secondary ease-in-out transition-all">
+              {tutor.lecture}
             </span>
           </div>
 
-          <h3 className="mt-2 font-medium text-2xl text-zeus group-hover:text-secondary ease-in-out transition-all">
-            {tutor.course}
-          </h3>
-
-          <div className="flex items-center gap-4 mt-4 text-[#ffa300] group-hover:text-zeus ease-in-out transition-all w-full">
+          {/* <div className="flex items-center gap-4 mt-4 text-[#ffa300] group-hover:text-zeus ease-in-out transition-all w-full">
             <span>{tutor.duration}</span>
             <div className="w-1 h-1 rounded-full bg-[#0a4d3c]" />
             <span>{tutor.lectures} Lectures</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Hidden on mobile, visible from md+ */}
@@ -75,6 +80,19 @@ function FeaturedTutorCard({ tutor }: { tutor: Tutor }): React.JSX.Element {
 function RecentlyCalledTutors(): React.JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const {
+    data: tutors,
+    // isLoading,
+    // isError,
+  } = useQuery({
+    queryKey: ["recentlyCalledTutors"],
+    queryFn: () => getRecentlyCalled(),
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
+  console.log(tutors);
 
   useEffect(() => {
     const scrollEl = scrollRef.current;
@@ -104,7 +122,7 @@ function RecentlyCalledTutors(): React.JSX.Element {
         <div className="w-full">
           <ScrollArea ref={scrollRef}>
             <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 py-4 px-1 overflow-x-auto md:overflow-visible scroll-smooth scrollbar-hide">
-              {tutors.length > 0 ? (
+              {tutors && tutors.length > 0 ? (
                 tutors.map((tutor, i) => (
                   <FeaturedTutorCard key={i} tutor={tutor} />
                 ))
@@ -127,16 +145,20 @@ function RecentlyCalledTutors(): React.JSX.Element {
         </div>
 
         {/* Pagination Dots (only visible on mobile) */}
-        {tutors.length > 0 && <div className="flex justify-center gap-2 mt-4 md:hidden w-full">
-          {tutors.map((_, index) => (
-            <span
-              key={index}
-              className={`h-2 rounded-full transition-all ${
-                index === currentIndex ? "w-4 bg-secondary" : "w-2 bg-gray-300"
-              }`}
-            />
-          ))}
-        </div>}
+        {tutors && tutors.length > 0 && (
+          <div className="flex justify-center gap-2 mt-4 md:hidden w-full">
+            {tutors.map((_, index) => (
+              <span
+                key={index}
+                className={`h-2 rounded-full transition-all ${
+                  index === currentIndex
+                    ? "w-4 bg-secondary"
+                    : "w-2 bg-gray-300"
+                }`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* View More button (only visible on mobile) */}
         <div className="flex justify-center w-full md:hidden">

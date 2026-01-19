@@ -16,11 +16,11 @@ function Login() {
         img={{
           secondary: {
             src: "/images/signup-Saly-17.png",
-            className: "top-0 left-0 w-16 md:w-24 lg:w-[190px]",
+            className: "top-0 left-0 w-16 md:w-[140px]",
           },
           primary: {
             src: "/images/signup-Saly-16.png",
-            className: "bottom-0 w-[200px] lg:w-auto",
+            className: "bottom-0 lg:bottom-0 w-[200px] lg:w-[500px]",
           },
         }}
         heading="Create your Account"

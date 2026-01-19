@@ -6,9 +6,15 @@ import {
   getBookings,
   GetBookingsParams,
   PaginatedBookingsResponse,
+  rescheduleBooking,
 } from "@/services/booking.service";
 import { useModalStore } from "@/store/useModal";
-import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import { useMemo } from "react";
 import { toast } from "sonner";
 
@@ -39,6 +45,30 @@ export const useCreateBooking = () => {
     },
     onError: (error) => {
       toast.error("Failed to create booking");
+      console.error("Submit error:", error);
+    },
+  });
+};
+
+export const useRescheduleBooking = () => {
+  const { openModal } = useModalStore();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { startTime: Date; id: string }) =>
+      rescheduleBooking(data.startTime, data.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+      openModal("success", {
+        title: "Call Rescheduled",
+        highlight: "Successfully",
+        message:
+          "You have successfully have successfully booked a call with th tutor",
+        buttonText: "Proceed",
+      });
+      toast.success("Booking rescheduled successfully");
+    },
+    onError: (error) => {
+      toast.error("Failed to reschedule booking");
       console.error("Submit error:", error);
     },
   });

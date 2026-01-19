@@ -1,5 +1,6 @@
+import { RecentlyCalledTutor } from "@/components/parents/recentlyCalledTutors";
 import axiosInstance from "@/lib/axios";
-import { Child, User } from "@/types";
+import { Child, Teacher, User } from "@/types";
 
 export interface CreateBooking {
   teacherId: string;
@@ -63,7 +64,7 @@ export interface GetBookingsParams {
 export interface Booking {
   _id: string;
   parentId: string;
-  teacherId: string;
+  teacherId: string | Teacher;
   learnerIds: string[];
   startTime: string;
   endTime: string;
@@ -106,10 +107,30 @@ export const createBooking = async (
   return response.data;
 };
 
+export const rescheduleBooking = async (
+  startTime: Date,
+  bookingId: string
+): Promise<Booking> => {
+  const response = await axiosInstance.post(
+    `/bookings/reschedule/${bookingId}`,
+    { startTime }
+  );
+  return response.data;
+};
+
 export async function getBookings(
   params?: GetBookingsParams
 ): Promise<PaginatedBookingsResponse> {
   const response = await axiosInstance.get("/bookings", { params });
+  return response.data;
+}
+
+export async function getRecentlyCalled(params?: {
+  limit?: number;
+}): Promise<RecentlyCalledTutor[]> {
+  const response = await axiosInstance.get("/bookings/recently-called", {
+    params,
+  });
   return response.data;
 }
 
