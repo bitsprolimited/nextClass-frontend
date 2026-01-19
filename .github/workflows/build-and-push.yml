@@ -8,12 +8,19 @@ on:
       - '**/*.txt'
       - '**/*.css'
       - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
       - '**/*.html'
       - '**/*.svg'
+      - '**/*.json'
+      - '.env*'
+      - 'src/**'
+      - 'public/**'
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPO_NAME: wiz-assessment-app
+  ECR_REPO_NAME: nextclass-app-dev
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
