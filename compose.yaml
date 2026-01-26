@@ -1,0 +1,69 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      NODE_ENV: development
+      PORT: 5500
+      MONGODB_URI: mongodb+srv://new_user:testing123@cluster0.sarfxhx.mongodb.net/next-class?retryWrites=true&w=majority
+      FRONTEND_URL: http://localhost:3000
+
+      JWT_SECRET: ${JWT_SECRET}
+      REFRESH_JWT_SECRET: ${REFRESH_JWT_SECRET}
+      REFRESH_JWT_EXPIRES_IN: ${REFRESH_JWT_EXPIRES_IN}
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+
+      SENTRY_DSN: ${SENTRY_DSN}
+
+      NYLAS_API_SECRET_KEY: ${NYLAS_API_SECRET_KEY}
+      NYLAS_API_URI: ${NYLAS_API_URI}
+      NYLAS_CLIENT_ID: ${NYLAS_CLIENT_ID}
+      NEST_PUBLIC_URL: ${NEST_PUBLIC_URL}
+
+      AWS_S3_REGION: ${AWS_S3_REGION}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET}
+
+      STREAM_API_KEY: ${STREAM_API_KEY}
+      STREAM_API_SECRET: ${STREAM_API_SECRET}
+
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL}
+
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      STRIPE_SUCCESS_URL: ${STRIPE_SUCCESS_URL}
+      STRIPE_CANCEL_URL: ${STRIPE_CANCEL_URL}
+    ports:
+      - "5500:5500"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      SESSION_SECRET_KEY: ${SESSION_SECRET_KEY}
+
+      # IMPORTANT: inside docker, don't point to localhost:5500
+      NEXT_PUBLIC_API_BASE_URL: http://backend:5500/api/v1
+
+      NEXT_PUBLIC_STREAM_API_KEY: ${NEXT_PUBLIC_STREAM_API_KEY}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL:  http://backend:5500
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
