@@ -1,0 +1,413 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { FaApple, FaGoogle } from "react-icons/fa";
+import { toast } from "sonner";
+
+import PasswordMeter from "@/components/auth/passwordMeter";
+import VerifyEmailAlert from "@/components/auth/verify-email-alert";
+import PhoneInputComponent from "@/components/PhoneInput";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import { parentSignupFormSchema, ParentSignupFormSchema } from "@/lib/schema";
+import { JSX } from "react";
+import { Spinner } from "@/components/ui/spinner";
+
+// type ParentSignupFormWithAddress = ParentSignupFormSchema & {
+//   address: {
+//     street: string;
+//     city: string;
+//     state: string;
+//     country: string;
+//   };
+// };
+
+// const countries = ["Nigeria", "Ghana", "Kenya", "South Africa"];
+
+// // Mock data - replace with actual data for your regions
+// const nigerianStates = ["Lagos", "Abuja", "Kano", "Rivers", "Ogun"];
+// const cities = {
+//   Lagos: ["Ikeja", "Victoria Island", "Lekki", "Surulere"],
+//   Abuja: ["Garki", "Wuse", "Asokoro", "Maitama"],
+//   // Add more cities for other states
+// };
+
+export default function ParentSignupForm(): JSX.Element {
+  const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    // setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<ParentSignupFormSchema>({
+    resolver: zodResolver(parentSignupFormSchema),
+    mode: "all",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      // country: "",
+      // state: "",
+      // city: "",
+      // street: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+      agreeTerms: false,
+      confirmAge: false,
+    },
+  });
+
+  const password = watch("password");
+  // const selectedCountry = watch("country");
+  // const selectedState = watch("state");
+
+  // const { mutate, isPending } = useMutation<
+  //   AuthResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   ParentSignupFormWithAddress
+  // >({
+  //   mutationKey: ["parentSignup"],
+  //   mutationFn: parentSignup,
+  //   onSuccess: async () => {
+  //     toast("Signup successful", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       duration: 5000,
+  //     });
+  //     setOpen(true);
+  //   },
+  //   onError: (error) => {
+  //     console.error("Signup failed:", error);
+  //     toast("Signup failed", {
+  //       className: "bg-[#F5F4F8] text-[#031D95]",
+  //       description: error.response?.data.message,
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
+
+  const onSubmit = async (data: ParentSignupFormSchema) => {
+    // Transform data to include structured address
+    // const transformedData = {
+    //   ...data,
+    //   address: {
+    //     street: data.street,
+    //     city: data.city,
+    //     state: data.state,
+    //     country: data.country,
+    //   },
+    // };
+    // mutate(transformedData);
+
+    await authClient.signUp.email(
+      {
+        email: data.email,
+        password: data.password,
+        name: data.fullName,
+        phoneNumber: data.phone,
+      },
+      {
+        onRequest: () => {
+          //show loading
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          toast("Signup successful", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            duration: 5000,
+          });
+          setOpen(true);
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          console.error("Signup failed:", ctx.error);
+          toast("Signup failed", {
+            className: "bg-[#F5F4F8] text-[#031D95]",
+            description: ctx.error.message,
+            duration: 5000,
+          });
+          setIsPending(false);
+        },
+      }
+    );
+  };
+
+  // Get available cities based on selected state
+  // const availableCities =
+  //   selectedState && cities[selectedState as keyof typeof cities]
+  //     ? cities[selectedState as keyof typeof cities]
+  //     : [];
+
+  return (
+    <div className="flex flex-col items-end w-full max-w-[1176px] mx-auto">
+      {/* Switch to Tutor Signup */}
+      <Link href="/sign-up/tutor" className="my-4 mr-4">
+        <Button className="bg-[#F5F4F8] md:text-xl text-[#031D95] hover:text-white px-4 py-3 rounded-full font-playfair-display">
+          Sign Up as Tutor
+        </Button>
+      </Link>
+
+      {/* Form Section */}
+      <section className="w-full mb-5 bg-[#F5F4F8] py-10 px-4 flex justify-center items-center font-montserrat">
+        <div className="w-full max-w-[418px]">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+            <div className="space-y-5">
+              <h2 className="text-2xl font-semibold font-playfair-display">
+                Parents&apos;{" "}
+                <span className="text-[#FFA300]">Registration</span>
+              </h2>
+
+              {/* Full Name */}
+              <Input
+                placeholder="Full Name"
+                {...register("fullName")}
+                className="py-4 pl-5 h-auto w-full"
+              />
+              {errors.fullName && (
+                <p className="text-red-500 text-sm">
+                  {errors.fullName.message}
+                </p>
+              )}
+
+              {/* Email */}
+              <Input
+                type="email"
+                placeholder="Email Address"
+                {...register("email")}
+                className="py-4 pl-5 h-auto w-full"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
+
+              {/* Phone */}
+              <div className="flex gap-2 w-full">
+                <Controller
+                  name="phone"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInputComponent
+                      className="bg-white border border-gray-300 rounded-lg text-gray-700 text-sm"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Enter phone number"
+                    />
+                  )}
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone.message}</p>
+              )}
+
+              {/* Country Select */}
+              {/* <Controller
+                name="country"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full bg-white py-4 pl-5 h-auto">
+                      <SelectValue placeholder="Select Country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countryList.map((country) => (
+                        <SelectItem key={country.isoCode} value={country.name}>
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.country && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.country.message as string}
+                </p>
+              )} */}
+
+              {/* State + City */}
+              {/* <div className="flex flex-col md:flex-row gap-2 w-full">
+                <div className="flex-1">
+                  <Controller
+                    name="state"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={!selectedCountry}
+                      >
+                        <SelectTrigger className="bg-white py-4 pl-5 h-auto">
+                          <SelectValue placeholder="Select State" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {stateList.map((state) => (
+                            <SelectItem key={state.isoCode} value={state.name}>
+                              {state.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.state && (
+                    <p className="text-red-500 text-sm">
+                      {errors.state.message}
+                    </p>
+                  )}
+
+                <div className="flex-1">
+                  <Controller
+                    name="city"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={!selectedState}
+                      >
+                        <SelectTrigger className="bg-white py-4 pl-5 h-auto">
+                    </p>
+                  )}
+                </div>
+              </div> */}
+
+              {/* Street Address */}
+              {/* <Input
+                className="py-4 pl-5 h-auto w-full"
+                type="text"
+                placeholder="Street Address"
+                {...register("street")}
+                className="py-4 pl-5 h-auto w-full"
+              />
+              {errors.street && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.street.message as string}
+                </p>
+              )} */}
+
+              {/* Password */}
+              <div className="relative">
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  {...register("password")}
+                  className="py-4 pl-5 h-auto w-full"
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+                <div className="mt-2 block lg:hidden">
+                  <PasswordMeter password={password || ""} />
+                </div>
+                <div className="hidden lg:block absolute left-full ml-5 top-1/2 w-full">
+                  <PasswordMeter password={password || ""} />
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <Input
+                type="password"
+                placeholder="Confirm Password"
+                {...register("confirmPassword")}
+                className="py-4 pl-5 h-auto w-full"
+              />
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            {/* Terms and Age Confirmation */}
+            <div className="space-y-3 text-sm">
+              <label className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  {...register("agreeTerms")}
+                  className="accent-orange-500 mt-1"
+                />
+                <span>
+                  By signing up, you agree to our{" "}
+                  <Link
+                    href="/terms-conditions"
+                    className="text-blue-500 underline"
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="text-blue-500 underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </span>
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  {...register("confirmAge")}
+                  className="accent-orange-500"
+                />
+                I confirm that I&apos;m 18 years or older
+              </label>
+            </div>
+
+            {/* Submit */}
+            <div className="w-full flex justify-center">
+              <Button
+                type="submit"
+                disabled={isSubmitting || isPending}
+                className="w-full bg-[#FFA300] hover:bg-primary rounded-full py-6 text-white text-base disabled:opacity-50"
+              >
+                {isSubmitting || isPending ? <Spinner /> : "Create An Account"}
+              </Button>
+            </div>
+
+            {/* Social Signup */}
+            <p className="text-sm text-center text-gray-500">
+              You can also sign up with:
+            </p>
+            <div className="flex flex-col md:flex-row gap-2.5 justify-center mt-4">
+              <Button
+                type="button"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm border w-full md:w-auto"
+              >
+                <FaGoogle className="w-5 h-5" />
+                Sign Up With Google
+              </Button>
+              <Button
+                type="button"
+                className="bg-primary hover:bg-secondary rounded-full px-6 py-4 flex items-center gap-2 shadow-sm w-full md:w-auto"
+              >
+                <FaApple className="w-5 h-5" />
+                Sign Up With Apple
+              </Button>
+            </div>
+          </form>
+
+          {/* Divider */}
+          <div className="my-6 border-t border-gray-800 w-[60%] mx-auto" />
+          <p className="mt-8 text-center text-sm">
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-600 underline">
+              Login
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      <VerifyEmailAlert open={open} onOpenChange={setOpen} />
+    </div>
+  );
+}

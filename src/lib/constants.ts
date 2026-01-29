@@ -1,0 +1,955 @@
+import { Option } from "@/components/ui/multiselect";
+import { FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+
+export const subjects: Option[] = [
+  {
+    value: "mathematics",
+    label: "Mathematics",
+  },
+  {
+    value: "english",
+    label: "English Language",
+  },
+  {
+    value: "physics",
+    label: "Physics",
+  },
+  {
+    value: "chemistry",
+    label: "Chemistry",
+  },
+  {
+    value: "biology",
+    label: "Biology",
+  },
+  {
+    value: "literature",
+    label: "Literature in English",
+  },
+  {
+    value: "government",
+    label: "Government",
+  },
+  {
+    value: "economics",
+    label: "Economics",
+  },
+  {
+    value: "geography",
+    label: "Geography",
+  },
+  {
+    value: "history",
+    label: "History",
+  },
+  {
+    value: "french",
+    label: "French",
+  },
+  {
+    value: "computer_science",
+    label: "Computer Science",
+  },
+  {
+    value: "agriculture",
+    label: "Agricultural Science",
+  },
+  {
+    value: "civic",
+    label: "Civic Education",
+  },
+  {
+    value: "commerce",
+    label: "Commerce",
+  },
+  {
+    value: "accounting",
+    label: "Accounting",
+  },
+];
+
+export const navItems = {
+  root: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "About",
+      href: "/about-us",
+    },
+    {
+      label: "Tutors",
+      href: "/tutors",
+    },
+    {
+      label: "Blog",
+      href: "/blog",
+    },
+  ],
+  parent: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Tutors",
+      href: "/tutors",
+    },
+    {
+      label: "Messages",
+      href: "/dashboard/messages",
+    },
+    {
+      label: "Schedule",
+      href: "/dashboard/schedule",
+    },
+  ],
+  tutor: [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Messages",
+      href: "/dashboard/messages",
+    },
+    {
+      label: "Schedule",
+      href: "/dashboard/schedule",
+    },
+  ],
+};
+
+export const HERO_IMAGES = [
+  {
+    id: 1,
+    src: "/images/hero-img1.png",
+    alt: "",
+  },
+  {
+    id: 2,
+    src: "/images/hero-img2.png",
+    alt: "",
+  },
+  {
+    id: 3,
+    src: "/images/hero-bg1.png",
+    alt: "",
+  },
+  {
+    id: 4,
+    src: "/images/hero-img7.png",
+    alt: "",
+  },
+  {
+    id: 5,
+    src: "/images/hero-img8.png",
+    alt: "",
+  },
+  {
+    id: 6,
+    src: "/images/hero-bg1.png",
+    alt: "",
+  },
+  {
+    id: 7,
+    src: "/images/hero-img3.png",
+    alt: "",
+  },
+  {
+    id: 8,
+    src: "/images/hero-img4.png",
+    alt: "",
+  },
+  {
+    id: 9,
+    src: "/images/hero-bg1.png",
+    alt: "",
+  },
+  {
+    id: 10,
+    src: "/images/hero-img5.png",
+    alt: "",
+  },
+  {
+    id: 11,
+    src: "/images/hero-img6.png",
+    alt: "",
+  },
+  {
+    id: 12,
+    src: "/images/hero-bg2.png",
+    alt: "",
+  },
+];
+
+export const slideConfigurations = [
+  {
+    image1: {
+      classes:
+        "absolute bottom-0 -left-6 w-full max-w-[700px] object-cover z-10",
+      transitionDelay: 0.1,
+    },
+    image2: {
+      classes:
+        "absolute -bottom-10 -right-10 w-full max-w-[700px] object-cover z-[5]",
+      transitionDelay: 0.3,
+    },
+    image3: {
+      classes: "absolute -top-4 -right-40 w-full h-full object-cover z-0",
+      transitionDelay: 0,
+    },
+  },
+  {
+    image1: {
+      classes:
+        "absolute bottom-0 -left-20 w-full max-w-[600px] object-cover z-10",
+      transitionDelay: 0.1,
+    },
+    image2: {
+      classes:
+        "absolute bottom-0 right-[-150px] md:right-[-210px] w-full object-cover z-[5]",
+      transitionDelay: 0.3,
+    },
+    image3: {
+      classes: "absolute -top-4 -right-40 w-full h-full object-cover z-0",
+      transitionDelay: 0,
+    },
+  },
+  {
+    image1: {
+      classes:
+        "absolute bottom-0 -left-[100px] w-full object-cover transform z-10",
+      transitionDelay: 0.15,
+    },
+    image2: {
+      classes:
+        "absolute bottom-0 right-[-150px] w-full object-cover transform z-[5]",
+      transitionDelay: 0.35,
+    },
+    image3: {
+      classes: "absolute -top-4 -right-40 w-full h-full object-cover z-0",
+      transitionDelay: 0,
+    },
+  },
+  {
+    image1: {
+      classes:
+        "absolute bottom-0 max-w-[600px] w-full left-0 object-cover z-10",
+      transitionDelay: 0.1,
+    },
+    image2: {
+      classes: "absolute top-20 max-w-[500px] w-full right-0 object-cover z-10",
+      transitionDelay: 0.3,
+    },
+    image3: {
+      classes: "absolute bottom-0 w-full h-full max-h-[790px] object-cover z-0",
+      transitionDelay: 0,
+    },
+  },
+];
+
+export const SOCIAL_ICONS = [FaFacebookF, FaSkype, FaTwitter, FaLinkedinIn];
+
+// export const tutors = [
+// {
+//   id: 1,
+//   name: "Ryan Patterson",
+//   course: "Math",
+//   price: "$50",
+//   image: "/images/tutor-1.png",
+//   duration: "8hrs",
+//   lectures: "20",
+// },
+// {
+//   id: 2,
+//   name: "Ryan Patterson",
+//   course: "Math",
+//   price: "$50",
+//   image: "/images/tutor-2.png",
+//   duration: "8hrs",
+//   lectures: "20",
+// },
+// {
+//   id: 3,
+//   name: "Ryan Patterson",
+//   course: "Math",
+//   price: "$50",
+//   image: "/images/tutor-3.png",
+//   duration: "8hrs",
+//   lectures: "20",
+// },
+// ];
+
+export const STEPS = {
+  parents: {
+    img: "/images/parent-how-it-works.png",
+    steps: [
+      {
+        title: "Sign up",
+        description:
+          "Create your account to have access to tutors and  book classes. Register with us",
+      },
+      {
+        title: "Discover Tutors",
+        description:
+          "Explore subjects and view our professional tutors. Check out the best tutors for children/ward development.",
+      },
+      {
+        title: "Schedule Introduction",
+        description:
+          "Book a real-time introductory session with tutors and confirm their personality matches what's best for your child(ren)/ward(s).",
+      },
+      {
+        title: "Book Classes",
+        description: "Easily book a class and begin your learning journey.",
+      },
+      {
+        title: "Explore and Learn",
+        description:
+          "Seamlessly explore the different subjects, courses and tutors that are available on NextClass",
+      },
+    ],
+  },
+  tutors: {
+    img: "/images/tutor-how-it-works.png",
+    steps: [
+      {
+        title: "Sign up",
+        description:
+          "Create your account to have access to bookings and  create courses classes. Get started.",
+      },
+      {
+        title: "Showcase your Experience",
+        description:
+          "Complete your profile by showcasing your area(s) of expertise, the excellent records and professional achievements you've garnered over the years.",
+      },
+      {
+        title: "Schedule your Availability",
+        description:
+          "Set your availability for real-time introductory session with parents to confirm they need for your child(ren)/ward(s).",
+      },
+      {
+        title: "Deliver Classes",
+        description:
+          "Deliver quality classes and continue your tutoring journey seamlessly. Follow courses outline to completion.",
+      },
+      {
+        title: "Teach and Earn",
+        description:
+          "Seamlessly teach all the different subjects, courses and classes within your expertise and start earning NextClass.",
+      },
+    ],
+  },
+};
+
+export const ARTICLES = [
+  {
+    date: {
+      month: "May",
+      day: "25",
+    },
+    title: "Top 5 Best Programming Languages to Learn in 2023",
+    description:
+      "Programming languages are the foundation of any software development project. Here are the top 5 programming languages to learn in 2023.",
+    author: "Maddie Rife",
+    likes: 123,
+    shares: 45,
+  },
+  {
+    date: {
+      month: "May",
+      day: "25",
+    },
+    title: "Top 5 Best Programming Languages to Learn in 2023",
+    description:
+      "Programming languages are the foundation of any software development project. Here are the top 5 programming languages to learn in 2023.",
+    author: "John Doe",
+    likes: 123,
+    shares: 45,
+  },
+  {
+    date: {
+      month: "May",
+      day: "25",
+    },
+    title: "Top 5 Best Programming Languages to Learn in 2023",
+    description:
+      "Programming languages are the foundation of any software development project. Here are the top 5 programming languages to learn in 2023.",
+    author: "John Doe",
+    likes: 123,
+    shares: 45,
+  },
+];
+
+export const GRADES = [
+  "Pre-K",
+  "Kindergarten",
+  "Grade 1",
+  "Grade 2",
+  "Grade 3",
+  "Grade 4",
+  "Grade 5",
+  "Grade 6",
+  "Grade 7",
+  "Grade 8",
+  "Grade 9",
+  "Grade 10",
+  "Grade 11",
+  "Grade 12",
+];
+
+export const SUBJECTS = [
+  "English",
+  "Math",
+  "Science",
+  "Fine Arts",
+  "Coding & Tech",
+  "Music",
+];
+
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+// Generate years from current year down to 2005
+export const YEARS = Array.from(
+  { length: new Date().getFullYear() - 2004 },
+  (_, i) => (new Date().getFullYear() - i).toString()
+);
+// data/chatData.ts
+export const conversations = [
+  {
+    id: 1,
+    name: "King James",
+    avatar: "/images/ryan.png",
+    lastMessage: "Hi, thanks much for the...",
+    timeAgo: "2days ago",
+    active: true,
+  },
+  {
+    id: 2,
+    name: "Queen Esther",
+    avatar: "/images/ryan.png",
+    lastMessage: "Hi, thanks much for the...",
+    timeAgo: "2days ago",
+  },
+  {
+    id: 3,
+    name: "Marvin Gaye",
+    avatar: "/images/Author.png",
+    lastMessage: "Hi, thanks much for the...",
+    timeAgo: "2days ago",
+  },
+];
+
+export const messages = [
+  {
+    id: 1,
+    sender: "them",
+    text: `Hello, Good morning.\nI wanted to confirm if you will be available for today's session`,
+    timestamp: "10:03am",
+  },
+  {
+    id: 2,
+    sender: "me",
+    text: `Hello, Good morning.\nI wanted to confirm that I will be available, thanks.`,
+    timestamp: "10:03am",
+  },
+];
+
+export const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+export const times = [
+  {
+    id: 0,
+    time: "00:00",
+  },
+  {
+    id: 1,
+    time: "00:30",
+  },
+  {
+    id: 2,
+    time: "01:00",
+  },
+  {
+    id: 3,
+    time: "01:30",
+  },
+  {
+    id: 4,
+    time: "02:00",
+  },
+  {
+    id: 5,
+    time: "02:30",
+  },
+  {
+    id: 6,
+    time: "03:00",
+  },
+  {
+    id: 7,
+    time: "03:30",
+  },
+  {
+    id: 8,
+    time: "04:00",
+  },
+  {
+    id: 9,
+    time: "04:30",
+  },
+  {
+    id: 10,
+    time: "05:00",
+  },
+  {
+    id: 11,
+    time: "05:30",
+  },
+  {
+    id: 12,
+    time: "06:00",
+  },
+  {
+    id: 13,
+    time: "06:30",
+  },
+  {
+    id: 14,
+    time: "07:00",
+  },
+  {
+    id: 15,
+    time: "07:30",
+  },
+  {
+    id: 16,
+    time: "08:00",
+  },
+  {
+    id: 17,
+    time: "08:30",
+  },
+  {
+    id: 18,
+    time: "09:00",
+  },
+  {
+    id: 19,
+    time: "09:30",
+  },
+  {
+    id: 20,
+    time: "10:00",
+  },
+  {
+    id: 21,
+    time: "10:30",
+  },
+  {
+    id: 22,
+    time: "11:00",
+  },
+  {
+    id: 23,
+    time: "11:30",
+  },
+  {
+    id: 24,
+    time: "12:00",
+  },
+  {
+    id: 25,
+    time: "12:30",
+  },
+  {
+    id: 26,
+    time: "13:00",
+  },
+  {
+    id: 27,
+    time: "13:30",
+  },
+  {
+    id: 28,
+    time: "14:00",
+  },
+  {
+    id: 29,
+    time: "14:30",
+  },
+  {
+    id: 30,
+    time: "15:00",
+  },
+  {
+    id: 31,
+    time: "15:30",
+  },
+  {
+    id: 32,
+    time: "16:00",
+  },
+  {
+    id: 33,
+    time: "16:30",
+  },
+  {
+    id: 34,
+    time: "17:00",
+  },
+  {
+    id: 35,
+    time: "17:30",
+  },
+  {
+    id: 36,
+    time: "18:00",
+  },
+  {
+    id: 37,
+    time: "18:30",
+  },
+  {
+    id: 38,
+    time: "19:00",
+  },
+  {
+    id: 39,
+    time: "19:30",
+  },
+  {
+    id: 40,
+    time: "20:00",
+  },
+  {
+    id: 41,
+    time: "20:30",
+  },
+  {
+    id: 42,
+    time: "21:00",
+  },
+  {
+    id: 43,
+    time: "21:30",
+  },
+  {
+    id: 44,
+    time: "22:00",
+  },
+  {
+    id: 45,
+    time: "22:30",
+  },
+  {
+    id: 46,
+    time: "23:00",
+  },
+  {
+    id: 47,
+    time: "23:30",
+  },
+];
+import * as z from "zod";
+
+export const bioDataSchema = z.object({
+  fullName: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().min(10),
+  country: z.string(),
+  state: z.string(),
+  city: z.string(),
+  address: z.string(),
+  about: z.string(),
+});
+
+export interface ProfileData {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  cityState: string;
+  country: string;
+  status: string;
+  profileImg: string;
+  city: string;
+  state: string;
+}
+
+export interface Learner {
+  id: string;
+  name: string;
+  age: number;
+  grade: string;
+  subjects: string[];
+}
+
+export interface ClassItem {
+  id: string;
+  tutorName: string;
+  learnerName: string;
+  grade: string;
+  subject: string;
+  dateTime: string;
+  amount: string;
+  status: string;
+}
+
+export interface Transaction {
+  id: string;
+  reference: string;
+  dateTime: string;
+  tutorName: string;
+  learnerName: string;
+  amount: string;
+  status: string;
+}
+
+export interface Country {
+  code: string;
+  flag: string; // path to flag image
+}
+
+// --- MOCK DATA to be used as initial state ---
+export const INITIAL_PROFILE_DATA: ProfileData = {
+  name: "JOHN DOE SANDERS",
+  email: "johndoe@xyz.com",
+  phone: "+234 1234567890",
+  address: "1234, Street Name, Area.",
+  city: "Houston",
+  state: "Texas",
+  cityState: "Houston/Texas",
+  country: "USA",
+  status: "Pending",
+  profileImg: "/path/to/profile-image.png",
+};
+
+// --- MOCK UPCOMING CLASSES ---
+export const MOCK_UPCOMING_CLASSES = [
+  {
+    id: "0000001",
+    tutor: "Abel Nick",
+    learner: "Fabrio Sanders",
+    details: "Grade 1 • Mathematics • 1 Session",
+    dateTime: "20/09/2025, 8:14am",
+    price: 6000,
+    status: "Pending",
+    rescheduleCount: 0,
+    grade: 1,
+    subject: "Mathematics",
+    sessionsCount: 1,
+  },
+  {
+    id: "0000002",
+    tutor: "Sarah James",
+    learner: "Liam Cole",
+    details: "Grade 3 • English • 2 Sessions",
+    dateTime: "22/09/2025, 9:30am",
+    price: 12000,
+    status: "Pending",
+    rescheduleCount: 1,
+    grade: 3,
+    subject: "English",
+    sessionsCount: 2,
+  },
+];
+
+// --- MOCK TRANSACTIONS ---
+export const MOCK_TRANSACTIONS = [
+  {
+    id: "0000001",
+    reference: "123gty566839fhvs",
+    dateTime: "20/09/2025, 8:14am",
+    tutor: "Abel Sanders",
+    learner: "Abel Sanders",
+    grade: "Grade 1",
+    subject: "Mathematics",
+    sessions: "1 Session",
+    price: 6000,
+    status: "Paid",
+  },
+  {
+    id: "0000002",
+    reference: "987abc566839hjks",
+    dateTime: "22/09/2025, 9:30am",
+    tutor: "Sarah James",
+    learner: "Liam Cole",
+    grade: "Grade 3",
+    subject: "English",
+    sessions: "2 Sessions",
+    price: 12000,
+    status: "Paid",
+  },
+];
+
+// ======== TUTORS (TEMP MOCK UNTIL API IS READY) ========
+
+export interface Tutor {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  cityState: string; // e.g. "Houston/Texas"
+  country: Country; // uses Country { code, flag } defined above
+  status: "Pending" | "Accepted" | "Declined" | "Active" | string;
+
+  // optional UI fields used in TutorProfileCard
+  avatar?: string;
+  grades?: string; // e.g. "Grade 1, 2, 3, 4, 5."
+  experience?: string; // e.g. "5yrs"
+  fee?: string; // e.g. "₦5,000 / hr"
+  bankName?: string; // e.g. "Access Bank"
+  accountNumber?: string; // e.g. "0123456789"
+  subjects?: string; // plain comma-separated string for the card
+  bio?: string;
+
+  // optional fallback bucket (your card already checks profileData.*)
+  profileData?: {
+    grades?: string;
+    experience?: string;
+    fee?: string;
+    bankName?: string;
+    accountNumber?: string;
+    subjects?: string;
+    bio?: string;
+  };
+}
+
+/**
+ * Simple mock list for development.
+ * Pick one with: const tutor = MOCK_TUTORS[0];
+ */
+export const MOCK_TUTORS: Tutor[] = [
+  {
+    id: "t-001",
+    name: "JOHN DOE SANDERS",
+    email: "johndoe@xyz.com",
+    phone: "+54 756 287 410",
+    address: "1234, Street Name, Area.",
+    cityState: "Houston/Texas",
+    country: { code: "USA", flag: "/images/USA.png" },
+    status: "Pending",
+    avatar: "/images/tutor-3.png",
+    grades: "Grade 1, 2, 3, 4, 5.",
+    experience: "5yrs",
+    fee: "₦5,000 / hr",
+    bankName: "Access Bank",
+    accountNumber: "0123456789",
+    subjects: "Mathematics, Physics, English, Basic Sciences",
+    bio:
+      "My philosophy is that all students can and will learn. Each student is unique and learns in their own way. " +
+      "My enthusiasm, lifelong passion for education and many years of experience are all qualities I bring to the table.",
+  },
+  {
+    id: "t-002",
+    name: "JANE DOE",
+    email: "jane.doe@example.com",
+    phone: "+44 123 456 789",
+    address: "56, River Street, Downtown",
+    cityState: "London/England",
+    country: { code: "GBR", flag: "/images/UK.png" }, // adjust path if you store flags differently
+    status: "Active",
+    avatar: "/images/tutor-2.png",
+    grades: "Grade 6, 7, 8.",
+    experience: "7yrs",
+    fee: "£25 / hr",
+    bankName: "HSBC",
+    accountNumber: "98-76-54",
+    subjects: "English, Chemistry, Literature",
+    bio: "Experienced English and Chemistry tutor with a focus on building strong fundamentals and exam confidence.",
+  },
+  {
+    id: "t-003",
+    name: "PEDRO ÁLVAREZ",
+    email: "pedro.alvarez@example.com",
+    phone: "+54 756 111 222",
+    address: "Av. 9 de Julio 101",
+    cityState: "Buenos Aires/Argentina",
+    country: { code: "ARG", flag: "/images/ARG.png" },
+    status: "Accepted",
+    avatar: "/images/tutor-1.png",
+    // demonstrate the fallback via profileData
+    profileData: {
+      grades: "Grade 3, 4, 5.",
+      experience: "4yrs",
+      fee: "$20 / hr",
+      bankName: "Banco Nación",
+      accountNumber: "00012345678",
+      subjects: "Science, Math",
+      bio: "STEM-focused tutor passionate about hands-on learning and problem solving.",
+    },
+  },
+];
+// ======== FEATURED / RECENTLY-CALLED TUTORS (for the homepage/parent dashboard cards) ========
+
+export type FeaturedTutor = {
+  id: number;
+  name: string;
+  price: string; // e.g. "$50"
+  course: string; // e.g. "Math"
+  image: string; // path to image
+  duration: string; // e.g. "8hrs"
+  lectures: string; // e.g. "20"
+};
+
+/**
+ * This array is used by:
+ *   src/components/parents/recentlyCalledTutors.tsx
+ *
+ * It matches that component's expected shape exactly:
+ *  - id, name, price, course, image, duration, lectures
+ */
+export const tutors: FeaturedTutor[] = [
+  {
+    id: 1,
+    name: "Ryan Patterson",
+    course: "Mathematics",
+    price: "$50",
+    image: "/images/tutor-1.png",
+    duration: "8hrs",
+    lectures: "20",
+  },
+  {
+    id: 2,
+    name: "Sarah James",
+    course: "English",
+    price: "$45",
+    image: "/images/tutor-2.png",
+    duration: "6hrs",
+    lectures: "15",
+  },
+  {
+    id: 3,
+    name: "Liam Cole",
+    course: "Physics",
+    price: "$55",
+    image: "/images/tutor-3.png",
+    duration: "10hrs",
+    lectures: "22",
+  },
+];
