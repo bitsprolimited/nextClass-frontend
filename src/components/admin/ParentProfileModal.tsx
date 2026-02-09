@@ -22,7 +22,7 @@ interface Country {
 }
 
 interface Parent {
-  avatar: string;
+  avatar: string | null;
   name: string;
   email: string;
   phone?: string;
@@ -61,13 +61,19 @@ export default function ParentProfileModal({
         <div className="px-8 py-8 overflow-y-auto h-[calc(650px-80px)]">
           {/* Profile Image and Details */}
           <div className="flex items-center gap-6 mb-8">
-            <Image
-              src={parent.avatar}
-              alt={parent.name}
-              width={70}
-              height={70}
-              className="rounded-full object-cover"
-            />
+            {parent.avatar ? (
+              <Image
+                src={parent.avatar}
+                alt={parent.name}
+                width={70}
+                height={70}
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-[70px] h-[70px] bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-2xl">
+                {parent.name.charAt(0).toUpperCase()}
+              </div>
+            )}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-x-10 gap-y-2 w-full">
               <div>
                 <div className="text-xs text-gray-400">Name</div>

@@ -1,98 +1,171 @@
+"use client";
+
 import TutorProfileCard from "@/components/admin/tutors/TutorProfileCard";
 import TutorClassesCard from "@/components/admin/tutors/TutorClassesCard";
 import TutorTransactionsCard from "@/components/admin/tutors/TutorTransactionsCard";
 import TutorSidebarCard from "@/components/admin/tutors/TutorSidebarCard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MOCK_TUTORS } from "@/lib/constants";
+import { Loader } from "lucide-react";
+import { useTutor } from "@/hooks/useTutors";
+import { useParams } from "next/navigation";
+import { getPayments } from "@/services/payments.service";
+import { useQuery } from "@tanstack/react-query";
+import type { Qualification, Address } from "@/types";
+import type { PaymentItem } from "@/types/transactions";
+import type { Tutor } from "@/lib/constants";
 
-// keep your helper that adds classes/transactions/learners
-const mockTutor = (id: string) => ({
-  id,
-  avatar: "/images/ryan.png",
-  name: "JOHN DOE SANDERS",
-  email: "johndoe@xyz.com",
-  phone: "+54 756 287 410",
-  country: { code: "USA", flag: "/images/USA.png" },
-  status: "Pending",
-  gender: "Male",
-  address: "1234, Street Name, Area.",
-  cityState: "Houston/Texas",
-  grades: "Grade 1, 2, 3, 4, 5",
-  experience: "5yrs",
-  fee: "₦5000",
-  bankName: "Access",
-  accountNumber: "1234567890",
-  subjects: "Mathematics, English, Physics",
-  learners: [
-    {
-      id: "l1",
-      name: "Jamie Sanders",
-      age: 6,
-      grade: "1",
-      subjects: ["Mathematics", "English"],
-    },
-    {
-      id: "l2",
-      name: "Lydia Sanders",
-      age: 7,
-      grade: "1",
-      subjects: ["Mathematics", "English"],
-    },
-    {
-      id: "l3",
-      name: "Aram Sanders",
-      age: 9,
-      grade: "1",
-      subjects: ["Mathematics", "English"],
-    },
-  ],
-  classes: [
-    {
-      id: "#00000001",
-      tutorName: "Abel Nick",
-      learnerName: "Fabrio Sanders",
-      grade: "Grade 1",
-      subject: "Mathematics",
-      dateTime: "20/08/2025, 8:4am",
-      amount: "₦6000",
-      status: "Pending",
-    },
-  ],
-  transactions: [
-    {
-      id: "txn-0001",
-      reference: "123ytrt56839fhvs",
-      dateTime: "20/08/2025, 8:14am",
-      tutorName: "Abel Sanders",
-      learnerName: "Abel Sanders",
-      amount: "₦6000",
-      status: "Paid",
-    },
-  ],
-  profileData: undefined,
-  bio: undefined,
-});
+// Mock data for classes (temporary until backend provides this data)
+const MOCK_CLASSES = [
+  {
+    id: "#00000001",
+    tutorName: "Abel Nick",
+    learnerName: "Fabrio Sanders",
+    grade: "Grade 1",
+    subject: "Mathematics",
+    dateTime: "20/08/2025, 8:4am",
+    amount: "₦6000",
+    status: "Pending",
+  },
+];
 
-// NOTE: async page + await params (fixes the build error)
-export default async function TutorDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+// Mock learners (temporary until backend provides this data)
+const MOCK_LEARNERS = [
+  {
+    id: "l1",
+    name: "Jamie Sanders",
+    age: 6,
+    grade: "1",
+    subjects: ["Mathematics", "English"],
+  },
+  {
+    id: "l2",
+    name: "Lydia Sanders",
+    age: 7,
+    grade: "1",
+    subjects: ["Mathematics", "English"],
+  },
+  {
+    id: "l3",
+    name: "Aram Sanders",
+    age: 9,
+    grade: "1",
+    subjects: ["Mathematics", "English"],
+  },
+];
 
-  // Try find a tutor by id from your constants; fallback to first item
-  const fromList = MOCK_TUTORS.find((t) => t.id === id) ?? MOCK_TUTORS[0];
+export default function TutorDetailsPage() {
+  const { id } = useParams();
+  const { data: tutorData, isLoading, isError, error } = useTutor(id as string);
+  
+  // Fetch transactions from API and filter by tutor ID
+  const {
+    data: allPayments = [],
+  } = useQuery({
+    queryKey: ["payments"],
+    queryFn: () => getPayments(),
+    refetchOnWindowFocus: false,
+  });
+  
+  // Filter payments for the current tutor
+  const transactions = allPayments.filter((payment: PaymentItem) => {
+    const tutorId = tutorData?._id || tutorData?.id;
+    
+    // Handle teacher reference from PaymentItem
+    const paymentTeacherId = 
+      (payment.teacher && typeof payment.teacher === 'object' && '_id' in payment.teacher)
+        ? (payment.teacher as { _id: string })._id
+        : (payment.teacher && typeof payment.teacher === 'object' && 'id' in payment.teacher)
+        ? (payment.teacher as { id: string }).id
+        : (payment.teacherId && typeof payment.teacherId === 'object' && '_id' in payment.teacherId)
+        ? (payment.teacherId as { _id: string })._id
+        : (payment.teacherId && typeof payment.teacherId === 'object' && 'id' in payment.teacherId)
+        ? (payment.teacherId as { id: string }).id
+        : null;
+    return paymentTeacherId === tutorId;
+  });
 
-  // Merge the found tutor with our page-specific defaults that include classes/transactions
-  // Properties from `fromList` will override the defaults where overlapping
-  const tutor = { ...mockTutor(id), ...fromList };
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen gap-4">
+        <div className="text-red-500 font-semibold">Error loading tutor data</div>
+        <p className="text-gray-600">{error?.message || "Something went wrong"}</p>
+        <Link
+          href="/admin/dashboard/tutors"
+          className="text-primary underline"
+        >
+          Back to Tutors
+        </Link>
+      </div>
+    );
+  }
+
+  if (!tutorData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-gray-600">No tutor data available</div>
+      </div>
+    );
+  }
+
+  // Prepare tutor object with proper data transformation
+  // API returns simpler structure, so we map it to what components expect
+  const tutor: Tutor = {
+    // Basic required fields (from Tutor interface)
+    id: tutorData._id || tutorData.id || "",
+    name: tutorData.fullName || "—",
+    email: tutorData.email || "—",
+    phone: tutorData.phoneNumber || "—",
+    address: typeof tutorData.address === 'object'
+      ? `${(tutorData.address as Address).street || ''}, ${(tutorData.address as Address).city || ''}`.replace(/^,\s+|\s+,$/g, '')
+      : typeof tutorData.address === 'string' ? tutorData.address : "—",
+    cityState: typeof tutorData.address === 'object'
+      ? `${(tutorData.address as Address).city || ""}/${(tutorData.address as Address).state || ""}`
+      : "—",
+    country: {
+      code: typeof tutorData.address === 'object' && (tutorData.address as Address).country
+        ? (tutorData.address as Address).country || tutorData.countryCode || "—"
+        : tutorData.countryCode || "—",
+      flag: tutorData.countryFlag || "/images/USA.png",
+    },
+    status: tutorData.status || "Pending",
+    
+    // Optional fields
+    avatar: tutorData.profilePicture,
+    grades: Array.isArray(tutorData.qualifications)
+      ? tutorData.qualifications
+          .map((q: Qualification) => typeof q === 'string' ? q : q.courseName)
+          .filter(Boolean)
+          .join(", ")
+      : "—",
+    experience: typeof tutorData.experience === 'number' 
+      ? `${tutorData.experience}+ years`
+      : tutorData.experience ?? "—",
+    fee: tutorData.hourlyRate 
+      ? `₦${tutorData.hourlyRate}`
+      : "—",
+    subjects: Array.isArray(tutorData.subjects)
+      ? tutorData.subjects.join(", ")
+      : "—",
+    bio: tutorData.bio || "",
+  };
+
+  // Additional data for the cards (not part of Tutor interface)
+  const classes = MOCK_CLASSES;
+  const learners = MOCK_LEARNERS;
 
   return (
     <main className="min-h-screen bg-[#F5F5F5] p-6 lg:p-8">
       {/* Back Header */}
-      <div className="flex items-center justify-start ">
+      <div className="flex items-center justify-start">
         <Link
           href="/admin/dashboard/tutors"
           className="flex items-center gap-2 text-gray-600 hover:bg-gray-100 p-2 text-sm"
@@ -122,13 +195,13 @@ export default async function TutorDetailsPage({
         {/* Left Section */}
         <div className="lg:col-span-8 space-y-6">
           <TutorProfileCard tutor={tutor} />
-          <TutorClassesCard classes={tutor.classes} />
+          <TutorClassesCard classes={classes} />
         </div>
 
         {/* Right Section */}
         <div className="lg:col-span-4 space-y-6">
-          <TutorSidebarCard learners={tutor.learners} />
-          <TutorTransactionsCard transactions={tutor.transactions} />
+          <TutorSidebarCard learners={learners} />
+          <TutorTransactionsCard transactions={transactions} />
         </div>
       </div>
     </main>

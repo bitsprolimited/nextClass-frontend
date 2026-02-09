@@ -4,12 +4,12 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Transaction } from "@/lib/constants";
+import type { PaymentItem } from "@/types/transactions";
 
 export default function TutorTransactionsCard({
   transactions,
 }: {
-  transactions?: Transaction[];
+  transactions?: PaymentItem[];
 }) {
   const [expandedTransaction, setExpandedTransaction] = useState<number | null>(
     null
@@ -38,38 +38,58 @@ export default function TutorTransactionsCard({
       <div className="space-y-3">
         {transactions.map((transaction, idx) => {
           const isOpen = expandedTransaction === idx;
-          // treat transaction as unknown and narrow each field safely
-          const tx = transaction as unknown as Record<string, unknown>;
+          
+          // Extract PaymentItem fields with safe type checking
+          const id = transaction.id || transaction._id || `txn-${idx}`;
+          const referenceId = transaction.referenceId || transaction.id || "-";
+          const amount = transaction.amount;
+          const amountDisplay = typeof amount === "number"
+            ? `₦${amount.toLocaleString()}`
+            : typeof amount === "string"
+            ? amount
+            : "—";
+          
+          const status = transaction.status || "Unknown";
+          const dateTime = transaction.createdAt || transaction.dateTime || "-";
+          
+          // Extract participant information from different possible structures
+          const participants = transaction.participants || [];
+          let tutorName = "-";
+          let learnerName = "-";
+          
+          if (Array.isArray(participants)) {
+            participants.forEach((p: any) => {
+              const role = p?.role || p?.type || "";
+              const name = p?.name || p?.fullName || "";
+              if (role?.toLowerCase?.()?.includes("tutor")) {
+                tutorName = name;
+              } else if (role?.toLowerCase?.()?.includes("learner") || role?.toLowerCase?.()?.includes("student")) {
+                learnerName = name;
+              }
+            });
+          }
 
-          const amountDisplay =
-            typeof tx.amount === "string"
-              ? tx.amount
-              : typeof tx.price === "number"
-              ? `₦${(tx.price as number).toLocaleString()}`
-              : "—";
-
-          const status = typeof tx.status === "string" ? tx.status : "Unknown";
-          const reference =
-            typeof tx.reference === "string" ? tx.reference : "-";
-          const dateTime = typeof tx.dateTime === "string" ? tx.dateTime : "-";
-          const tutorName = typeof tx.tutor === "string" ? tx.tutor : "-";
-          const learnerName = typeof tx.learner === "string" ? tx.learner : "-";
-          const grade = typeof tx.grade === "string" ? tx.grade : "";
-          const subject = typeof tx.subject === "string" ? tx.subject : "";
-          const sessions =
-            typeof tx.sessions === "number" || typeof tx.sessions === "string"
-              ? String(tx.sessions)
-              : "";
+          // Extract from teacher/parent if participants not available
+          if (tutorName === "-" && transaction.teacher) {
+            tutorName = typeof transaction.teacher === "object" 
+              ? (transaction.teacher as any).fullName || (transaction.teacher as any).name || "-"
+              : String(transaction.teacher);
+          }
+          if (learnerName === "-" && transaction.parent) {
+            learnerName = typeof transaction.parent === "object"
+              ? (transaction.parent as any).fullName || (transaction.parent as any).name || "-"
+              : String(transaction.parent);
+          }
 
           return (
             <div
-              key={transaction.id ?? idx}
+              key={id}
               className="bg-[#F5F4F8] rounded-xl px-3 py-3 transition-all"
             >
               {/* Top Row */}
               <div className="flex justify-between items-center">
                 <p className="text-sm font-semibold text-gray-800">
-                  Session {transaction.id}
+                  Session {id}
                 </p>
                 <div className="flex flex-col items-end">
                   <span className="text-green-600 font-semibold text-sm">
@@ -86,7 +106,7 @@ export default function TutorTransactionsCard({
 
               {/* Middle Info */}
               <div className="flex justify-between items-center text-[11px] text-gray-500 mt-1">
-                <p>Reference {reference}</p>
+                <p>Reference {referenceId}</p>
                 <p>{dateTime}</p>
               </div>
 
@@ -106,21 +126,6 @@ export default function TutorTransactionsCard({
                         {learnerName}
                       </span>
                     </span>
-                  </div>
-                  <div className="flex gap-1 items-center text-gray-500">
-                    <span>{grade}</span>
-                    {subject && (
-                      <>
-                        <span>•</span>
-                        <span>{subject}</span>
-                      </>
-                    )}
-                    {sessions && (
-                      <>
-                        <span>•</span>
-                        <span>{sessions}</span>
-                      </>
-                    )}
                   </div>
                 </div>
               )}

@@ -55,6 +55,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 export interface Child {
+  profileImg: string;
   _id: string;
   name: string;
   age: number;
@@ -63,6 +64,7 @@ export interface Child {
   gender: "male" | "female" | "other";
   dateOfBirth: string;
   interests: string[];
+  status: "active" | "inactive" | "suspended";
   createdAt: string;
   updatedAt: string;
 }
@@ -231,3 +233,21 @@ export type PaymentStatus =
   | "canceled";
 
 export type PaymentType = "one_time" | "recurring";
+
+export interface GetLearnersParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  parentId?: string;
+}
+
+export interface GetLearnersResponse {
+  items: Child[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage?: boolean;
+  };
+}

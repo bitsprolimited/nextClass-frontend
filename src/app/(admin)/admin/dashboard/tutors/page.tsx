@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,78 +29,13 @@ import {
   Search,
 } from "lucide-react";
 import StatCard from "@/components/admin/StatCard";
-
-// Fake Data
-const initialTutors = [
-  {
-    id: 1,
-    name: "JOHN DOE SANDERS",
-    email: "johndoe@xyz.com",
-    phone: "+54 756 287 410",
-    country: { code: "ARG", flag: "/images/ARG.png" },
-    grade: "Grade 5",
-    gradeMore: "Grade 2 +2 more",
-    subjects: "Mathematics, Physics + 3 more",
-    dateJoined: "01, Aug. 2025",
-    status: "Active",
-    avatar: "/images/ryan.png",
-  },
-  {
-    id: 2,
-    name: "JOHN DOE SANDERS",
-    email: "johndoe@xyz.com",
-    phone: "+54 756 287 410",
-    country: { code: "USA", flag: "/images/USA.png" },
-    grade: "Grade 5",
-    gradeMore: "Grade 2 +2 more",
-    subjects: "Mathematics, Physics + 3 more",
-    dateJoined: "01, Aug. 2025",
-    status: "Active",
-    avatar: "/images/ryan.png",
-  },
-  {
-    id: 3,
-    name: "JOHN DOE SANDERS",
-    email: "johndoe@xyz.com",
-    phone: "+54 756 287 410",
-    country: { code: "NGN", flag: "/images/NGN.png" },
-    grade: "Grade 5",
-    gradeMore: "Grade 2 +2 more",
-    subjects: "Mathematics, Physics + 3 more",
-    dateJoined: "01, Aug. 2025",
-    status: "Suspended",
-    avatar: "/images/ryan.png",
-  },
-  {
-    id: 4,
-    name: "JOHN DOE SANDERS",
-    email: "johndoe@xyz.com",
-    phone: "+54 756 287 410",
-    country: { code: "BRA", flag: "/images/BRA.png" },
-    grade: "Grade 5",
-    gradeMore: "Grade 2 +2 more",
-    subjects: "Mathematics, Physics + 3 more",
-    dateJoined: "01, Aug. 2025",
-    status: "Suspended",
-    avatar: "/images/ryan.png",
-  },
-  {
-    id: 5,
-    name: "JOHN DOE SANDERS",
-    email: "johndoe@xyz.com",
-    phone: "+54 756 287 410",
-    country: { code: "USA", flag: "/images/USA.png" },
-    grade: "Grade 5",
-    gradeMore: "Grade 2 +2 more",
-    subjects: "Mathematics, Physics + 3 more",
-    dateJoined: "01, Aug. 2025",
-    status: "Suspended",
-    avatar: "/images/ryan.png",
-  },
-];
+import { useTutors } from "@/hooks/useTutors";
+import Loader from "@/components/Loader";
+import type { Teacher } from "@/types";
 
 export default function TutorsPage() {
-  const [tutors] = useState(initialTutors);
+  const { data: tutorResponse, isLoading, error } = useTutors();
+  const tutors: Teacher[] = tutorResponse?.teachers || [];
 
   const renderTable = (status: string) => (
     <Card className="mt-4">
@@ -121,16 +55,16 @@ export default function TutorsPage() {
         </TableHeader>
         <TableBody>
           {tutors
-            .filter((t) =>
+            .filter((t: Teacher) =>
               status === "all"
                 ? true
                 : status === "active"
                 ? t.status.toLowerCase() === "active"
                 : t.status.toLowerCase() === "suspended"
             )
-            .map((tutor) => (
+            .map((tutor: Teacher) => (
               <TableRow
-                key={tutor.id}
+                key={tutor._id}
                 className="odd:bg-[#F5F4F8] even:bg-white"
               >
                 <TableCell>
@@ -138,8 +72,8 @@ export default function TutorsPage() {
                 </TableCell>
                 <TableCell className="flex items-center gap-3">
                   <Image
-                    src={tutor.avatar}
-                    alt={tutor.name}
+                    src={tutor.profilePicture || "/images/default-avatar.png"}
+                    alt={tutor.fullName}
                     width={40}
                     height={40}
                     className="rounded-full"
@@ -147,51 +81,69 @@ export default function TutorsPage() {
                   <div>
                     <p className="font-medium">
                       <Link
-                        href={`/admin/dashboard/tutors/${tutor.id}`}
+                        href={`/admin/dashboard/tutors/${tutor._id}`}
                         className="text-primary underline"
                       >
-                        {tutor.name}
+                        {tutor.fullName}
                       </Link>
                     </p>
                     <p className="text-xs text-gray-500">{tutor.email}</p>
                   </div>
                 </TableCell>
-                <TableCell>{tutor.phone}</TableCell>
+                <TableCell>{tutor.phoneNumber || "—"}</TableCell>
                 <TableCell className="flex items-center gap-2">
-                  <Image
-                    src={tutor.country.flag}
-                    alt={tutor.country.code}
-                    width={24}
-                    height={24}
-                  />
-                  {tutor.country.code}
+                  {tutor.countryFlag && (
+                    <Image
+                      src={tutor.countryFlag}
+                      alt={tutor.countryCode || ""}
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                  {tutor.countryCode || "—"}
                 </TableCell>
                 <TableCell>
                   <div>
-                    <div>{tutor.grade}</div>
+                    <div>
+                      {tutor.grades && tutor.grades.length > 0
+                        ? tutor.grades[0]
+                        : "—"}
+                    </div>
                     <div className="text-xs text-gray-500">
-                      {tutor.gradeMore}
+                      {tutor.grades && tutor.grades.length > 1
+                        ? `+${tutor.grades.length - 1} more`
+                        : ""}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <span className="font-semibold">
-                    {tutor.subjects.split(",")[0]}
+                    {tutor.subjects && tutor.subjects.length > 0
+                      ? tutor.subjects[0]
+                      : "—"}
                   </span>
                   <span className="text-xs text-gray-500">
-                    , {tutor.subjects.split(",").slice(1).join(",")}
+                    {tutor.subjects && tutor.subjects.length > 1
+                      ? `, +${tutor.subjects.length - 1} more`
+                      : ""}
                   </span>
                 </TableCell>
-                <TableCell>{tutor.dateJoined}</TableCell>
+                <TableCell>
+                  {tutor.createdAt
+                    ? new Date(tutor.createdAt).toLocaleDateString()
+                    : "—"}
+                </TableCell>
                 <TableCell>
                   <span
                     className={`px-4 py-1 rounded-full text-xs font-semibold ${
-                      tutor.status === "Active"
+                      tutor.status === "active"
                         ? "bg-green-50 text-green-600"
-                        : "bg-orange-50 text-orange-500"
+                        : tutor.status === "suspended"
+                        ? "bg-orange-50 text-orange-500"
+                        : "bg-gray-50 text-gray-600"
                     }`}
                   >
-                    {tutor.status}
+                    {tutor.status.charAt(0).toUpperCase() + tutor.status.slice(1)}
                   </span>
                 </TableCell>
                 <TableCell>
@@ -203,12 +155,12 @@ export default function TutorsPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link href={`/admin/dashboard/tutors/${tutor.id}`}>
+                        <Link href={`/admin/dashboard/tutors/${tutor._id}`}>
                           View
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
-                        {tutor.status === "Active" ? "Suspend" : "Activate"}
+                        {tutor.status === "active" ? "Suspend" : "Activate"}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -220,13 +172,31 @@ export default function TutorsPage() {
     </Card>
   );
 
+  if (isLoading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-screen">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+          Failed to load tutors. Please try again later.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Stats */}
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         <StatCard
           title="Total Tutors"
-          value="1,543"
+          value={tutors.length.toString()}
           icon={<Users />}
           change="18%"
         />
