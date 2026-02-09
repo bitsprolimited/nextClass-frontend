@@ -6,6 +6,21 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { PaymentItem } from "@/types/transactions";
 
+// Type definitions for safe object access
+type Participant = {
+  role?: string;
+  type?: string;
+  name?: string;
+  fullName?: string;
+};
+
+type Person = {
+  name?: string;
+  fullName?: string;
+  id?: string;
+  _id?: string;
+};
+
 export default function TutorTransactionsCard({
   transactions,
 }: {
@@ -53,14 +68,15 @@ export default function TutorTransactionsCard({
           const dateTime = transaction.createdAt || transaction.dateTime || "-";
           
           // Extract participant information from different possible structures
-          const participants = transaction.participants || [];
+          const participants = (transaction.participants || []) as Array<Participant | Record<string, unknown>>;
           let tutorName = "-";
           let learnerName = "-";
           
           if (Array.isArray(participants)) {
-            participants.forEach((p: any) => {
-              const role = p?.role || p?.type || "";
-              const name = p?.name || p?.fullName || "";
+            participants.forEach((p) => {
+              const participant = p as Participant;
+              const role = participant?.role || participant?.type || "";
+              const name = participant?.name || participant?.fullName || "";
               if (role?.toLowerCase?.()?.includes("tutor")) {
                 tutorName = name;
               } else if (role?.toLowerCase?.()?.includes("learner") || role?.toLowerCase?.()?.includes("student")) {
@@ -71,13 +87,15 @@ export default function TutorTransactionsCard({
 
           // Extract from teacher/parent if participants not available
           if (tutorName === "-" && transaction.teacher) {
+            const teacher = transaction.teacher as Person;
             tutorName = typeof transaction.teacher === "object" 
-              ? (transaction.teacher as any).fullName || (transaction.teacher as any).name || "-"
+              ? teacher.fullName || teacher.name || "-"
               : String(transaction.teacher);
           }
           if (learnerName === "-" && transaction.parent) {
+            const parent = transaction.parent as Person;
             learnerName = typeof transaction.parent === "object"
-              ? (transaction.parent as any).fullName || (transaction.parent as any).name || "-"
+              ? parent.fullName || parent.name || "-"
               : String(transaction.parent);
           }
 
