@@ -20,7 +20,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPO_NAME: nextclass-app-dev
+  ECR_REPO_NAME: nextclass-frontend-dev
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -58,11 +58,12 @@ jobs:
       # Trivy scan (warn only)
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: ${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: 0 # WARN ONLY
+          exit-code: 1
           format: table
 
       # Ensure container runs as non-root
