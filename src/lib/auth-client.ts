@@ -1,0 +1,51 @@
+import { inferAdditionalFields } from "better-auth/client/plugins";
+import { nextCookies } from "better-auth/next-js";
+import { createAuthClient } from "better-auth/react";
+
+export type BetterAuthSession = typeof authClient.$Infer.Session;
+
+export const authClient = createAuthClient({
+  basePath: "/api/auth",
+  fetchOptions: {
+    credentials: "include",
+  },
+  plugins: [
+    nextCookies(),
+    inferAdditionalFields({
+      user: {
+        role: {
+          type: "string",
+          defaultValue: "parent",
+        },
+        status: {
+          type: "string",
+          defaultValue: "active",
+        },
+        phoneNumber: {
+          type: "string",
+          required: false,
+        },
+        timezone: {
+          type: "string",
+          defaultValue: "UTC",
+        },
+        rating: {
+          type: "number",
+          defaultValue: 0,
+        },
+        ratingCount: {
+          type: "number",
+          defaultValue: 0,
+        },
+        hasStripeAccount: {
+          type: "boolean",
+          defaultValue: false,
+        },
+        isProfileComplete: {
+          type: "boolean",
+          defaultValue: false,
+        },
+      },
+    }),
+  ],
+});

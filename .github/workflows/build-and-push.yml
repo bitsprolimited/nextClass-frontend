@@ -3,24 +3,24 @@ name: Build, Scan and Push to ECR
 on:
   push:
     paths:
-      - 'Dockerfile'
-      - '**/*.go'
-      - '**/*.txt'
-      - '**/*.css'
-      - '**/*.js'
-      - '**/*.jsx'
-      - '**/*.ts'
-      - '**/*.tsx'
-      - '**/*.html'
-      - '**/*.svg'
-      - '**/*.json'
-      - '.env*'
-      - 'src/**'
-      - 'public/**'
+      - "Dockerfile"
+      - "**/*.go"
+      - "**/*.txt"
+      - "**/*.css"
+      - "**/*.js"
+      - "**/*.jsx"
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.html"
+      - "**/*.svg"
+      - "**/*.json"
+      - ".env*"
+      - "src/**"
+      - "public/**"
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPO_NAME: nextclass-app-dev
+  ECR_REPO_NAME: nextclass-frontend-dev
   IMAGE_TAG: ${{ github.sha }}
 
 jobs:
@@ -49,17 +49,21 @@ jobs:
       - name: Build Docker image (no push yet)
         run: |
           docker build \
+            --build-arg BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }} \
+            --build-arg NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }} \
+            --build-arg NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }} \
             -t ${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }} \
             .
 
       # Trivy scan (warn only)
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: ${{ env.ECR_REPO_NAME }}:${{ env.IMAGE_TAG }}
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-          exit-code: 0   # WARN ONLY
+          exit-code: 1
           format: table
 
       # Ensure container runs as non-root
