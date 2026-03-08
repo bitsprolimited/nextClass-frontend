@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useParent } from "@/hooks/useUser";
 import Image from "next/image";
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SuspendParentModal } from "@/components/admin/SuspendParentModal";
 import { EditProfileModal } from "@/components/admin/EditParentProfileModal";
 import {
@@ -79,6 +80,32 @@ export default function ParentProfilePage() {
   // 1. STATE MANAGEMENT
   const [profileData, setProfileData] =
     useState<ProfileData>(INITIAL_PROFILE_DATA);
+
+  // fetch parent by id when available
+  const { data: parentData, isLoading: isParentLoading } = useParent(
+    id ?? "",
+    { enabled: !!id }
+  );
+
+  React.useEffect(() => {
+    if (parentData) {
+      setProfileData((prev) => ({
+        ...prev,
+        name: parentData.fullName || prev.name,
+        email: parentData.email || prev.email,
+        phone: parentData.phoneNumber || prev.phone,
+        address: parentData.address?.street || prev.address,
+        city: parentData.address?.city || prev.city,
+        state: parentData.address?.state || prev.state,
+        country: parentData.address?.country || prev.country,
+        cityState: parentData.address
+          ? `${parentData.address.city}/${parentData.address.state}`
+          : prev.cityState,
+        profileImg: parentData.profilePicture || prev.profileImg,
+        status: parentData.status || prev.status,
+      }));
+    }
+  }, [parentData]);
   const [isSuspendModalOpen, setIsSuspendModalOpen] = useState(false); // Suspend modal state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Edit modal state
   const [expandedTransaction, setExpandedTransaction] = useState<number | null>(

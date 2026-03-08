@@ -28,13 +28,16 @@ export const getAvailableSlots = async (
  */
 export async function updateTeacherVerification(
   id: string,
-  isAdminVerified: boolean
+  isAdminVerified: boolean,
+  /** optional explanation for a decline; server currently ignores it but we keep for future */
+  reason?: string
 ): Promise<Teacher> {
+  const payload: Record<string, unknown> = { isAdminVerified };
+  if (reason !== undefined) payload.reason = reason;
+
   const res = await axiosInstance.patch(
     `/teachers/${encodeURIComponent(id)}/verification-status`,
-    {
-      isAdminVerified,
-    }
+    payload
   );
   // response may be wrapped or direct; return sensible payload
   const body = res.data;

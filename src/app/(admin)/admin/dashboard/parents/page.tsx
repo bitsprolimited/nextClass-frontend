@@ -28,12 +28,17 @@ import {
   GraduationCap,
   MoreVertical,
   Search,
+  Loader2,
 } from "lucide-react";
 import StatCard from "@/components/admin/StatCard";
-import ParentProfileModal from "@/components/admin/ParentProfileModal";
-import { useRouter } from "next/navigation";
-import { useParents } from "@/hooks/useUser";
+import { useParents, useParent } from "@/hooks/useUser";
 import Loader from "@/components/Loader";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { User, Child } from "@/types";
 import { getAllLearners } from "@/services/learner.service";
 
@@ -179,8 +184,42 @@ const getLearnersFull = (): FullLearner[] => [
   },
 ];
 
+
+// simple modal to surface fetched parent details
+const ParentDetailModal: React.FC<{
+  open: boolean;
+  onClose: () => void;
+  parent?: User;
+  loading: boolean;
+}> = ({ open, onClose, parent, loading }) => (
+  <Dialog open={open} onOpenChange={onClose}>
+    <DialogContent className="max-w-[500px]">
+      <DialogHeader>
+        <DialogTitle>Parent Details</DialogTitle>
+      </DialogHeader>
+
+      {loading ? (
+        <div className="flex justify-center py-6">
+          <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+        </div>
+      ) : parent ? (
+        <div className="space-y-2">
+          <p><strong>Name:</strong> {parent.fullName}</p>
+          <p><strong>Email:</strong> {parent.email}</p>
+          <p><strong>Phone:</strong> {parent.phoneNumber}</p>
+          {/* dump raw JSON for now until UI is fleshed out */}
+          <pre className="text-xs bg-gray-100 p-2 rounded">
+            {JSON.stringify(parent, null, 2)}
+          </pre>
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 py-6">No parent selected</p>
+      )}
+    </DialogContent>
+  </Dialog>
+);
+
 export default function ParentsPage() {
-  const router = useRouter();
   const { data: parentResponse, isLoading, error } = useParents();
   const { data: learnersData } = useQuery({
     queryKey: ["all-learners-stats"],
@@ -198,6 +237,13 @@ export default function ParentsPage() {
 
   const [selectedParent, setSelectedParent] = useState<ParentDisplayItem | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const {
+    data: parentDetail,
+    isLoading: isParentLoading,
+  } = useParent(selectedParent?.id ?? "", {
+    enabled: modalOpen && !!selectedParent,
+  });
 
   const renderTable = (status: string) => (
     <Card className="mt-4">
@@ -226,9 +272,10 @@ export default function ParentsPage() {
               <TableRow
                 key={parent.id}
                 className="odd:bg-[#F5F4F8] even:bg-white hover:bg-gray-100 cursor-pointer transition"
-                onClick={() =>
-                  router.push(`/admin/dashboard/parents/${parent.id}`)
-                }
+                onClick={() => {
+                  setSelectedParent(parent);
+                  setModalOpen(true);
+                }}
               >
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <input type="checkbox" />
@@ -444,10 +491,11 @@ export default function ParentsPage() {
         <TabsContent value="suspended">{renderTable("suspended")}</TabsContent>
       </Tabs>
 
-      <ParentProfileModal
+      <ParentDetailModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        parent={selectedParent}
+        parent={parentDetail}
+        loading={isParentLoading}
       />
     </div>
   );

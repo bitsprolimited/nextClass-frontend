@@ -52,8 +52,9 @@ export function useUpdateTeacherVerification() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, isAdminVerified }: { id: string; isAdminVerified: boolean }) =>
-      updateTeacherVerification(id, isAdminVerified),
+    mutationFn: (
+      vars: { id: string; isAdminVerified: boolean; reason?: string }
+    ) => updateTeacherVerification(vars.id, vars.isAdminVerified, vars.reason),
     onSuccess: (updated) => {
       // Refresh list
       qc.invalidateQueries({ queryKey: ["tutors"] });

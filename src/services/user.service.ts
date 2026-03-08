@@ -89,3 +89,17 @@ export const getParents = async (): Promise<{ users: User[]; pagination?: Pagina
     pagination: normalized.pagination,
   };
 };
+
+/**
+ * Fetch a single parent/user by id
+ */
+export const getParent = async (id: string): Promise<User> => {
+  const response = await axiosInstance.get(`/user/${encodeURIComponent(id)}`);
+  // server might wrap payload
+  const data = response.data;
+  if (data && typeof data === "object" && "user" in data) {
+   
+    return data.user;
+  }
+  return data as User;
+};

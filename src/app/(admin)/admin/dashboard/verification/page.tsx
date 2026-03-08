@@ -33,8 +33,6 @@ import { useTutors, useTutor } from "@/hooks/useTutors";
 import type { Teacher, Qualification } from "@/types";
 import { TutorVerificationModal } from "@/components/admin/TutorVerificationModal";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateTeacherVerification } from "@/services/tutors.service";
 
 // ---------- Table row shape ----------
 type TutorRow = {
@@ -182,43 +180,11 @@ export default function VerificationPage() {
     };
   }, [tutorDetail]);
 
-  // ---- Approve / Decline (via PATCH endpoint) ----
-  const qc = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, isAdminVerified }: { id: string; isAdminVerified: boolean }) =>
-      updateTeacherVerification(id, isAdminVerified),
-    onSuccess: (updated, vars) => {
-      const newStatus: TutorRow["status"] = vars.isAdminVerified
-        ? "accepted"
-        : "declined";
-
-      // update local list immediately
-      setTutors((prev) =>
-        prev.map((row) =>
-          String(row.id) === String(vars.id) ? { ...row, status: newStatus } : row
-        )
-      );
-
-      // switch to the bucket
-      setActiveTab(newStatus);
-
-      // refresh queries (keeps source of truth correct)
-      qc.invalidateQueries({ queryKey: ["tutors"] });
-      if (vars.id) qc.invalidateQueries({ queryKey: ["tutor", vars.id] });
-    },
-  });
-
-  const handleApprove = (id: string) =>
-    mutation.mutate({ id, isAdminVerified: true });
-
-  const handleDecline = (id: string) =>
-    mutation.mutate({ id, isAdminVerified: false });
-
   // ---------- Stats (functional) ----------
   const totalTutors = tutors.length;
   const acceptedCount = tutors.filter((t) => t.status === "accepted").length;
   const pendingCount = tutors.filter((t) => t.status === "pending").length;
+  const declinedCount = tutors.filter((t) => t.status === "declined").length;
 
   // ---------- Table Helper ----------
   const renderTable = (status: "all" | "pending" | "accepted" | "declined") => {
@@ -325,44 +291,42 @@ export default function VerificationPage() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Stats (functional) */}
+      {/* Stats */}
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         <StatCard
-          title="Total Registered Parents"
-          value="1,543"
-          icon={<Users />}
-          change="18%"
-        />
-        <StatCard
-          title="Total Registered Learners"
-          value="1,543"
-          icon={<GraduationCap />}
-          change="18%"
-        />
-        <StatCard
-          title="Total Registered Tutors"
-          value={String(totalTutors)}
-          icon={<UserCheck />}
+          title="Total Tutor Applications"
+          value={totalTutors}
+          icon={<Users className="w-5 h-5" />}
           change={
             totalTutors > 0
-              ? `${Math.round((acceptedCount / totalTutors) * 100)}%`
+              ? `${Math.round((pendingCount / totalTutors) * 100)}%`
               : "0%"
           }
-          changeColor="bg-green-100 text-green-600"
-          subStats={[
-            {
-              label: "Verified",
-              value: acceptedCount,
-              color: "text-green-600",
-            },
-            {
-              label: "Pending",
-              value: pendingCount,
-              color: "text-red-500",
-            },
-          ]}
         />
-        <StatCard title="Total Revenue" value="₦124,309.50" />
+        <StatCard
+          title="Pending Verification"
+          value={pendingCount}
+          icon={<GraduationCap className="w-5 h-5" />}
+          change={pendingCount > 0 ? "+5%" : "0%"}
+          changeColor="bg-yellow-100 text-yellow-600"
+          iconBg="bg-yellow-50"
+        />
+        <StatCard
+          title="Verified Tutors"
+          value={acceptedCount}
+          icon={<UserCheck className="w-5 h-5" />}
+          change={acceptedCount > 0 ? "+12%" : "0%"}
+          changeColor="bg-green-100 text-green-600"
+          iconBg="bg-green-50"
+        />
+        <StatCard
+          title="Declined Tutors"
+          value={declinedCount}
+          icon={<Users className="w-5 h-5" />}
+          change={declinedCount > 0 ? "-3%" : "0%"}
+          changeColor="bg-red-100 text-red-500"
+          iconBg="bg-red-50"
+        />
       </div>
 
       {/* Search (kept simple) */}
@@ -434,14 +398,20 @@ export default function VerificationPage() {
           setSelectedId(null);
         }}
         tutor={isTutorLoading || !modalTutor ? null : modalTutor}
-        // If your modal accepts these optional props, it will call them.
-        // The `as any` avoids TS noise if your modal's props haven't been extended yet.
-        {...({
-          onApprove: () => selectedId && handleApprove(selectedId),
-          onDecline: () => selectedId && handleDecline(selectedId),
-          actionLoading: mutation.isPending,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any)}
+        onAfterAction={(status, id) => {
+          if (!id) return;
+          const newStatus: TutorRow["status"] = status;
+          setTutors((prev) =>
+            prev.map((row) =>
+              String(row.id) === String(id) ? { ...row, status: newStatus } : row
+            )
+          );
+          setActiveTab(newStatus);
+        }}
+        onDeclineReason={(reason) => {
+          console.log("Decline reason:", reason);
+          // TODO: when endpoint exists we can send this along
+        }}
       />
     </div>
   );

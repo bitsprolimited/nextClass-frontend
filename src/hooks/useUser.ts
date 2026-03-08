@@ -14,6 +14,8 @@ export function useUser() {
 type ParentsKey = ["parents"];
 type ParentsResponse = { users: User[]; pagination?: { page: number; limit: number; total: number; pages: number } };
 
+type ParentKey = ["parent", string];
+
 /** Fetch all parents */
 export function useParents<TData = ParentsResponse>(
   options?: Omit<
@@ -26,6 +28,26 @@ export function useParents<TData = ParentsResponse>(
     queryFn: getParents,
     refetchOnWindowFocus: false,
     retry: false,
+    ...(options ?? {}),
+  });
+}
+
+/**
+ * Fetch one parent by ID (enabled only when id truthy)
+ */
+export function useParent<TData = User>(
+  id: string,
+  options?: Omit<
+    UseQueryOptions<User, Error, TData, ParentKey>,
+    "queryKey" | "queryFn"
+  >
+): UseQueryResult<TData, Error> {
+  return useQuery<User, Error, TData, ParentKey>({
+    queryKey: ["parent", id],
+    queryFn: () => getParent(id),
+    refetchOnWindowFocus: false,
+    retry: false,
+    enabled: !!id,
     ...(options ?? {}),
   });
 }

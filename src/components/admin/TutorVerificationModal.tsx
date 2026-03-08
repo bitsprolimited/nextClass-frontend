@@ -62,7 +62,12 @@ export interface TutorVerificationModalProps {
   onClose: () => void;
   tutor: TutorVerificationViewModel | null;
   /** Optional: let the parent react immediately to a status change */
-  onAfterAction?: (newStatus: "accepted" | "declined") => void;
+  onAfterAction?: (
+    newStatus: "accepted" | "declined",
+    tutorId?: string
+  ) => void;
+  /** Optional: receives the reason text when a decline is submitted */
+  onDeclineReason?: (reason: string) => void;
 }
 
 /** ---------- Small UI atoms ---------- */
@@ -213,21 +218,77 @@ const QualificationCard: React.FC<{ q: TutorQualification }> = ({ q }) => {
   );
 };
 
+// small helper dialog shown when the admin clicks "Decline Tutor";
+// collects a free‑form reason before the actual verification request fires.
+const DeclineReasonDialog: React.FC<{
+  open: boolean;
+  onClose: () => void;
+  reason: string;
+  setReason: (r: string) => void;
+  onConfirm: () => void;
+  loading: boolean;
+}> = ({ open, onClose, reason, setReason, onConfirm, loading }) => (
+  <Dialog open={open} onOpenChange={onClose}>
+    <DialogContent className="max-w-[420px] w-[420px]">
+      <DialogHeader>
+        <DialogTitle>Decline Tutor</DialogTitle>
+        <DialogDescription>
+          Please provide a short explanation for declining this tutor.
+        </DialogDescription>
+      </DialogHeader>
+
+      <textarea
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        className="w-full h-28 border rounded-md p-2 mt-2 text-sm"
+        placeholder="Type reason here..."
+      />
+
+      <div className="flex justify-end gap-4 mt-4">
+        <Button variant="outline" onClick={onClose} disabled={loading}>
+          Cancel
+        </Button>
+        <Button
+          onClick={onConfirm}
+          disabled={loading || reason.trim() === ""}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Processing…
+            </>
+          ) : (
+            "Submit"
+          )}
+        </Button>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
 /** ---------- Main Modal ---------- */
 export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
   open,
   onClose,
   tutor,
   onAfterAction,
+  onDeclineReason,
 }) => {
   const [isPlaying, setPlaying] = React.useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const [expanded, setExpanded] = React.useState(false);
 
+  // reason dialog state
+  const [reasonModalOpen, setReasonModalOpen] = React.useState(false);
+  const [declineReason, setDeclineReason] = React.useState("");
+
   React.useEffect(() => {
     setExpanded(false);
     setPlaying(false);
     videoRef.current?.pause?.();
+    // reset decline flow when different tutor loads
+    setReasonModalOpen(false);
+    setDeclineReason("");
   }, [tutor?.id]);
 
   // Mutation to approve/decline
@@ -239,19 +300,27 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
     updateVerification.mutate(
       { id: String(tutor.id), isAdminVerified: true },
       {
-        onSuccess: () => onAfterAction?.("accepted"),
+        onSuccess: () => onAfterAction?.("accepted", String(tutor.id)),
       }
     );
   };
 
-  const handleDecline = () => {
+  const handleDecline = (reason?: string) => {
     if (!tutor?.id) return;
     updateVerification.mutate(
-      { id: String(tutor.id), isAdminVerified: false },
+      { id: String(tutor.id), isAdminVerified: false, reason },
       {
-        onSuccess: () => onAfterAction?.("declined"),
+        onSuccess: () => onAfterAction?.("declined", String(tutor.id)),
       }
     );
+  };
+
+  const handleDeclineConfirm = () => {
+    // send reason to parent for later use (endpoint not yet ready)
+    onDeclineReason?.(declineReason);
+    setReasonModalOpen(false);
+    setDeclineReason("");
+    handleDecline(declineReason);
   };
 
   if (!tutor) {
@@ -452,7 +521,7 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                   <Button
                     variant="outline"
                     className="border-red-500 text-red-500 hover:bg-red-50"
-                    onClick={handleDecline}
+                    onClick={() => setReasonModalOpen(true)}
                     disabled={busy}
                   >
                     {busy ? (
@@ -479,6 +548,15 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                     )}
                   </Button>
                 </section>
+                {/* reason modal overlay */}
+                <DeclineReasonDialog
+                  open={reasonModalOpen}
+                  onClose={() => setReasonModalOpen(false)}
+                  reason={declineReason}
+                  setReason={setDeclineReason}
+                  onConfirm={handleDeclineConfirm}
+                  loading={busy}
+                />
               </div>
             </ScrollArea>
           </div>

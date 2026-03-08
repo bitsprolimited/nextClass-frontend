@@ -5,16 +5,16 @@ import Image from "next/image";
 import {
   LayoutDashboard,
   UserCheck,
-  Users,
+  // Users,
   BookOpen,
   Briefcase,
   Calendar,
-  FileText,
+  // FileText,
   CreditCard,
-  AlertTriangle,
-  Sliders,
-  Settings,
-  User,
+  // AlertTriangle,
+  // Sliders,
+  // Settings,
+  // User,
   Users2,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -49,20 +49,20 @@ const navSections = [
   {
     title: "Application",
     links: [
-      { name: "Reports", href: "/reports", icon: FileText },
+      // { name: "Reports", href: "/reports", icon: FileText },
       { name: "Transactions", href: "/admin/dashboard/transactions", icon: CreditCard },
-      { name: "Disputes", href: "/admin/dashboard/disputes", icon: AlertTriangle },
+      // { name: "Disputes", href: "/admin/dashboard/disputes", icon: AlertTriangle },
     ],
   },
-  {
-    title: "Admin Settings",
-    links: [
-      { name: "Plans", href: "/plans", icon: Sliders },
-      { name: "Platform", href: "/platform", icon: Settings },
-      { name: "Profile", href: "/profile", icon: User },
-      { name: "Teams", href: "/teams", icon: Users },
-    ],
-  },
+  // {
+  //   title: "Admin Settings",
+  //   links: [
+  //     { name: "Plans", href: "/plans", icon: Sliders },
+  //     { name: "Platform", href: "/platform", icon: Settings },
+  //     { name: "Profile", href: "/profile", icon: User },
+  //     { name: "Teams", href: "/teams", icon: Users },
+  //   ],
+  // },
 ];
 
 export default function Sidebar() {

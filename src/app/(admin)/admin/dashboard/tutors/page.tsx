@@ -71,13 +71,19 @@ export default function TutorsPage() {
                   <input type="checkbox" />
                 </TableCell>
                 <TableCell className="flex items-center gap-3">
-                  <Image
-                    src={tutor.profilePicture || "/images/default-avatar.png"}
-                    alt={tutor.fullName}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+                  {tutor.profilePicture ? (
+                    <Image
+                      src={tutor.profilePicture}
+                      alt={tutor.fullName}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {tutor.fullName?.charAt(0).toUpperCase() || "T"}
+                    </div>
+                  )}
                   <div>
                     <p className="font-medium">
                       <Link
