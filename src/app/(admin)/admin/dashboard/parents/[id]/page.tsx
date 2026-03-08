@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SuspendParentModal } from "@/components/admin/SuspendParentModal";
 import { EditProfileModal } from "@/components/admin/EditParentProfileModal";
 import {
@@ -82,7 +82,7 @@ export default function ParentProfilePage() {
     useState<ProfileData>(INITIAL_PROFILE_DATA);
 
   // fetch parent by id when available
-  const { data: parentData, isLoading: isParentLoading } = useParent(
+  const { data: parentData } = useParent(
     id ?? "",
     { enabled: !!id }
   );
