@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBookings } from "@/hooks/useBooking";
+import { bookingUtils, useBookings } from "@/hooks/useBooking";
 import {
   BookingStatus,
   EventType,
@@ -21,8 +21,7 @@ export default function UpcomingCallTabs() {
       statuses: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
       sortBy: "startTime" as SortBy,
       sortOrder: "asc" as SortOrder,
-      limit: 3,
-      dateFrom: new Date().toISOString(),
+      limit: 50,
     };
   }, []);
 
@@ -35,6 +34,22 @@ export default function UpcomingCallTabs() {
     ...upcomingParams,
     eventType: EventType.INTRODUCTION_CALL,
   });
+
+  const upcomingClassBookings = useMemo(
+    () =>
+      upcomingClassesQuery.bookings
+        .filter((booking) => !bookingUtils.isPast(booking))
+        .slice(0, 3),
+    [upcomingClassesQuery.bookings]
+  );
+
+  const upcomingCallBookings = useMemo(
+    () =>
+      upcomingCallsQuery.bookings
+        .filter((booking) => !bookingUtils.isPast(booking))
+        .slice(0, 3),
+    [upcomingCallsQuery.bookings]
+  );
 
   return (
     <Tabs
@@ -64,7 +79,7 @@ export default function UpcomingCallTabs() {
         className="w-full bg-[#f8f6f4] space-y-10 p-4"
       >
         <BookingTabContent
-          bookings={upcomingClassesQuery.bookings}
+          bookings={upcomingClassBookings}
           isLoading={upcomingClassesQuery.isLoading}
           error={upcomingClassesQuery.error}
           isHistory={false}
@@ -79,7 +94,7 @@ export default function UpcomingCallTabs() {
         className="w-full bg-[#f8f6f4] space-y-10 p-4"
       >
         <BookingTabContent
-          bookings={upcomingCallsQuery.bookings}
+          bookings={upcomingCallBookings}
           isLoading={upcomingCallsQuery.isLoading}
           error={upcomingCallsQuery.error}
           isHistory={false}

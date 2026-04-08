@@ -124,10 +124,14 @@ export function BookAClassModal({
   tutor,
   duration,
   session,
+  disabled = false,
+  disabledLabel = "Book a class",
 }: {
   session: BetterAuthSession | null;
   tutor: Teacher;
   duration: number;
+  disabled?: boolean;
+  disabledLabel?: string;
 }) {
   const router = useRouter();
   const today = new Date();
@@ -367,9 +371,11 @@ export function BookAClassModal({
         <DialogTrigger asChild>
           <Button
             onClick={handleBookingClick}
+            disabled={disabled}
             className="bg-secondary text-white px-6 rounded-full"
+            title={disabled ? disabledLabel : undefined}
           >
-            Book a class
+            {disabled ? disabledLabel : "Book a class"}
           </Button>
         </DialogTrigger>
 

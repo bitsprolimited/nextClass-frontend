@@ -88,10 +88,14 @@ export function BookIntroductoryCallModal({
   tutor,
   duration,
   session,
+  disabled = false,
+  disabledLabel = "Book Introduction Call",
 }: {
   session: BetterAuthSession | null | undefined;
   tutor: Teacher;
   duration: number;
+  disabled?: boolean;
+  disabledLabel?: string;
 }) {
   const router = useRouter();
   const today = new Date();
@@ -157,9 +161,11 @@ export function BookIntroductoryCallModal({
         <DialogTrigger asChild>
           <Button
             onClick={handleBookingClick}
+            disabled={disabled}
             className="bg-primary text-white px-6 rounded-full"
+            title={disabled ? disabledLabel : undefined}
           >
-            Book Introduction Call
+            {disabled ? disabledLabel : "Book Introduction Call"}
           </Button>
         </DialogTrigger>
 

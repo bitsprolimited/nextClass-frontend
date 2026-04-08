@@ -9,7 +9,7 @@ import {
 import { Camera, CameraOff, LogIn, Mic, MicOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
@@ -61,6 +61,9 @@ const MeetingSetup = ({
   setIsSetupComplete: (value: boolean) => void;
   user: User;
 }) => {
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinError, setJoinError] = useState<string | null>(null);
+
   // https://getstream.io/video/docs/react/guides/call-and-participant-state/#call-state
   const {
     useCallEndedAt,
@@ -85,9 +88,31 @@ const MeetingSetup = ({
   }
 
   useEffect(() => {
-    call.camera.enable();
-    call.microphone.enable();
+    const enableDevices = async () => {
+      try {
+        await Promise.all([call.camera.enable(), call.microphone.enable()]);
+      } catch (error) {
+        console.error("Failed to initialize call devices:", error);
+      }
+    };
+
+    void enableDevices();
   }, [call.camera, call.microphone]);
+
+  const handleJoinMeeting = async () => {
+    setIsJoining(true);
+    setJoinError(null);
+
+    try {
+      await call.join();
+      setIsSetupComplete(true);
+    } catch (error) {
+      console.error("Failed to join meeting:", error);
+      setJoinError("Could not join the meeting. Please try again.");
+    } finally {
+      setIsJoining(false);
+    }
+  };
 
   // if (callTimeNotArrived)
   //   return (
@@ -114,15 +139,13 @@ const MeetingSetup = ({
       />
       <Button
         className="rounded-full bg-primary px-6 py-2.5"
-        onClick={() => {
-          call.join();
-
-          setIsSetupComplete(true);
-        }}
+        onClick={handleJoinMeeting}
+        disabled={isJoining}
       >
         <LogIn />
-        Join meeting
+        {isJoining ? "Joining..." : "Join meeting"}
       </Button>
+      {joinError && <p className="text-sm text-red-600">{joinError}</p>}
       <div className="py-6 border-t border-gray-200 w-full">
         <div className="flex items-center justify-center gap-4">
           <button
