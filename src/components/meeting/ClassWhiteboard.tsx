@@ -32,7 +32,7 @@ type WhiteboardElements = Parameters<NonNullable<ExcalidrawProps["onChange"]>>[0
 
 const ClassWhiteboard = ({
   meetingId,
-  isOpen,
+  // isOpen,
 }: {
   meetingId: string;
   isOpen: boolean;
