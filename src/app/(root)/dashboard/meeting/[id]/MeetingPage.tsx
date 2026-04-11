@@ -2,6 +2,7 @@
 
 import { StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import "stream-chat-react/dist/css/v2/index.css";
 
@@ -10,12 +11,29 @@ import MeetingRoom from "@/components/MeetingRoom";
 import MeetingSetup, { Alert } from "@/components/MeetingSetup";
 import { useGetCallById } from "@/hooks/useGetCallById";
 import { useAuth } from "@/providers/AuthProvider";
+import { EventType, getBookingByMeetingLink } from "@/services/booking.service";
+
+const isClassCall = (custom: Record<string, unknown>, callType: string) => {
+  return (
+    custom.eventType === "class" ||
+    custom.sessionType === "class" ||
+    custom.meetingType === "class" ||
+    callType === "class"
+  );
+};
 
 const MeetingPage = ({ id }: { id: string }) => {
   const { call, isCallLoading } = useGetCallById(id);
   const { session, isLoading } = useAuth();
   const user = session?.user;
   const [isSetupComplete, setIsSetupComplete] = useState(false);
+  const { data: booking, isLoading: isBookingLoading } = useQuery({
+    queryKey: ["meeting-booking", id],
+    queryFn: () => getBookingByMeetingLink(id),
+    enabled: !!user,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 
   if (isCallLoading || isLoading) return <Loader />;
 
@@ -34,6 +52,13 @@ const MeetingPage = ({ id }: { id: string }) => {
   if (notAllowed)
     return <Alert title="You are not allowed to join this meeting" />;
 
+  const metadataClassSession = isClassCall(call.state.custom ?? {}, call.type);
+
+  if (isBookingLoading && !metadataClassSession) return <Loader />;
+
+  const isClassSession =
+    booking?.eventType === EventType.CLASS || metadataClassSession;
+
   return (
     <main className="h-screen w-full">
       <StreamCall call={call}>
@@ -41,7 +66,7 @@ const MeetingPage = ({ id }: { id: string }) => {
           {!isSetupComplete ? (
             <MeetingSetup user={user!} setIsSetupComplete={setIsSetupComplete} />
           ) : (
-            <MeetingRoom callId={id} />
+            <MeetingRoom callId={id} isClassSession={isClassSession} />
           )}
         </StreamTheme>
       </StreamCall>
