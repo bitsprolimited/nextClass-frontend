@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SuspendParentModal } from "@/components/admin/SuspendParentModal";
 import { EditProfileModal } from "@/components/admin/EditParentProfileModal";
 import {
@@ -76,18 +76,16 @@ const ActivitiesContent = () => {
 export default function ParentProfilePage() {
   const { id } = useParams();
   const router = useRouter();
+  const parentId = Array.isArray(id) ? id[0] ?? "" : id ?? "";
 
   // 1. STATE MANAGEMENT
   const [profileData, setProfileData] =
     useState<ProfileData>(INITIAL_PROFILE_DATA);
 
   // fetch parent by id when available
-  const { data: parentData } = useParent(
-    id ?? "",
-    { enabled: !!id }
-  );
+  const { data: parentData } = useParent(parentId, { enabled: !!parentId });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (parentData) {
       setProfileData((prev) => ({
         ...prev,
@@ -114,7 +112,7 @@ export default function ParentProfilePage() {
 
   // Handlers
   const handleSuspendAccount = (reason: string) => {
-    console.log(`Suspending account ${id} with reason: ${reason}`);
+    console.log(`Suspending account ${parentId} with reason: ${reason}`);
     // API call goes here
     setIsSuspendModalOpen(false);
   };

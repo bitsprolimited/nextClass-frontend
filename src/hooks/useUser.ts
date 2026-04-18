@@ -1,4 +1,4 @@
-import { getUser, getParents } from "@/services/user.service";
+import { getUser, getParents, getParent } from "@/services/user.service";
 import { useQuery, type UseQueryOptions, type UseQueryResult } from "@tanstack/react-query";
 import type { User } from "@/types";
 
