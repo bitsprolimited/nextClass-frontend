@@ -11,7 +11,11 @@ import MeetingRoom from "@/components/MeetingRoom";
 import MeetingSetup, { Alert } from "@/components/MeetingSetup";
 import { useGetCallById } from "@/hooks/useGetCallById";
 import { useAuth } from "@/providers/AuthProvider";
-import { EventType, getBookingByMeetingLink } from "@/services/booking.service";
+import {
+  EventType,
+  getBookingByMeetingLink,
+  getMeetingAccess,
+} from "@/services/booking.service";
 
 const isClassCall = (custom: Record<string, unknown>, callType: string) => {
   return (
@@ -34,8 +38,20 @@ const MeetingPage = ({ id }: { id: string }) => {
     refetchOnWindowFocus: false,
     retry: 1,
   });
+  const {
+    data: meetingAccess,
+    isLoading: isMeetingAccessLoading,
+    refetch: refetchMeetingAccess,
+  } = useQuery({
+    queryKey: ["meeting-access", id],
+    queryFn: () => getMeetingAccess(id),
+    enabled: !!user,
+    refetchInterval: isSetupComplete ? false : 15000,
+    refetchOnWindowFocus: true,
+    retry: 1,
+  });
 
-  if (isCallLoading || isLoading) return <Loader />;
+  if (isCallLoading || isLoading || isMeetingAccessLoading) return <Loader />;
 
   if (!call)
     return (
@@ -52,6 +68,22 @@ const MeetingPage = ({ id }: { id: string }) => {
   if (notAllowed)
     return <Alert title="You are not allowed to join this meeting" />;
 
+  if (meetingAccess && !meetingAccess.isEnrolled) {
+    return <Alert title={meetingAccess.message} />;
+  }
+
+  if (meetingAccess?.isSessionEnded) {
+    return (
+      <Alert
+        title={
+          meetingAccess.sessionEndedReason === "time_expired"
+            ? "This session has ended because the scheduled time expired."
+            : meetingAccess.message
+        }
+      />
+    );
+  }
+
   const metadataClassSession = isClassCall(call.state.custom ?? {}, call.type);
 
   if (isBookingLoading && !metadataClassSession) return <Loader />;
@@ -64,9 +96,19 @@ const MeetingPage = ({ id }: { id: string }) => {
       <StreamCall call={call}>
         <StreamTheme>
           {!isSetupComplete ? (
-            <MeetingSetup user={user!} setIsSetupComplete={setIsSetupComplete} />
+            <MeetingSetup
+              user={user!}
+              meetingId={id}
+              meetingAccess={meetingAccess}
+              refetchMeetingAccess={refetchMeetingAccess}
+              setIsSetupComplete={setIsSetupComplete}
+            />
           ) : (
-            <MeetingRoom callId={id} isClassSession={isClassSession} />
+            <MeetingRoom
+              callId={id}
+              isClassSession={isClassSession}
+              meetingAccess={meetingAccess}
+            />
           )}
         </StreamTheme>
       </StreamCall>

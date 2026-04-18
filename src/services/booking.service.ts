@@ -77,6 +77,10 @@ export interface Booking {
   totalAmount: number;
   meetingLink: string;
   platformFeePercentage: number;
+  sessionStartedAt?: string;
+  sessionEndedAt?: string;
+  sessionEndedReason?: "host_ended" | "time_expired";
+  attendance?: MeetingAttendanceEntry[];
   whiteboardScene?: Record<string, unknown>;
   whiteboardUpdatedAt?: string;
   whiteboardUpdatedBy?: string;
@@ -86,6 +90,40 @@ export interface Booking {
   teacher?: User;
   parent?: User;
   learners?: Child[];
+}
+
+export interface MeetingAttendanceEntry {
+  userId: string;
+  role: "parent" | "teacher";
+  firstJoinedAt?: string | null;
+  lastJoinedAt?: string | null;
+  lastLeftAt?: string | null;
+  isPresent: boolean;
+  reconnectCount: number;
+  totalConnectedSeconds: number;
+}
+
+export interface MeetingAccessResponse {
+  meetingLink: string;
+  serverNow: string;
+  startTime: string;
+  endTime: string;
+  joinWindowStartsAt: string;
+  canJoin: boolean;
+  isEnrolled: boolean;
+  isSessionStarted: boolean;
+  isSessionEnded: boolean;
+  isWithinJoinWindow: boolean;
+  shouldShowWaitingRoom: boolean;
+  hasActiveAttendance: boolean;
+  bookingStatus: BookingStatus;
+  sessionStartedAt?: string | null;
+  sessionEndedAt?: string | null;
+  sessionEndedReason?: "host_ended" | "time_expired" | null;
+  serverTimeOffsetMs: number;
+  denyReason?: string | null;
+  message: string;
+  attendance: MeetingAttendanceEntry[];
 }
 
 export interface WhiteboardStateResponse {
@@ -157,6 +195,36 @@ export async function getBookingByMeetingLink(
   meetingLink: string
 ): Promise<Booking> {
   const response = await axiosInstance.get(`/bookings/meeting/${meetingLink}`);
+  return response.data;
+}
+
+export async function getMeetingAccess(
+  meetingLink: string
+): Promise<MeetingAccessResponse> {
+  const response = await axiosInstance.get(
+    `/bookings/meeting/${meetingLink}/access`
+  );
+  return response.data;
+}
+
+export async function joinMeetingSession(
+  meetingLink: string
+): Promise<MeetingAccessResponse> {
+  const response = await axiosInstance.post(`/bookings/meeting/${meetingLink}/join`);
+  return response.data;
+}
+
+export async function leaveMeetingSession(
+  meetingLink: string
+): Promise<MeetingAccessResponse> {
+  const response = await axiosInstance.post(`/bookings/meeting/${meetingLink}/leave`);
+  return response.data;
+}
+
+export async function endMeetingSession(
+  meetingLink: string
+): Promise<MeetingAccessResponse> {
+  const response = await axiosInstance.post(`/bookings/meeting/${meetingLink}/end`);
   return response.data;
 }
 

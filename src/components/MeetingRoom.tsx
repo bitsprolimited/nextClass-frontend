@@ -12,10 +12,16 @@ import {
 import { AnimatePresence, motion, Variants } from "motion/react";
 import { LayoutList, MessageSquare, PenTool, Users, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import {
+  endMeetingSession,
+  leaveMeetingSession,
+  MeetingAccessResponse,
+} from "@/services/booking.service";
 import Loader from "./Loader";
+import { Alert } from "./MeetingSetup";
 import ClassWhiteboard from "./meeting/ClassWhiteboard";
 import { Button } from "./ui/button";
 import {
@@ -56,6 +62,7 @@ const EndCallButton = () => {
   if (!isMeetingOwner) return null;
 
   const endCall = async () => {
+    await endMeetingSession(call.id);
     await call.endCall();
     router.push("/");
   };
@@ -70,9 +77,11 @@ const EndCallButton = () => {
 const MeetingRoom = ({
   callId,
   isClassSession,
+  meetingAccess,
 }: {
   callId: string;
   isClassSession: boolean;
+  meetingAccess?: MeetingAccessResponse;
 }) => {
   const searchParams = useSearchParams();
   const isPersonalRoom = !!searchParams.get("personal");
@@ -81,9 +90,13 @@ const MeetingRoom = ({
   const [showParticipants, setShowParticipants] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showWhiteboard, setShowWhiteboard] = useState(false);
-  const { useCallCallingState } = useCallStateHooks();
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const { useCallCallingState, useLocalParticipant } = useCallStateHooks();
+  const hasRecordedLeaveRef = useRef(false);
 
   const callingState = useCallCallingState();
+  const call = useCall();
+  const localParticipant = useLocalParticipant();
 
   const { client, setActiveChannel } = useChatContext();
 
@@ -92,6 +105,61 @@ const MeetingRoom = ({
     setActiveChannel(channel);
   }, [callId, client, setActiveChannel]);
 
+  useEffect(() => {
+    if (!meetingAccess || !call) return;
+    if (meetingAccess.isSessionEnded) {
+      setSessionExpired(true);
+      return;
+    }
+
+    const endTimeMs = new Date(meetingAccess.endTime).getTime();
+    const currentServerMs = Date.now() + meetingAccess.serverTimeOffsetMs;
+    const remainingMs = Math.max(0, endTimeMs - currentServerMs);
+
+    const timer = window.setTimeout(() => {
+      const expireSession = async () => {
+        try {
+          hasRecordedLeaveRef.current = true;
+          await leaveMeetingSession(callId);
+        } catch (error) {
+          console.error("Failed to record session expiry:", error);
+        }
+
+        try {
+          if (call?.state.createdBy?.id === localParticipant?.userId) {
+            await endMeetingSession(callId);
+            await call.endCall();
+          } else {
+            await call?.leave();
+          }
+        } catch (error) {
+          console.error("Failed to close expired session:", error);
+        } finally {
+          setSessionExpired(true);
+        }
+      };
+
+      void expireSession();
+    }, remainingMs);
+
+    return () => window.clearTimeout(timer);
+  }, [call, callId, localParticipant?.userId, meetingAccess]);
+
+  useEffect(() => {
+    return () => {
+      if (hasRecordedLeaveRef.current) return;
+      hasRecordedLeaveRef.current = true;
+      void leaveMeetingSession(callId).catch((error) => {
+        console.error("Failed to record meeting leave:", error);
+      });
+    };
+  }, [callId]);
+
+  if (sessionExpired) {
+    return (
+      <Alert title="This session has ended because the scheduled time expired." />
+    );
+  }
   if (callingState !== CallingState.JOINED) return <Loader />;
 
   const CallLayout = () => {
@@ -281,7 +349,12 @@ const MeetingRoom = ({
 
       {/* Video Layout and Call Controls */}
       <div className="sticky bottom-0 flex w-full items-center justify-center gap-5 z-30">
-        <CallControls onLeave={() => router.push(`/`)} />
+        <CallControls
+          onLeave={() => {
+            hasRecordedLeaveRef.current = true;
+            void leaveMeetingSession(callId).finally(() => router.push(`/`));
+          }}
+        />
 
         {isClassSession && (
           <Button
