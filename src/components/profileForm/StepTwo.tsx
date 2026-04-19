@@ -61,7 +61,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
   const uploadCertificate = useUploadCertificate();
 
   const [showForm, setShowForm] = useState<boolean>(
-    careerExperience.qualifications?.length === 0 ? true : false
+    careerExperience.qualifications?.length === 0 ? true : false,
   );
   const [currentQualification, setCurrentQualification] = useState<
     Partial<QualificationData>
@@ -144,7 +144,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
     removeQualification(index);
     form.setValue(
       "qualifications",
-      form.getValues("qualifications").filter((_, i) => i !== index)
+      form.getValues("qualifications").filter((_, i) => i !== index),
     );
   };
 
@@ -234,7 +234,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                     <MultipleSelector
                       commandProps={{ label: "Select subjects" }}
                       value={subjects.filter(
-                        (s) => (field.value || []).includes(s.value) // map stored strings to Option[]
+                        (s) => (field.value || []).includes(s.value), // map stored strings to Option[]
                       )}
                       className="bg-white"
                       defaultOptions={subjects}
@@ -309,7 +309,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                         <SelectItem key={year} value={year}>
                           {year}
                         </SelectItem>
-                      )
+                      ),
                     )}
                   </SelectContent>
                 </Select>
@@ -356,7 +356,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                         <p className="text-xs">
                           {qual.expiryDate
                             ? new Date(qual.expiryDate).toLocaleDateString(
-                                "en-GB"
+                                "en-GB",
                               )
                             : "N/A"}
                         </p>
@@ -385,7 +385,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                         <SelectItem key={type} value={type.toLowerCase()}>
                           {type}
                         </SelectItem>
-                      )
+                      ),
                     )}
                   </SelectContent>
                 </Select>
@@ -413,84 +413,6 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                     }))
                   }
                 />
-
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "h-12 w-full hover:bg-transparent flex items-center border border-gray-300 px-4 text-gray-700 bg-white justify-between",
-                        !expiryDate && "text-muted-foreground"
-                      )}
-                    >
-                      <span className="flex items-center gap-2">
-                        <CalendarIcon className="h-5 w-5 text-[#FF9900]" />
-                        {expiryDate ? (
-                          format(expiryDate, "PPP")
-                        ) : (
-                          <span className="text-gray-400">
-                            Select Expiry date (optional)
-                          </span>
-                        )}
-                      </span>
-                    </Button>
-                  </PopoverTrigger>
-
-                  {/* <PopoverContent
-                    align="start"
-                    sideOffset={6}
-                    className="w-[360px] p-0"
-                  >
-                    <Calendar
-                      mode="single"
-                      captionLayout="dropdown"
-                      fromYear={1970}
-                      toYear={new Date().getFullYear() + 10}
-                      showOutsideDays
-                      fixedWeeks
-                      defaultMonth={expiryDate ?? new Date()}
-                      selected={expiryDate}
-                      onSelect={setExpiryDate}
-                      className="p-3"
-                      classNames={{
-                        months: "w-full flex justify-center",
-                        month: "space-y-3",
-                        caption:
-                          "flex items-center justify-between w-full px-2 mb-2",
-                        caption_label: "text-sm font-medium w-40 text-center",
-                        // nav: "flex items-center gap-2",
-                        // nav_button: "h-8 w-8 rounded-md",
-                        head_row: "grid grid-cols-7 gap-1 px-1",
-                        head_cell: "text-[12px] text-muted-foreground",
-                        table: "w-full border-collapse",
-                        row: "grid grid-cols-7 gap-1",
-
-                        day: "h-9 w-9 rounded-md text-sm aria-selected:opacity-100",
-                        day_selected:
-                          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                        day_today: "border border-primary",
-                        day_outside: "text-muted-foreground/50",
-                        day_disabled: "text-muted-foreground opacity-50",
-                      }}
-                    />
-                  </PopoverContent> */}
-
-                  <PopoverContent
-                    align="start"
-                    sideOffset={6}
-                    className="w-[360px] p-0"
-                  >
-                    <Calendar
-                      mode="single"
-                      selected={expiryDate}
-                      onSelect={setExpiryDate}
-                      captionLayout="dropdown"
-                      fromYear={1970}
-                      toYear={new Date().getFullYear() + 10}
-                      className="rounded-md border shadow-sm p-7 w-full"
-                    />
-                  </PopoverContent>
-                </Popover>
 
                 <div className="flex justify-center gap-2 mb-2">
                   <span className="text-xs text-gray-500">
@@ -520,7 +442,44 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                   getInputProps={getInputProps}
                   maxSize={maxSize}
                 />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "h-12 w-full hover:bg-transparent flex items-center border border-gray-300 px-4 text-gray-700 bg-white justify-between",
+                        !expiryDate && "text-muted-foreground",
+                      )}
+                    >
+                      <span className="flex items-center gap-2">
+                        <CalendarIcon className="h-5 w-5 text-[#FF9900]" />
+                        {expiryDate ? (
+                          format(expiryDate, "PPP")
+                        ) : (
+                          <span className="text-gray-400">
+                            Select Expiry date (optional)
+                          </span>
+                        )}
+                      </span>
+                    </Button>
+                  </PopoverTrigger>
 
+                  <PopoverContent
+                    align="start"
+                    sideOffset={6}
+                    className="w-[360px] p-0"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={expiryDate}
+                      onSelect={setExpiryDate}
+                      captionLayout="dropdown"
+                      fromYear={1970}
+                      toYear={new Date().getFullYear() + 10}
+                      className="rounded-md border shadow-sm p-7 w-full"
+                    />
+                  </PopoverContent>
+                </Popover>
                 <div className="flex justify-end mt-2">
                   <Button
                     type="button"

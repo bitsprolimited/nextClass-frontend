@@ -1,38 +1,19 @@
-// import { getTutor, getTutors } from "@/services/tutors.service";
-// import { useQuery } from "@tanstack/react-query";
-
-// export function useTutors() {
-//   return useQuery({
-//     queryKey: ["tutors"],
-//     queryFn: getTutors,
-//     refetchOnWindowFocus: false,
-//     retry: false,
-//   });
-// }
-
-// export function useTutor(id: string) {
-//   return useQuery({
-//     queryKey: ["tutor", id],
-//     queryFn: () => getTutor(id),
-//     refetchOnWindowFocus: false,
-//     retry: false,
-//   });
-// }
-
 // src/hooks/useTutors.ts
-import { getTutor, getTutors } from "@/services/tutors.service";
+import { getTutor, getTutors, updateTeacherVerification } from "@/services/tutors.service";
 import {
   useQuery,
+  useMutation,
+  useQueryClient,
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
 import type { Teacher, TeacherResponse } from "@/types";
 
-// Typed keys
+// Typed query keys
 type TutorsKey = ["tutors"];
 type TutorKey = ["tutor", string];
 
-/** Fetch all tutors; allows .select() without any */
+/** Fetch all tutors */
 export function useTutors<TData = TeacherResponse>(
   options?: Omit<
     UseQueryOptions<TeacherResponse, Error, TData, TutorsKey>,
@@ -63,5 +44,24 @@ export function useTutor<TData = Teacher>(
     retry: false,
     enabled: !!id,
     ...(options ?? {}),
+  });
+}
+
+/** Approve/Decline a teacher (PATCH /teachers/{id}/verification-status) */
+export function useUpdateTeacherVerification() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (
+      vars: { id: string; isAdminVerified: boolean; reason?: string }
+    ) => updateTeacherVerification(vars.id, vars.isAdminVerified, vars.reason),
+    onSuccess: (updated) => {
+      // Refresh list
+      qc.invalidateQueries({ queryKey: ["tutors"] });
+      // Refresh detail if we know the id
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const id = (updated as any)?._id as string | undefined;
+      if (id) qc.invalidateQueries({ queryKey: ["tutor", id] });
+    },
   });
 }

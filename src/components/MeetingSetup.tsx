@@ -95,7 +95,7 @@ const MeetingSetup = ({
 
   if (!call) {
     throw new Error(
-      "useStreamCall must be used within a StreamCall component."
+      "useStreamCall must be used within a StreamCall component.",
     );
   }
 
@@ -168,7 +168,8 @@ const MeetingSetup = ({
                 {new Date(meetingAccess.joinWindowStartsAt).toLocaleString()}.
               </p>
               <p className="text-sm text-slate-400">
-                Class starts at {new Date(meetingAccess.startTime).toLocaleString()}.
+                Class starts at{" "}
+                {new Date(meetingAccess.startTime).toLocaleString()}.
               </p>
             </div>
 
@@ -206,9 +207,11 @@ const MeetingSetup = ({
         <LogIn />
         {isJoining ? "Joining..." : "Join meeting"}
       </Button>
-      {meetingAccess && !meetingAccess.canJoin && !meetingAccess.shouldShowWaitingRoom && (
-        <p className="text-sm text-amber-300">{meetingAccess.message}</p>
-      )}
+      {meetingAccess &&
+        !meetingAccess.canJoin &&
+        !meetingAccess.shouldShowWaitingRoom && (
+          <p className="text-sm text-amber-300">{meetingAccess.message}</p>
+        )}
       {joinError && <p className="text-sm text-red-600">{joinError}</p>}
       <div className="py-6 border-t border-gray-200 w-full">
         <div className="flex items-center justify-center gap-4">

@@ -87,6 +87,8 @@ export default function EditLearnerModal({
     mutationFn: editLearner,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      // Invalidate the specific learner query to refresh the learner details page
+      queryClient.invalidateQueries({ queryKey: ["learner", learner._id] });
       setSelectedSubjects([]);
       setSelectedGrade("");
       openModal("success", {

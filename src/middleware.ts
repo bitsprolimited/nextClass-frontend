@@ -15,7 +15,6 @@ const roleDashboards: Record<string, string> = {
   admin: "/admin",
 };
 
-
 const protectedRoutes = [
   "/dashboard/meeting",
   "/dashboard/messages",
