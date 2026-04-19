@@ -2,16 +2,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import Image from "next/image";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableHeader,
@@ -20,11 +20,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import Image from "next/image";
 import {
   ChevronDown,
   GraduationCap,
-  MoreVertical,
   Search,
   UserCheck,
   Users,
@@ -32,10 +30,11 @@ import {
 
 import StatCard from "@/components/admin/StatCard";
 import { useTutors, useTutor } from "@/hooks/useTutors";
-import { Teacher, Qualification } from "@/types";
+import type { Teacher, Qualification } from "@/types";
 import { TutorVerificationModal } from "@/components/admin/TutorVerificationModal";
 
-// Table row shape
+
+// ---------- Table row shape ----------
 type TutorRow = {
   id: string | number;
   name: string;
@@ -45,7 +44,7 @@ type TutorRow = {
   grade: string;
   subjects: string;
   joined: string;
-  status: string;
+  status: "pending" | "accepted" | "declined";
   avatar: string;
 };
 
@@ -66,23 +65,28 @@ const initialTutors: TutorRow[] = [
 ];
 
 export default function VerificationPage() {
-  // list state
+  // which tab is active (controlled Tabs)
+  const [activeTab, setActiveTab] = useState<
+    "all" | "pending" | "accepted" | "declined"
+  >("all");
+
+  // list state (render rows)
   const [tutors, setTutors] = useState<TutorRow[]>(initialTutors);
 
   // modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // fetch list
+  // list fetch
   const { data, isLoading, error } = useTutors();
 
-  // fetch detail (only when modal is open and id is set)
+  // detail fetch (when modal is open)
   const { data: tutorDetail, isLoading: isTutorLoading } = useTutor(
     selectedId ?? "",
     { enabled: modalOpen && !!selectedId }
   );
 
-  // map list → table rows
+  // map API list → table rows (status from isAdminVerified)
   useEffect(() => {
     if (!data?.teachers) return;
 
@@ -101,6 +105,13 @@ export default function VerificationPage() {
             .join(", ")
         : "";
 
+      const derivedStatus: TutorRow["status"] =
+        t.isAdminVerified === true
+          ? "accepted"
+          : t.isAdminVerified === false
+          ? "declined"
+          : "pending";
+
       return {
         id: t._id ?? `t-${idx}`,
         name: t.fullName ?? "—",
@@ -113,13 +124,11 @@ export default function VerificationPage() {
         grade: gradeFromGrades || gradeFromQuals || "—",
         subjects: Array.isArray(t.subjects)
           ? t.subjects.length > 2
-            ? `${t.subjects[0]}, ${t.subjects[1]} + ${
-                t.subjects.length - 2
-              } more`
+            ? `${t.subjects[0]}, ${t.subjects[1]} + ${t.subjects.length - 2} more`
             : t.subjects.join(", ")
           : "—",
         joined: t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—",
-        status: (t.status ?? "pending").toLowerCase(),
+        status: derivedStatus,
         avatar: t.profilePicture ?? "/images/tutor-3.png",
       };
     });
@@ -127,7 +136,7 @@ export default function VerificationPage() {
     setTutors(mapped);
   }, [data]);
 
-  // map detail → modal structure
+  // ---- Modal detail mapping ----
   const modalTutor = useMemo(() => {
     if (!tutorDetail) return null;
     const t: Teacher = tutorDetail;
@@ -140,7 +149,7 @@ export default function VerificationPage() {
       phoneNumber: t.phoneNumber,
       subjects: Array.isArray(t.subjects) ? t.subjects.join(", ") : "—",
       experience:
-        typeof t.experience === "number" ? `${t.experience} yrs` : "—",
+        typeof t.experience === "number" ? `${t.experience} yrs` : t.experience ?? "—",
       qualifications: Array.isArray(t.qualifications)
         ? t.qualifications.map((q: Qualification, i: number) => ({
             id: i + 1,
@@ -151,28 +160,33 @@ export default function VerificationPage() {
           }))
         : [],
       rating: typeof t.rating === "number" ? t.rating.toFixed(1) : "—",
-      status: (t.status ?? "pending").toString(),
+      status:
+        t.isAdminVerified === true
+          ? "accepted"
+          : t.isAdminVerified === false
+          ? "declined"
+          : "pending",
       profilePicture: t.profilePicture,
       introductionVideoUrl: t.introductionVideoUrl,
       address: t.address?.street ?? "—",
       country: t.address?.country ?? t.countryCode ?? "—",
       timezone: t.timezone ?? "—",
       createdAt: t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—",
+      identityDocument: t.identityDocument,
+      grade:
+        Array.isArray(t.grades) && t.grades.length
+          ? t.grades.join(", ")
+          : "—",
     };
   }, [tutorDetail]);
 
-  // update local status
-  const handleStatusChange = (id: number | string, newStatus: string) => {
-    setTutors((prev) =>
-      prev.map((t) =>
-        String(t.id) === String(id)
-          ? { ...t, status: newStatus.toLowerCase() }
-          : t
-      )
-    );
-  };
+  // ---------- Stats (functional) ----------
+  const totalTutors = tutors.length;
+  const acceptedCount = tutors.filter((t) => t.status === "accepted").length;
+  const pendingCount = tutors.filter((t) => t.status === "pending").length;
+  const declinedCount = tutors.filter((t) => t.status === "declined").length;
 
-  // render one table (for each tab)
+  // ---------- Table Helper ----------
   const renderTable = (status: "all" | "pending" | "accepted" | "declined") => {
     const rows =
       status === "all" ? tutors : tutors.filter((t) => t.status === status);
@@ -189,32 +203,26 @@ export default function VerificationPage() {
               <TableHead className="text-white">Grade</TableHead>
               <TableHead className="text-white">Subjects</TableHead>
               <TableHead className="text-white">Date Joined</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead></TableHead>
+              <TableHead className="text-white">Action</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={9} className="py-8 text-center">
+                <TableCell colSpan={8} className="py-8 text-center">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : error ? (
               <TableRow>
-                <TableCell
-                  colSpan={9}
-                  className="py-8 text-center text-red-500"
-                >
-                  {error instanceof Error
-                    ? error.message
-                    : "Failed to load tutors"}
+                <TableCell colSpan={8} className="py-8 text-center text-red-500">
+                  {error instanceof Error ? error.message : "Failed to load tutors"}
                 </TableCell>
               </TableRow>
             ) : rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="py-8 text-center">
+                <TableCell colSpan={8} className="py-8 text-center">
                   No tutors found
                 </TableCell>
               </TableRow>
@@ -259,6 +267,7 @@ export default function VerificationPage() {
                   <TableCell>{tutor.joined}</TableCell>
 
                   <TableCell>
+                    {/* View only. Approve/Decline lives in the modal now. */}
                     <Button
                       size="sm"
                       variant="outline"
@@ -270,34 +279,6 @@ export default function VerificationPage() {
                     >
                       View
                     </Button>
-                  </TableCell>
-
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="w-5 h-5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          onClick={() =>
-                            handleStatusChange(tutor.id, "accepted")
-                          }
-                        >
-                          Approve
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          onClick={() =>
-                            handleStatusChange(tutor.id, "declined")
-                          }
-                        >
-                          Decline
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
@@ -313,46 +294,49 @@ export default function VerificationPage() {
       {/* Stats */}
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         <StatCard
-          title="Total Registered Parents"
-          value="1,543"
-          icon={<Users />}
-          change="18%"
+          title="Total Tutor Applications"
+          value={totalTutors}
+          icon={<Users className="w-5 h-5" />}
+          change={
+            totalTutors > 0
+              ? `${Math.round((pendingCount / totalTutors) * 100)}%`
+              : "0%"
+          }
         />
         <StatCard
-          title="Total Registered Learners"
-          value="1,543"
-          icon={<GraduationCap />}
-          change="18%"
+          title="Pending Verification"
+          value={pendingCount}
+          icon={<GraduationCap className="w-5 h-5" />}
+          change={pendingCount > 0 ? "+5%" : "0%"}
+          changeColor="bg-yellow-100 text-yellow-600"
+          iconBg="bg-yellow-50"
         />
         <StatCard
-          title="Total Registered Tutors"
-          value={String(tutors.length)}
-          icon={<UserCheck />}
-          change="50%"
+          title="Verified Tutors"
+          value={acceptedCount}
+          icon={<UserCheck className="w-5 h-5" />}
+          change={acceptedCount > 0 ? "+12%" : "0%"}
           changeColor="bg-green-100 text-green-600"
-          subStats={[
-            {
-              label: "Verified",
-              value: tutors.filter((t) => t.status === "accepted").length,
-              color: "text-green-600",
-            },
-            {
-              label: "Pending",
-              value: tutors.filter((t) => t.status === "pending").length,
-              color: "text-red-500",
-            },
-          ]}
+          iconBg="bg-green-50"
         />
-        <StatCard title="Total Revenue" value="₦124,309.50" />
+        <StatCard
+          title="Declined Tutors"
+          value={declinedCount}
+          icon={<Users className="w-5 h-5" />}
+          change={declinedCount > 0 ? "-3%" : "0%"}
+          changeColor="bg-red-100 text-red-500"
+          iconBg="bg-red-50"
+        />
       </div>
 
-      {/* Search + Sort */}
+      {/* Search (kept simple) */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center bg-[#F5F4F8] rounded-lg px-2 py-1 max-w-md w-full sm:w-[300px]">
           <Input
             type="text"
             placeholder="Enter keywords"
             className="bg-transparent border-none focus:ring-0 px-2 text-sm w-full"
+            // wire your filter here if needed
           />
           <Button
             size="sm"
@@ -362,22 +346,17 @@ export default function VerificationPage() {
           </Button>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Sort By <ChevronDown className="w-4 h-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Name</DropdownMenuItem>
-            <DropdownMenuItem>Date Joined</DropdownMenuItem>
-            <DropdownMenuItem>Status</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button variant="outline">
+          Sort By <ChevronDown className="w-4 h-4" />
+        </Button>
       </div>
 
-      {/* Tabs + Tables */}
-      <Tabs defaultValue="all" className="w-full">
+      {/* Tabs + Tables (controlled) */}
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+        className="w-full"
+      >
         <TabsList className="flex justify-start gap-4 bg-transparent">
           <TabsTrigger
             value="all"
@@ -411,7 +390,7 @@ export default function VerificationPage() {
         <TabsContent value="declined">{renderTable("declined")}</TabsContent>
       </Tabs>
 
-      {/* Modal */}
+      {/* Modal (Approve/Decline only here) */}
       <TutorVerificationModal
         open={modalOpen}
         onClose={() => {
@@ -419,6 +398,20 @@ export default function VerificationPage() {
           setSelectedId(null);
         }}
         tutor={isTutorLoading || !modalTutor ? null : modalTutor}
+        onAfterAction={(status, id) => {
+          if (!id) return;
+          const newStatus: TutorRow["status"] = status;
+          setTutors((prev) =>
+            prev.map((row) =>
+              String(row.id) === String(id) ? { ...row, status: newStatus } : row
+            )
+          );
+          setActiveTab(newStatus);
+        }}
+        onDeclineReason={(reason) => {
+          console.log("Decline reason:", reason);
+          // TODO: when endpoint exists we can send this along
+        }}
       />
     </div>
   );
