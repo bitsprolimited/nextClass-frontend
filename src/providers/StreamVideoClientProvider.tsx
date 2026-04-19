@@ -59,7 +59,7 @@ const StreamClientSetup = ({
         .catch((err) => console.error("Failed to disconnect user:", err));
       setVideoClient(undefined);
     };
-  }, [user, token]);
+  }, [token, user.id, user.name, user.image]);
 
   if (!chatClient || !videoClient) {
     return <Loader />;
@@ -81,20 +81,42 @@ export const StreamVideoClientProvider = ({
   const { data: token, isPending: isTokenPending } = useQuery({
     queryKey: ["stream-token", session?.user?.id],
     queryFn: fetchStreamToken,
+    enabled: !!session?.user?.id,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     retry: 2,
   });
-  const user = session?.user;
+  const [stableUser, setStableUser] = useState<User | null>(null);
+  const [stableToken, setStableToken] = useState<string | null>(null);
 
-  if (isPending || isTokenPending) {
+  useEffect(() => {
+    if (session?.user) {
+      setStableUser(session.user);
+    } else if (!isPending) {
+      setStableUser(null);
+    }
+  }, [isPending, session?.user]);
+
+  useEffect(() => {
+    if (token) {
+      setStableToken(token);
+    } else if (!isTokenPending && !session?.user) {
+      setStableToken(null);
+    }
+  }, [isTokenPending, session?.user, token]);
+
+  if ((isPending || isTokenPending) && !(stableUser && stableToken)) {
     return <Loader />;
   }
 
-  if (user && token) {
+  if (stableUser && stableToken) {
     return (
-      <StreamClientSetup key={user.id} user={user} token={token}>
+      <StreamClientSetup
+        key={`${stableUser.id}:${stableToken}`}
+        user={stableUser}
+        token={stableToken}
+      >
         {children}
       </StreamClientSetup>
     );

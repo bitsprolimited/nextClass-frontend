@@ -10,11 +10,19 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 import { AnimatePresence, motion, Variants } from "motion/react";
-import { LayoutList, MessageSquare, Users } from "lucide-react";
+import { LayoutList, MessageSquare, PenTool, Users, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { cn } from "@/lib/utils";
+import {
+  endMeetingSession,
+  leaveMeetingSession,
+  MeetingAccessResponse,
+} from "@/services/booking.service";
 import Loader from "./Loader";
+import { Alert } from "./MeetingSetup";
+import ClassWhiteboard from "./meeting/ClassWhiteboard";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -31,7 +39,6 @@ import {
   useChatContext,
   Window,
 } from "stream-chat-react";
-import { cn } from "@/lib/utils";
 
 type CallLayoutType = "grid" | "speaker-left" | "speaker-right";
 
@@ -55,6 +62,7 @@ const EndCallButton = () => {
   if (!isMeetingOwner) return null;
 
   const endCall = async () => {
+    await endMeetingSession(call.id);
     await call.endCall();
     router.push("/");
   };
@@ -66,16 +74,29 @@ const EndCallButton = () => {
   );
 };
 
-const MeetingRoom = ({ callId }: { callId: string }) => {
+const MeetingRoom = ({
+  callId,
+  isClassSession,
+  meetingAccess,
+}: {
+  callId: string;
+  isClassSession: boolean;
+  meetingAccess?: MeetingAccessResponse;
+}) => {
   const searchParams = useSearchParams();
   const isPersonalRoom = !!searchParams.get("personal");
   const router = useRouter();
   const [layout, setLayout] = useState<CallLayoutType>("speaker-left");
   const [showParticipants, setShowParticipants] = useState(false);
   const [showChat, setShowChat] = useState(false);
-  const { useCallCallingState } = useCallStateHooks();
+  const [showWhiteboard, setShowWhiteboard] = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const { useCallCallingState, useLocalParticipant } = useCallStateHooks();
+  const hasRecordedLeaveRef = useRef(false);
 
   const callingState = useCallCallingState();
+  const call = useCall();
+  const localParticipant = useLocalParticipant();
 
   const { client, setActiveChannel } = useChatContext();
 
@@ -84,6 +105,61 @@ const MeetingRoom = ({ callId }: { callId: string }) => {
     setActiveChannel(channel);
   }, [callId, client, setActiveChannel]);
 
+  useEffect(() => {
+    if (!meetingAccess || !call) return;
+    if (meetingAccess.isSessionEnded) {
+      setSessionExpired(true);
+      return;
+    }
+
+    const endTimeMs = new Date(meetingAccess.endTime).getTime();
+    const currentServerMs = Date.now() + meetingAccess.serverTimeOffsetMs;
+    const remainingMs = Math.max(0, endTimeMs - currentServerMs);
+
+    const timer = window.setTimeout(() => {
+      const expireSession = async () => {
+        try {
+          hasRecordedLeaveRef.current = true;
+          await leaveMeetingSession(callId);
+        } catch (error) {
+          console.error("Failed to record session expiry:", error);
+        }
+
+        try {
+          if (call?.state.createdBy?.id === localParticipant?.userId) {
+            await endMeetingSession(callId);
+            await call.endCall();
+          } else {
+            await call?.leave();
+          }
+        } catch (error) {
+          console.error("Failed to close expired session:", error);
+        } finally {
+          setSessionExpired(true);
+        }
+      };
+
+      void expireSession();
+    }, remainingMs);
+
+    return () => window.clearTimeout(timer);
+  }, [call, callId, localParticipant?.userId, meetingAccess]);
+
+  useEffect(() => {
+    return () => {
+      if (hasRecordedLeaveRef.current) return;
+      hasRecordedLeaveRef.current = true;
+      void leaveMeetingSession(callId).catch((error) => {
+        console.error("Failed to record meeting leave:", error);
+      });
+    };
+  }, [callId]);
+
+  if (sessionExpired) {
+    return (
+      <Alert title="This session has ended because the scheduled time expired." />
+    );
+  }
   if (callingState !== CallingState.JOINED) return <Loader />;
 
   const CallLayout = () => {
@@ -166,6 +242,45 @@ const MeetingRoom = ({ callId }: { callId: string }) => {
     },
   };
 
+  const whiteboardOverlayVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.2,
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        duration: 0.15,
+      },
+    },
+  };
+
+  const whiteboardPanelVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.985,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.18,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.985,
+      transition: {
+        duration: 0.12,
+      },
+    },
+  };
+
   return (
     <section className="relative h-screen w-full overflow-hidden py-6 bg-[#1C1F2E] text-white">
       <div className="relative flex size-full items-center justify-center">
@@ -234,7 +349,24 @@ const MeetingRoom = ({ callId }: { callId: string }) => {
 
       {/* Video Layout and Call Controls */}
       <div className="sticky bottom-0 flex w-full items-center justify-center gap-5 z-30">
-        <CallControls onLeave={() => router.push(`/`)} />
+        <CallControls
+          onLeave={() => {
+            hasRecordedLeaveRef.current = true;
+            void leaveMeetingSession(callId).finally(() => router.push(`/`));
+          }}
+        />
+
+        {isClassSession && (
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            className="rounded-2xl bg-[#19232d] text-white hover:bg-[#4c535b] hover:text-white"
+            onClick={() => setShowWhiteboard(true)}
+          >
+            <PenTool size={20} />
+          </Button>
+        )}
 
         {/* Layout Dropdown */}
         <DropdownMenu>
@@ -324,6 +456,54 @@ const MeetingRoom = ({ callId }: { callId: string }) => {
 
         {!isPersonalRoom && <EndCallButton />}
       </div>
+
+      <AnimatePresence>
+        {showWhiteboard && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-[2px]"
+              variants={whiteboardOverlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={() => setShowWhiteboard(false)}
+            />
+
+            <motion.div
+              className="fixed inset-0 z-50 flex items-stretch justify-end p-0 sm:p-4"
+              variants={whiteboardOverlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <motion.div
+                className="relative flex h-full w-full overflow-hidden border-l border-slate-800 bg-slate-950 shadow-2xl sm:max-w-[min(92vw,1100px)] sm:rounded-3xl sm:border"
+                variants={whiteboardPanelVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="absolute right-4 top-4 z-20">
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="ghost"
+                    className="rounded-full bg-slate-900/80 text-white hover:bg-slate-800 hover:text-white"
+                    onClick={() => setShowWhiteboard(false)}
+                  >
+                    <X />
+                  </Button>
+                </div>
+
+                <div className="h-full w-full p-0 sm:p-3">
+                  <ClassWhiteboard meetingId={callId} isOpen={showWhiteboard} />
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

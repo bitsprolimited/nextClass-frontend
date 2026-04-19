@@ -2,7 +2,7 @@
 
 import BookingTabContent from "@/components/schedule/BookingTabsContent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useBookings } from "@/hooks/useBooking";
+import { bookingUtils, useBookings } from "@/hooks/useBooking";
 import {
   BookingStatus,
   EventType,
@@ -46,8 +46,7 @@ export default function ClassTabs() {
       statuses: [BookingStatus.PENDING, BookingStatus.CONFIRMED],
       sortBy: "startTime" as SortBy,
       sortOrder: "asc" as SortOrder,
-      limit: 20,
-      dateFrom: new Date().toISOString(),
+      limit: 100,
     };
   }, []);
 
@@ -92,6 +91,46 @@ export default function ClassTabs() {
       eventType: EventType.INTRODUCTION_CALL,
     },
     { enabled: shouldFetchHistoryCalls }
+  );
+
+  const upcomingClassBookings = useMemo(
+    () =>
+      upcomingClassesQuery.bookings
+        .filter((booking) => !bookingUtils.isPast(booking))
+        .slice(0, 20),
+    [upcomingClassesQuery.bookings]
+  );
+
+  const historyClassBookings = useMemo(
+    () =>
+      historyClassesQuery.bookings.filter(
+        (booking) =>
+          bookingUtils.isPast(booking) ||
+          [BookingStatus.COMPLETED, BookingStatus.CANCELED].includes(
+            booking.status
+          )
+      ),
+    [historyClassesQuery.bookings]
+  );
+
+  const upcomingCallBookings = useMemo(
+    () =>
+      upcomingCallsQuery.bookings
+        .filter((booking) => !bookingUtils.isPast(booking))
+        .slice(0, 20),
+    [upcomingCallsQuery.bookings]
+  );
+
+  const historyCallBookings = useMemo(
+    () =>
+      historyCallsQuery.bookings.filter(
+        (booking) =>
+          bookingUtils.isPast(booking) ||
+          [BookingStatus.COMPLETED, BookingStatus.CANCELED].includes(
+            booking.status
+          )
+      ),
+    [historyCallsQuery.bookings]
   );
 
   const tabs = [
@@ -151,7 +190,7 @@ export default function ClassTabs() {
             <div className="w-full mb-3">
               <TabsContent value="upcoming">
                 <BookingTabContent
-                  bookings={upcomingClassesQuery.bookings}
+                  bookings={upcomingClassBookings}
                   isLoading={upcomingClassesQuery.isLoading}
                   error={upcomingClassesQuery.error}
                   isHistory={false}
@@ -162,7 +201,7 @@ export default function ClassTabs() {
 
               <TabsContent value="history">
                 <BookingTabContent
-                  bookings={historyClassesQuery.bookings}
+                  bookings={historyClassBookings}
                   isLoading={historyClassesQuery.isLoading}
                   error={historyClassesQuery.error}
                   isHistory={true}
@@ -201,7 +240,7 @@ export default function ClassTabs() {
             <div className="w-full mb-3">
               <TabsContent value="upcoming">
                 <BookingTabContent
-                  bookings={upcomingCallsQuery.bookings}
+                  bookings={upcomingCallBookings}
                   isLoading={upcomingCallsQuery.isLoading}
                   error={upcomingCallsQuery.error}
                   isHistory={false}
@@ -212,7 +251,7 @@ export default function ClassTabs() {
 
               <TabsContent value="history">
                 <BookingTabContent
-                  bookings={historyCallsQuery.bookings}
+                  bookings={historyCallBookings}
                   isLoading={historyCallsQuery.isLoading}
                   error={historyCallsQuery.error}
                   isHistory={true}

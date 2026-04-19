@@ -1,12 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
 import Footer from "@/components/footer";
 import Header from "@/components/Header";
-import { resendVerificationEmail, verifyEmail } from "@/services/auth.service";
-import { AxioErrorResponse } from "@/types";
-import { AxiosError } from "axios";
+import { authClient } from "@/lib/auth-client";
 import {
   ArrowRight,
   CheckCircle,
@@ -31,80 +28,115 @@ export default function EmailVerificationPage() {
   >("loading");
   const [userEmail, setUserEmail] = useState("");
   const [countdown, setCountdown] = useState(5);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
-  const { mutate: verify } = useMutation({
-    mutationFn: verifyEmail,
-    onSuccess: () => {
-      setVerificationStatus("success");
-      toast.success("Email verified successfully!", {
-        className: "bg-green-50 text-green-800 border-green-200",
-        duration: 3000,
-      });
-
-      // Start countdown for redirect
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            router.push("/login");
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    },
-    onError: (error: AxiosError<AxioErrorResponse>) => {
-      const errorMessage = error.response?.data.message;
-
-      if (
-        typeof errorMessage === "string" &&
-        (errorMessage.includes("expired") || errorMessage.includes("invalid"))
-      ) {
-        setVerificationStatus("expired");
-      } else {
-        setVerificationStatus("error");
-      }
-
-      toast.error("Verification failed", {
+  const handleResendVerification = async () => {
+    if (!userEmail) {
+      toast.error("Please enter your email address", {
         className: "bg-red-50 text-red-800 border-red-200",
-        description: errorMessage,
-        duration: 5000,
       });
-    },
-  });
+      return;
+    }
 
-  // Resend verification mutation
-  const { mutate: resend, isPending: isResending } = useMutation({
-    mutationFn: resendVerificationEmail,
-    onSuccess: () => {
-      toast.success("Verification email sent!", {
-        className: "bg-blue-50 text-blue-800 border-blue-200",
-        description: "Please check your inbox and spam folder",
-        duration: 5000,
+    try {
+      setIsResending(true);
+      const result = await authClient.sendVerificationEmail({
+        email: userEmail,
       });
-    },
-    onError: (error: Error) => {
+
+      if (result.error) {
+        toast.error("Failed to resend email", {
+          className: "bg-red-50 text-red-800 border-red-200",
+          description: result.error.message || "Please try again later",
+          duration: 5000,
+        });
+      } else {
+        toast.success("Verification email sent!", {
+          className: "bg-blue-50 text-blue-800 border-blue-200",
+          description: "Please check your inbox and spam folder",
+          duration: 5000,
+        });
+        setUserEmail("");
+      }
+    } catch (error) {
+      console.error("Error resending verification email:", error);
       toast.error("Failed to resend email", {
         className: "bg-red-50 text-red-800 border-red-200",
-        description: error.message || "Please try again later",
+        description: "An unexpected error occurred. Please try again.",
         duration: 5000,
       });
-    },
-  });
+    } finally {
+      setIsResending(false);
+    }
+  };
 
   useEffect(() => {
+    const handleVerify = async (token: string) => {
+      try {
+        setIsVerifying(true);
+        const result = await authClient.verifyEmail({
+          query: {
+            token: token,
+          },
+        });
+
+        if (result.error) {
+          const errorMessage = result.error.message || "Verification failed";
+
+          if (
+            typeof errorMessage === "string" &&
+            (errorMessage.toLowerCase().includes("expired") ||
+              errorMessage.toLowerCase().includes("invalid"))
+          ) {
+            setVerificationStatus("expired");
+          } else {
+            setVerificationStatus("error");
+          }
+
+          toast.error("Verification failed", {
+            className: "bg-red-50 text-red-800 border-red-200",
+            description: errorMessage,
+            duration: 5000,
+          });
+        } else {
+          setVerificationStatus("success");
+          toast.success("Email verified successfully!", {
+            className: "bg-green-50 text-green-800 border-green-200",
+            duration: 3000,
+          });
+
+          // Start countdown for redirect
+          const timer = setInterval(() => {
+            setCountdown((prev) => {
+              if (prev <= 1) {
+                clearInterval(timer);
+                router.push("/login");
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+      } catch (error) {
+        console.error("Error verifying email:", error);
+        setVerificationStatus("error");
+        toast.error("Verification failed", {
+          className: "bg-red-50 text-red-800 border-red-200",
+          description: "An unexpected error occurred. Please try again.",
+          duration: 5000,
+        });
+      } finally {
+        setIsVerifying(false);
+      }
+    };
     if (token) {
-      verify(token);
+      handleVerify(token);
     } else {
       setVerificationStatus("error");
     }
-  }, [token, verify]);
-
-  const handleResendVerification = () => {
-    if (userEmail) {
-      resend(userEmail);
-    }
-  };
+  }, [token, router]);
 
   const renderContent = () => {
     switch (verificationStatus) {
