@@ -15,10 +15,10 @@ services:
     environment:
       NODE_ENV: production
       SESSION_SECRET_KEY: ${SESSION_SECRET_KEY}
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+      NEXT_PUBLIC_API_BASE_URL: https://nextclass-backend.onrender.com/api/v1
       NEXT_PUBLIC_STREAM_API_KEY: ${NEXT_PUBLIC_STREAM_API_KEY}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      BETTER_AUTH_URL: https://nextclass-backend.onrender.com
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
     ports:
       - 3000:3000
