@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
 import { useUpdateTeacherVerification } from "@/hooks/useTutors";
+import { resolvePrivateFileUrl } from "@/lib/private-file-url";
 
 /** ---------- Types ---------- */
 type TutorQualification = {
@@ -99,7 +100,7 @@ const StatusPill: React.FC<{ status: string }> = ({ status }) => {
 const ViewPill: React.FC<{ href?: string }> = ({ href }) =>
   href ? (
     <a
-      href={href}
+      href={resolvePrivateFileUrl(href)}
       target="_blank"
       rel="noreferrer"
       className="text-[11px] px-3 py-1 rounded-full border border-secondary text-secondary hover:bg-[#FFF3D6] inline-flex items-center"
@@ -361,7 +362,10 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                 <section className="space-y-6">
                   <div className="flex items-center gap-4">
                     <Image
-                      src={tutor.profilePicture ?? "/images/tutor-3.png"}
+                      src={
+                        resolvePrivateFileUrl(tutor.profilePicture) ||
+                        "/images/tutor-3.png"
+                      }
                       alt={tutor.name}
                       width={72}
                       height={72}
@@ -484,7 +488,9 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                       <div className="relative aspect-video rounded-lg overflow-hidden mx-auto w-full max-w-[560px] md:max-w-[640px]">
                         <video
                           ref={videoRef}
-                          src={tutor.introductionVideoUrl}
+                          src={resolvePrivateFileUrl(
+                            tutor.introductionVideoUrl,
+                          )}
                           className="h-full w-full bg-black object-cover"
                           controls={isPlaying}
                           onEnded={() => setPlaying(false)}

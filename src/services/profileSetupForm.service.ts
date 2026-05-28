@@ -6,60 +6,32 @@ import {
   IdentityDocumentFormData,
 } from "@/lib/schema";
 import { UserProgress } from "@/store/useProfileSetupForm";
+import { uploadFileToS3 } from "./upload.service";
 
 export const uploadCertificate = async (
   file: FileMetadata | File
 ): Promise<{ fileUrl: string }> => {
-  const formData = new FormData();
   if (file instanceof File) {
-    formData.append("file", file);
+    return uploadFileToS3(file, "certificates");
   } else {
     throw new Error("Invalid file");
   }
-
-  const response = await axiosInstance.post("/upload/certificate", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-
-  return response.data;
 };
 
 export const uploadIdentityDocument = async (
   file: FileMetadata | File
 ): Promise<{ fileUrl: string }> => {
-  const formData = new FormData();
   if (file instanceof File) {
-    formData.append("file", file);
+    return uploadFileToS3(file, "identity-documents");
   } else {
     throw new Error("Invalid file");
   }
-
-  const response = await axiosInstance.post(
-    "/upload/identity-document",
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
-  );
-
-  return response.data;
 };
 
 export const uploadIntroductionVideo = async (
   file: File
 ): Promise<{ fileUrl: string }> => {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const response = await axiosInstance.post(
-    "/upload/introduction-video",
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
-  );
-
-  return response.data;
+  return uploadFileToS3(file, "introduction-videos");
 };
 
 // Form submission functions

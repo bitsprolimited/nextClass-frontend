@@ -26,13 +26,14 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createDashboardLink,
   createStripeConnect,
 } from "@/services/tutors.service";
 import { Spinner } from "./ui/spinner";
 import { toast } from "sonner";
+import { useUser } from "@/hooks/useUser";
 
 export const links = {
   parent: [
@@ -102,6 +103,8 @@ function ProfileMenu({
   user: typeof authClient.$Infer.Session.user;
 }) {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const { data: profile } = useUser();
 
   const { mutate: createStripeConnectMutate, isPending: isCreating } =
     useMutation({
@@ -136,7 +139,14 @@ function ProfileMenu({
     createStripeConnectMutate();
   };
 
-  const currentLinks = user.role === "parent" ? links.parent : links.tutor;
+  const currentUser = profile?.user;
+  const displayName = currentUser?.fullName ?? user.name;
+  const displayImage = currentUser?.profilePicture ?? user.image ?? "";
+  const role = currentUser?.role ?? user.role;
+  const hasStripeAccount =
+    (currentUser as { hasStripeAccount?: boolean } | undefined)
+      ?.hasStripeAccount ?? user.hasStripeAccount;
+  const currentLinks = role === "parent" ? links.parent : links.tutor;
   const router = useRouter();
 
   return (
@@ -160,13 +170,13 @@ function ProfileMenu({
             <span className="absolute -inset-1.5" />
             <span className="sr-only">Open user menu</span>
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.image ?? ""} />
+              <AvatarImage src={displayImage} />
               <AvatarFallback className="uppercase border border-primary bg-white">
-                {user.name[0]}
+                {displayName[0]}
               </AvatarFallback>
             </Avatar>
             <p className=" text-primary font-medium ml-2 capitalize">
-              {user?.name}
+              {displayName}
             </p>
             <ChevronDown
               className="h-4 w-4 ml-2 text-primary group-data-[state=open]:rotate-180 transition-all"
@@ -204,9 +214,9 @@ function ProfileMenu({
               </Link>
             </DropdownMenuItem>
           ))}
-          {user.role === "teacher" && (
+          {role === "teacher" && (
             <>
-              {user.hasStripeAccount ? (
+              {hasStripeAccount ? (
                 <DropdownMenuItem
                   className="focus:bg-[#D9D9D9] cursor-pointer"
                   asChild
@@ -248,7 +258,9 @@ function ProfileMenu({
                 await authClient.signOut({
                   fetchOptions: {
                     onSuccess: () => {
+                      queryClient.clear();
                       router.push("/login");
+                      router.refresh();
                     },
                   },
                 });

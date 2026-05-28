@@ -22,11 +22,13 @@ import DashboardTabs from "@/components/tutors/DashboardTabs";
 import { useBookings } from "@/hooks/useBooking";
 import { useTutor } from "@/hooks/useTutors";
 import { getScheduleString } from "@/lib/utils";
+import { resolvePrivateFileUrl } from "@/lib/private-file-url";
 import { useAuth } from "@/providers/AuthProvider";
 import { BookingStatus, EventType } from "@/services/booking.service";
 import { format } from "date-fns";
 import type { Availability } from "@/types";
 import { useMemo } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -103,8 +105,9 @@ export default function TutorProfile({ id }: { id: string }) {
   const schedule = getScheduleString(availabilityArray);
   const hasBookedIntroCall = introBookingsQuery.bookings.length > 0;
   const hasBookedClass = classBookingsQuery.bookings.length > 0;
-
-  console.log(introBookingsQuery, classBookingsQuery);
+  const tutorProfilePicture =
+    resolvePrivateFileUrl(tutor?.profilePicture) || "/images/tutor-1.png";
+  const tutorIntroVideoUrl = resolvePrivateFileUrl(tutor?.introductionVideoUrl);
 
   return (
     <div className="flex flex-col gap-6 items-center py-10">
@@ -114,13 +117,10 @@ export default function TutorProfile({ id }: { id: string }) {
         <Card className="flex flex-col md:flex-row gap-6 p-6 rounded-xl shadow-md flex-1 h-full font-montserrat">
           {/* Left Profile Section */}
           <div className="flex flex-col items-center gap-3 min-w-40">
-            <Image
-              src={tutor?.profilePicture || "/images/tutor-1.png"}
-              alt={tutor?.fullName || "Tutor"}
-              width={200}
-              height={200}
-              className="rounded-full size-[200px] object-cover border-4 border-green-500 shadow"
-            />
+            <Avatar className="size-50">
+              <AvatarImage src={tutorProfilePicture} />
+              <AvatarFallback>{tutor?.fullName.charAt(0)}</AvatarFallback>
+            </Avatar>
             <p className="text-green-600 text-sm font-semibold">
               {true ? "ONLINE" : "OFFLINE"}
             </p>
@@ -209,14 +209,20 @@ export default function TutorProfile({ id }: { id: string }) {
         </Card>
 
         {/* Video Section (separate card) */}
-        <div className="relative w-75 overflow-hidden rounded-lg shadow h-full">
-          <ReactPlayer
-            // url={tutor?.introductionVideoUrl ?? ""}
-            controls
-            playing={false}
-            width="100%"
-            height="100%"
-          />
+        <div className="relative w-75 overflow-hidden rounded-lg shadow aspect-video bg-black">
+          {tutorIntroVideoUrl ? (
+            <ReactPlayer
+              src={tutorIntroVideoUrl}
+              controls
+              playing={false}
+              width="100%"
+              height="100%"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center px-4 text-center text-sm text-white/70">
+              No introductory video available
+            </div>
+          )}
         </div>
       </div>
 

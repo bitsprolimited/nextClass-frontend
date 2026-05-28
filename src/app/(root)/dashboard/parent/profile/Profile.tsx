@@ -3,8 +3,8 @@ import ErrorComponent from "@/components/ErrorComponent";
 import Loader from "@/components/Loader";
 import LearnersSection from "@/components/parents/learnersSection";
 import LessonNotesSection from "@/components/parents/lessonNotesSection";
+import ProfilePhotoUploader from "@/components/ProfilePhotoUploader";
 import ReviewsPanel from "@/components/tutors/ReviewsPanel";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/hooks/useUser";
 import { format } from "date-fns";
 import {
@@ -35,12 +35,11 @@ export const Profile = (): JSX.Element => {
       <div className="flex flex-col md:flex-row items-center gap-10 w-full max-w-6xl">
         {/* Profile Image */}
         <div className="hidden lg:flex flex-col items-center">
-          <Avatar className="w-30 lg:w-75 h-30 lg:h-75">
-            <AvatarImage src={user.user.profilePicture ?? ""} />
-            <AvatarFallback className="text-2xl lg:text-7xl">
-              {user.user.fullName.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+          <ProfilePhotoUploader
+            user={user.user}
+            avatarClassName="w-30 lg:w-75 h-30 lg:h-75"
+            fallbackClassName="text-2xl lg:text-7xl"
+          />
           <p className="text-green-600 font-semibold mt-2">ONLINE</p>
         </div>
 
@@ -49,12 +48,11 @@ export const Profile = (): JSX.Element => {
           <div className="w-full flex flex-col gap-4 lg:gap-8">
             <div className="flex items-center lg:items-stretch lg:flex-col gap-4 px-4">
               <div className="lg:hidden flex flex-col items-center">
-                <Avatar className="w-16.5 lg:w-75 h-16.5 lg:h-75">
-                  <AvatarImage src={user.user.profilePicture ?? ""} />
-                  <AvatarFallback className="text-2xl lg:text-7xl">
-                    {user.user.fullName.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
+                <ProfilePhotoUploader
+                  user={user.user}
+                  avatarClassName="w-16.5 lg:w-75 h-16.5 lg:h-75"
+                  fallbackClassName="text-2xl lg:text-7xl"
+                />
                 <p className="text-green-600 text-xs lg:text-base font-semibold mt-2">
                   ONLINE
                 </p>
