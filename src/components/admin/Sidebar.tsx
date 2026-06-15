@@ -11,7 +11,7 @@ import {
   Calendar,
   // FileText,
   CreditCard,
-  // AlertTriangle,
+  ShieldAlert,
   // Sliders,
   // Settings,
   // User,
@@ -51,6 +51,7 @@ const navSections = [
     links: [
       // { name: "Reports", href: "/reports", icon: FileText },
       { name: "Transactions", href: "/admin/dashboard/transactions", icon: CreditCard },
+      { name: "Moderation", href: "/admin/dashboard/moderation", icon: ShieldAlert },
       // { name: "Disputes", href: "/admin/dashboard/disputes", icon: AlertTriangle },
     ],
   },
