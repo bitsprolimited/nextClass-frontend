@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { JSX, useEffect, useState } from "react";
@@ -30,6 +31,7 @@ interface PostLoginRedirect {
 
 export function LoginForm(): JSX.Element {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const [redirectInfo, setRedirectInfo] = useState<PostLoginRedirect | null>(
     null
@@ -129,6 +131,13 @@ export function LoginForm(): JSX.Element {
         },
         onSuccess: (ctx) => {
           toast.success("Login successful");
+          queryClient.clear();
+
+          const navigateAfterLogin = (href: string) => {
+            router.push(href);
+            router.refresh();
+          };
+
           if (redirectInfo) {
             const redirectTo =
               redirectInfo.returnTo ||
@@ -136,22 +145,22 @@ export function LoginForm(): JSX.Element {
                 ctx.data.user.role,
                 ctx.data.user.isProfileComplete
               );
-            router.push(redirectTo);
+            navigateAfterLogin(redirectTo);
             setIsPending(false);
             return;
           }
 
           if (ctx.data.user.role === "parent") {
-            router.push("/dashboard/parent");
+            navigateAfterLogin("/dashboard/parent");
             setIsPending(false);
             return;
           }
           if (!ctx.data.user.isProfileComplete) {
-            router.push("/dashboard/profile-setup");
+            navigateAfterLogin("/dashboard/profile-setup");
             setIsPending(false);
             return;
           }
-          router.push("/dashboard/tutor");
+          navigateAfterLogin("/dashboard/tutor");
           setIsPending(false);
         },
         onError: (ctx) => {

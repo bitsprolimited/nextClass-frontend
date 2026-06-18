@@ -1,20 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
 import Image from "next/image";
 import Link from "next/link";
-import { JSX } from "react";
-import { AxioErrorResponse, ForgotPasswordResponse } from "@/types";
-import { forgotPassword } from "@/services/auth.service";
-import { AxiosError } from "axios";
+import { JSX, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
+import { z } from "zod";
 
 const forgotPasswordFormSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -25,6 +21,7 @@ export type ForgotPasswordFormSchema = z.infer<typeof forgotPasswordFormSchema>;
 const ForgotPasswordForm = (): JSX.Element => {
   const [showPopup, setShowPopup] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
@@ -36,32 +33,59 @@ const ForgotPasswordForm = (): JSX.Element => {
     mode: "all",
   });
 
-  const { mutate, isPending } = useMutation<
-    ForgotPasswordResponse,
-    AxiosError<AxioErrorResponse>,
-    ForgotPasswordFormSchema
-  >({
-    mutationKey: ["forgot-password"],
-    mutationFn: forgotPassword,
-    onSuccess: () => {
-      const email = getValues("email");
-      setSubmittedEmail(email);
-      setShowPopup(true);
-      toast.success("Password reset email sent successfully!", {
-        duration: 3000,
-      });
-    },
-    onError: (error) => {
-      console.error("Failed to send password reset email:", error);
-      toast.error("Failed to send password reset email", {
-        description: error.response?.data.message || "Please try again later",
-        duration: 5000,
-      });
-    },
-  });
+  // const { mutate, isPending } = useMutation<
+  //   ForgotPasswordResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   ForgotPasswordFormSchema
+  // >({
+  //   mutationKey: ["forgot-password"],
+  //   mutationFn: forgotPassword,
+  //   onSuccess: () => {
+  //     const email = getValues("email");
+  //     setSubmittedEmail(email);
+  //     setShowPopup(true);
+  //     toast.success("Password reset email sent successfully!", {
+  //       duration: 3000,
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     console.error("Failed to send password reset email:", error);
+  //     toast.error("Failed to send password reset email", {
+  //       description: error.response?.data.message || "Please try again later",
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
   const onSubmit = async (data: ForgotPasswordFormSchema) => {
-    mutate(data);
+    // mutate(data);
+    await authClient.requestPasswordReset(
+      {
+        email: data.email,
+      },
+      {
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          const email = getValues("email");
+          setSubmittedEmail(email);
+          setShowPopup(true);
+          toast.success("Password reset email sent successfully!", {
+            duration: 3000,
+          });
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          console.error("Failed to send password reset email:", ctx.error);
+          toast.error("Failed to send password reset email", {
+            description: ctx.error.message || "Please try again later",
+            duration: 5000,
+          });
+          setIsPending(false);
+        },
+      },
+    );
   };
 
   const maskEmail = (email: string): string => {
@@ -75,8 +99,8 @@ const ForgotPasswordForm = (): JSX.Element => {
   };
 
   return (
-    <div className="bg-white flex items-center justify-center py-12 sm:py-[60px]">
-      <div className="bg-[#F5F4F8] w-full max-w-5xl py-10 sm:py-[60px] px-4 sm:px-12 lg:px-40 md:text-center mx-auto rounded-md font-montserrat">
+    <div className="bg-white flex items-center justify-center py-12 sm:py-15">
+      <div className="bg-[#F5F4F8] w-full max-w-5xl py-10 sm:py-15 px-4 sm:px-12 lg:px-40 md:text-center mx-auto rounded-md font-montserrat">
         <h2 className="text-xl sm:text-[28px] font-semibold text-[#2C1E1E] mb-2 font-playfair-display">
           Input Your Registered <span className="text-secondary">Email</span>
         </h2>
@@ -90,7 +114,7 @@ const ForgotPasswordForm = (): JSX.Element => {
             <Input
               type="email"
               placeholder="Email Address"
-              className="h-[50px] sm:h-[56px] text-sm sm:text-base px-4"
+              className="h-12.5 sm:h-14 text-sm sm:text-base px-4"
               {...register("email")}
             />
             {errors.email && (

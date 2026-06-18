@@ -3,11 +3,8 @@
 import PasswordMeter from "@/components/auth/passwordMeter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { resetPassword } from "@/services/auth.service";
-import { AxioErrorResponse, ForgotPasswordResponse } from "@/types";
+import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -23,7 +20,7 @@ const passwordResetFormSchema = z
       .min(8, "Password must be at least 8 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
       ),
     confirmPassword: z.string(),
   })
@@ -39,6 +36,7 @@ const PasswordResetForm = ({
 }: {
   token: string | string[] | undefined;
 }): JSX.Element => {
+  const [isPending, setIsPending] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
 
@@ -60,27 +58,27 @@ const PasswordResetForm = ({
     }
   }, [router, token]);
 
-  const { mutate, isPending } = useMutation<
-    ForgotPasswordResponse,
-    AxiosError<AxioErrorResponse>,
-    { password: string; token: string }
-  >({
-    mutationKey: ["reset-password"],
-    mutationFn: resetPassword,
-    onSuccess: () => {
-      setShowPopup(true);
-      toast.success("Password reset successfully!", {
-        duration: 3000,
-      });
-    },
-    onError: (error) => {
-      console.error("Failed to reset password:", error);
-      toast.error("Failed to reset password", {
-        description: error.response?.data.message || "Please try again later",
-        duration: 5000,
-      });
-    },
-  });
+  // const { mutate, isPending } = useMutation<
+  //   ForgotPasswordResponse,
+  //   AxiosError<AxioErrorResponse>,
+  //   { password: string; token: string }
+  // >({
+  //   mutationKey: ["reset-password"],
+  //   mutationFn: resetPassword,
+  //   onSuccess: () => {
+  //     setShowPopup(true);
+  //     toast.success("Password reset successfully!", {
+  //       duration: 3000,
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     console.error("Failed to reset password:", error);
+  //     toast.error("Failed to reset password", {
+  //       description: error.response?.data.message || "Please try again later",
+  //       duration: 5000,
+  //     });
+  //   },
+  // });
 
   const onSubmit = async (data: PasswordResetFormSchema) => {
     if (!token) {
@@ -88,10 +86,37 @@ const PasswordResetForm = ({
       return;
     }
 
-    mutate({
-      password: data.password,
-      token: token as string,
-    });
+    await authClient.resetPassword(
+      {
+        newPassword: data.password,
+        token: token as string,
+      },
+      {
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onSuccess: () => {
+          setShowPopup(true);
+          toast.success("Password reset successfully!", {
+            duration: 3000,
+          });
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          console.error("Failed to reset password:", ctx.error);
+          toast.error("Failed to reset password", {
+            description: ctx.error.message || "Please try again later",
+            duration: 5000,
+          });
+          setIsPending(false);
+        },
+      },
+    );
+
+    // mutate({
+    //   password: data.password,
+    //   token: token as string,
+    // });
   };
 
   // Show loading or redirect if no token
@@ -160,7 +185,7 @@ const PasswordResetForm = ({
         </div>
 
         {/* PasswordMeter floats beside the form */}
-        <div className="hidden md:block absolute right-[-420px] top-[100px] z-10">
+        <div className="hidden md:block absolute -right-105 top-25 z-10">
           <PasswordMeter password={password} />
         </div>
       </div>
@@ -168,7 +193,7 @@ const PasswordResetForm = ({
       {/* ✅ Popup */}
       {showPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 w-full p-10">
-          <div className="bg-white rounded-xl p-6 sm:p-10 w-full max-w-[90vw] md:max-w-[600px] xl:max-w-[700px] text-center shadow-xl relative">
+          <div className="bg-white rounded-xl p-6 sm:p-10 w-full max-w-[90vw] md:max-w-150 xl:max-w-175 text-center shadow-xl relative">
             <h2 className="text-xl font-semibold mb-4">
               Password Changed
               <span className="text-[#FFA300]"> Successfully</span>

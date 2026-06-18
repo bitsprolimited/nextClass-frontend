@@ -61,7 +61,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
   const uploadCertificate = useUploadCertificate();
 
   const [showForm, setShowForm] = useState<boolean>(
-    careerExperience.qualifications?.length === 0 ? true : false
+    careerExperience.qualifications?.length === 0 ? true : false,
   );
   const [currentQualification, setCurrentQualification] = useState<
     Partial<QualificationData>
@@ -144,7 +144,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
     removeQualification(index);
     form.setValue(
       "qualifications",
-      form.getValues("qualifications").filter((_, i) => i !== index)
+      form.getValues("qualifications").filter((_, i) => i !== index),
     );
   };
 
@@ -234,7 +234,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                     <MultipleSelector
                       commandProps={{ label: "Select subjects" }}
                       value={subjects.filter(
-                        (s) => (field.value || []).includes(s.value) // map stored strings to Option[]
+                        (s) => (field.value || []).includes(s.value), // map stored strings to Option[]
                       )}
                       className="bg-white"
                       defaultOptions={subjects}
@@ -309,7 +309,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                         <SelectItem key={year} value={year}>
                           {year}
                         </SelectItem>
-                      )
+                      ),
                     )}
                   </SelectContent>
                 </Select>
@@ -356,7 +356,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                         <p className="text-xs">
                           {qual.expiryDate
                             ? new Date(qual.expiryDate).toLocaleDateString(
-                                "en-GB"
+                                "en-GB",
                               )
                             : "N/A"}
                         </p>
@@ -385,7 +385,7 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                         <SelectItem key={type} value={type.toLowerCase()}>
                           {type}
                         </SelectItem>
-                      )
+                      ),
                     )}
                   </SelectContent>
                 </Select>
@@ -413,8 +413,6 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                     }))
                   }
                 />
-
-                
 
                 <div className="flex justify-center gap-2 mb-2">
                   <span className="text-xs text-gray-500">
@@ -444,13 +442,13 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                   getInputProps={getInputProps}
                   maxSize={maxSize}
                 />
-<Popover>
+                <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       className={cn(
                         "h-12 w-full hover:bg-transparent flex items-center border border-gray-300 px-4 text-gray-700 bg-white justify-between",
-                        !expiryDate && "text-muted-foreground"
+                        !expiryDate && "text-muted-foreground",
                       )}
                     >
                       <span className="flex items-center gap-2">
@@ -465,8 +463,6 @@ export default function StepTwo({ onNext, onBack }: StepTwoProps) {
                       </span>
                     </Button>
                   </PopoverTrigger>
-
-                  
 
                   <PopoverContent
                     align="start"

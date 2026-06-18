@@ -21,6 +21,7 @@ import { Separator } from "./ui/separator";
 import { links } from "./ProfileMenu";
 import Image from "next/image";
 import { authClient, BetterAuthSession } from "@/lib/auth-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface MobileNavProps {
   session: BetterAuthSession | null | undefined;
@@ -30,6 +31,7 @@ interface MobileNavProps {
 export function MobileNav({ session, currentNavItems }: MobileNavProps) {
   const user = session?.user;
   const router = useRouter();
+  const queryClient = useQueryClient();
   const pathname = usePathname();
   const currentLinks =
     user && user.role === "parent" ? links.parent : links.tutor;
@@ -138,7 +140,9 @@ export function MobileNav({ session, currentNavItems }: MobileNavProps) {
               await authClient.signOut({
                 fetchOptions: {
                   onSuccess: () => {
+                    queryClient.clear();
                     router.push("/login");
+                    router.refresh();
                   },
                 },
               });

@@ -17,9 +17,9 @@ import Image from "next/image";
 import { recordToAvailability } from "@/app/(root)/tutors/[id]/tutor-profile";
 import ErrorComponent from "@/components/ErrorComponent";
 import Loader from "@/components/Loader";
+import ProfilePhotoUploader from "@/components/ProfilePhotoUploader";
 import AboutTutor from "@/components/tutors/AboutTutor";
 import MyQualificationsSection from "@/components/tutors/QualificationsSection";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/hooks/useUser";
 import { getScheduleString } from "@/lib/utils";
 import { Availability, Role, Teacher } from "@/types";
@@ -67,19 +67,26 @@ export default function Profile() {
     <div className="flex flex-col gap-8 items-center py-10">
       {/* Top Section */}
       <div className="flex flex-col md:flex-row items-center gap-10 w-full max-w-6xl">
+        <div className="lg:hidden flex flex-col items-center">
+          <ProfilePhotoUploader
+            user={user.user}
+            avatarClassName="w-[120px] h-[120px]"
+            fallbackClassName="text-2xl"
+            showTextAction
+          />
+          <p className="text-green-600 font-semibold mt-2">ONLINE</p>
+        </div>
+
         {/* Profile Image */}
         <div className="hidden lg:flex flex-col items-center">
-          <Avatar className="w-[120px] lg:w-[300px] h-[120px] lg:h-[300px]">
-            <AvatarImage src={user.user.profilePicture ?? ""} />
-            <AvatarFallback className="text-2xl lg:text-7xl">
-              {user.user.fullName.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
+          <ProfilePhotoUploader
+            user={user.user}
+            avatarClassName="w-[120px] lg:w-[300px] h-[120px] lg:h-[300px]"
+            fallbackClassName="text-2xl lg:text-7xl"
+            showTextAction
+          />
           <div className="flex justify-between gap-10 items-center">
             <p className="text-green-600 font-semibold mt-2">ONLINE</p>
-            <button className="text-sm font-medium text-[#031D95] hover:underline mt-2">
-              Change Image
-            </button>
           </div>
         </div>
 

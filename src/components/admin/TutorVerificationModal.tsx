@@ -15,6 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { Loader2, X } from "lucide-react";
 import { useUpdateTeacherVerification } from "@/hooks/useTutors";
+import { resolvePrivateFileUrl } from "@/lib/private-file-url";
 
 /** ---------- Types ---------- */
 type TutorQualification = {
@@ -64,7 +65,7 @@ export interface TutorVerificationModalProps {
   /** Optional: let the parent react immediately to a status change */
   onAfterAction?: (
     newStatus: "accepted" | "declined",
-    tutorId?: string
+    tutorId?: string,
   ) => void;
   /** Optional: receives the reason text when a decline is submitted */
   onDeclineReason?: (reason: string) => void;
@@ -87,8 +88,8 @@ const StatusPill: React.FC<{ status: string }> = ({ status }) => {
     s === "accepted" || s === "verified"
       ? "bg-green-100 text-green-700"
       : s === "pending"
-      ? "bg-yellow-100 text-yellow-700"
-      : "bg-red-100 text-red-700";
+        ? "bg-yellow-100 text-yellow-700"
+        : "bg-red-100 text-red-700";
   return (
     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${tone}`}>
       {status}
@@ -99,7 +100,7 @@ const StatusPill: React.FC<{ status: string }> = ({ status }) => {
 const ViewPill: React.FC<{ href?: string }> = ({ href }) =>
   href ? (
     <a
-      href={href}
+      href={resolvePrivateFileUrl(href)}
       target="_blank"
       rel="noreferrer"
       className="text-[11px] px-3 py-1 rounded-full border border-secondary text-secondary hover:bg-[#FFF3D6] inline-flex items-center"
@@ -211,7 +212,8 @@ const QualificationCard: React.FC<{ q: TutorQualification }> = ({ q }) => {
       <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
         <div>{q.issuingInstitution || "—"}</div>
         <div>
-          exp. {q.expiryDate ? new Date(q.expiryDate).toLocaleDateString() : "—"}
+          exp.{" "}
+          {q.expiryDate ? new Date(q.expiryDate).toLocaleDateString() : "—"}
         </div>
       </div>
     </div>
@@ -248,10 +250,7 @@ const DeclineReasonDialog: React.FC<{
         <Button variant="outline" onClick={onClose} disabled={loading}>
           Cancel
         </Button>
-        <Button
-          onClick={onConfirm}
-          disabled={loading || reason.trim() === ""}
-        >
+        <Button onClick={onConfirm} disabled={loading || reason.trim() === ""}>
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -301,7 +300,7 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
       { id: String(tutor.id), isAdminVerified: true },
       {
         onSuccess: () => onAfterAction?.("accepted", String(tutor.id)),
-      }
+      },
     );
   };
 
@@ -311,7 +310,7 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
       { id: String(tutor.id), isAdminVerified: false, reason },
       {
         onSuccess: () => onAfterAction?.("declined", String(tutor.id)),
-      }
+      },
     );
   };
 
@@ -363,7 +362,10 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                 <section className="space-y-6">
                   <div className="flex items-center gap-4">
                     <Image
-                      src={tutor.profilePicture ?? "/images/tutor-3.png"}
+                      src={
+                        resolvePrivateFileUrl(tutor.profilePicture) ||
+                        "/images/tutor-3.png"
+                      }
                       alt={tutor.name}
                       width={72}
                       height={72}
@@ -486,7 +488,9 @@ export const TutorVerificationModal: React.FC<TutorVerificationModalProps> = ({
                       <div className="relative aspect-video rounded-lg overflow-hidden mx-auto w-full max-w-[560px] md:max-w-[640px]">
                         <video
                           ref={videoRef}
-                          src={tutor.introductionVideoUrl}
+                          src={resolvePrivateFileUrl(
+                            tutor.introductionVideoUrl,
+                          )}
                           className="h-full w-full bg-black object-cover"
                           controls={isPlaying}
                           onEnded={() => setPlaying(false)}
